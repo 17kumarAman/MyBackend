@@ -37,7 +37,11 @@ import {
   postWarning,
   getWarning,
   deleteWarning,
-  updateWarning
+  updateWarning,
+  postComplain,
+  getComplain,
+  deleteComplain,
+  updateComplain
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -102,6 +106,11 @@ router.post('/postWarning',postWarning);
 router.get('/getWarning', getWarning);
 router.delete("/deleteWarning/:id",deleteWarning);
 router.put("/updateWarning/:id", updateWarning);
+
+router.post('/postComplain',postComplain);
+router.get('/getComplain', getComplain);
+router.delete("/deleteComplain/:id",deleteComplain);
+router.put("/updateComplain/:id", updateComplain);
 
 
 export default router;

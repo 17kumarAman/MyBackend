@@ -7,6 +7,7 @@ import Announcement from "../models/Announcement/Announcement.js";
 import Tracking from "../models/Tracking/Tracking.js";
 import Termination from "../models/Termination/Termination.js";
 import Warning from "../models/Warning/Warning.js";
+import Complain from "../models/Complain/Complain.js";
 import User from "../models/User/User.js";
 import Project from "../models/Project/Project.js";
 import { createTransport } from "nodemailer";
@@ -562,7 +563,7 @@ export const updateIndicator = asyncHandler(async (req, res) => {
 
 
   for (const email of emailList) {
-    await mailSender(email , `Regarding UpdateIndicator` ,`<div>
+    await mailSender(email, `Regarding UpdateIndicator`, `<div>
       <div>Description: ${updateObj}</div>
       </div>` );
   }
@@ -590,7 +591,7 @@ export const postApprisal = asyncHandler(async (req, res) => {
   // retreiving all the user of same department and designation 
   const userDetail = await User.findOne({ fullName: Employee });
 
-  await mailSender(userDetail.email , `Regarding Create Apprisal` , `<div>
+  await mailSender(userDetail.email, `Regarding Create Apprisal`, `<div>
     <div>Branch By: ${Branch}</div>
     <div>SelectMonth: ${SelectMonth}</div>
     <div>Employee: ${Employee}</div>
@@ -672,7 +673,7 @@ export const updateApprisal = asyncHandler(async (req, res) => {
   // retreiving all the user of same department and designation 
   const userDetail = await User.findOne({ fullName: Employee });
 
-  await mailSender(userDetail.email , "Regarding Update Apprisal" ,  `<div>
+  await mailSender(userDetail.email, "Regarding Update Apprisal", `<div>
   <div>Branch: ${Branch}</div>
   <div>SelectMonth: ${SelectMonth}</div>
   <div>Employee: ${Employee}</div>
@@ -710,7 +711,7 @@ export const postAssets = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ fullName: Employee });
 
-  await mailSender(users.email , "Regarding Create Assets" , `<div>
+  await mailSender(users.email, "Regarding Create Assets", `<div>
   <div>Name: ${Name}</div>
   <div>amount: ${amount}</div>
   <div> purchaseDate: ${purchaseDate}</div>
@@ -778,14 +779,14 @@ export const updateAssets = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ _id: id });
 
-  await mailSender(users.email  ,"Regarding Update Assets" ,`<div>
+  await mailSender(users.email, "Regarding Update Assets", `<div>
   <div>Name: ${Name}</div>
   <div>amount: ${amount}</div>
   <div> purchaseDate: ${purchaseDate}</div>
   <div>supportedDate: ${supportedDate}</div>
   </div>`
-);
-  
+  );
+
 
 
   let updateObj = removeUndefined({
@@ -869,7 +870,7 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
     const users = await User.find({ department: Department });
 
     for (const user of users) {
-      await mailSender(user.email ,"Create Annnouncement " , `<div>
+      await mailSender(user.email, "Create Annnouncement ", `<div>
       <div>title: ${title}</div>
       <div>Branch: ${Branch}</div>
       <div>Department: ${Department}</div>
@@ -878,7 +879,7 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
       <div>endDate: ${endDate}</div>
       <div>description: ${description}</div>
       </div>`)
-  
+
 
     }
 
@@ -887,7 +888,7 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
   else {
 
     const user = await User.findOne({ fullName: Employee });
-    await mailSender(user.email ,"Create Annnouncement " , `<div>
+    await mailSender(user.email, "Create Annnouncement ", `<div>
     <div>title: ${title}</div>
     <div>Branch: ${Branch}</div>
     <div>Department: ${Department}</div>
@@ -945,7 +946,7 @@ export const updateAnnouncement = asyncHandler(async (req, res) => {
 
     const users = await User.find({ department: Department });
     for (const user of users) {
-      await mailSender(user.email ,"update Annnouncement " , `<div>
+      await mailSender(user.email, "update Annnouncement ", `<div>
       <div>title: ${title}</div>
       <div>Branch: ${Branch}</div>
       <div>Department: ${Department}</div>
@@ -954,7 +955,7 @@ export const updateAnnouncement = asyncHandler(async (req, res) => {
       <div>endDate: ${endDate}</div>
       <div>description: ${description}</div>
       </div>`)
-  
+
     }
 
 
@@ -962,7 +963,7 @@ export const updateAnnouncement = asyncHandler(async (req, res) => {
   else {
 
     const user = await User.findOne({ fullName: Employee });
-    await mailSender(user.email ,"update Annnouncement " , `<div>
+    await mailSender(user.email, "update Annnouncement ", `<div>
     <div>title: ${title}</div>
     <div>Branch: ${Branch}</div>
     <div>Department: ${Department}</div>
@@ -970,7 +971,8 @@ export const updateAnnouncement = asyncHandler(async (req, res) => {
     <div>startDate: ${startDate}</div>
     <div>endDate: ${endDate}</div>
     <div>description: ${description}</div>
-    </div>`)  }
+    </div>`)
+  }
 
 
   const updateAnnouncement = await Announcement.findByIdAndUpdate(
@@ -1139,7 +1141,7 @@ export const postWarning = asyncHandler(async (req, res) => {
   });
 
   let info = await transporter.sendMail({
-    from: 'Kushel Digi Solutions" <info@kusheldigi.com>',
+    from: 'Kushel Digi Solutions" <asitmandal492@gmail.com>',
     to: `${users1.email}`,
     subject: "Regarding Warning",
     html: `<div>
@@ -1182,11 +1184,11 @@ export const deleteWarning = asyncHandler(async (req, res) => {
 });
 
 export const updateWarning = asyncHandler(async (req, res) => {
-  const {warningBy,
+  const { warningBy,
     warningTo,
     subject,
     warningDate,
-    description} = req.body;
+    description } = req.body;
 
   const { id } = req.params;
 
@@ -1228,6 +1230,132 @@ export const updateWarning = asyncHandler(async (req, res) => {
   console.log(`mail send to ${users1}`);
 
   const updateTermination = await Warning.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateTermination, "Updated  Successfully"));
+});
+
+export const postComplain = asyncHandler(async (req, res) => {
+
+  const { complainFrom,
+    complainAgain,
+    title,
+    complainDate,
+    description
+  } = req.body;
+
+  // const users = await User.findOne({ fullName: warningBy });
+  const users1 = await User.findOne({ fullName: complainAgain });
+
+  let transporter = createTransport({
+    host: "smtp.gmail.com",
+    auth: {
+      user: "webmaster.kushel@gmail.com",
+      pass: "paurymswxlpytekp",
+    },
+    tls: {
+      rejectUnauthorized: false // Temporarily bypass certificate validation
+    }
+  });
+
+  let info = await transporter.sendMail({
+    from: 'Kushel Digi Solutions" <info@kusheldigi.com>',
+    to: `${users1.email}`,
+    subject: "Regarding Warning",
+    html: `<div>
+      <div>Complain From: ${complainFrom}</div>
+      <div>Title: ${title}</div>
+      <div>Complain Date: ${complainDate}</div>
+      <div>Description: ${description}</div>
+      </div>`
+  });
+
+
+  console.log(`mail send to ${users1}`);
+
+
+  const complain = await Complain.create({
+    complainFrom,
+    complainAgain,
+    title,
+    complainDate,
+    description
+  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, complain, " successfully posted"));
+});
+
+export const getComplain = asyncHandler(async (req, res) => {
+  const data = await Complain.find();
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, " Successfully fetched all the Warning"));
+});
+
+export const deleteComplain = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await Complain.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
+});
+
+export const updateComplain = asyncHandler(async (req, res) => {
+  const { complainFrom,
+    complainAgain,
+    title,
+    complainDate,
+    description } = req.body;
+
+  const { id } = req.params;
+
+  const users1 = await User.findOne({ fullName: complainAgain });
+
+
+
+  let updateObj = removeUndefined({
+    complainFrom,
+    complainAgain,
+    title,
+    complainDate,
+    description
+  });
+
+  let transporter = createTransport({
+    host: "smtp.gmail.com",
+    auth: {
+      user: "webmaster.kushel@gmail.com",
+      pass: "paurymswxlpytekp",
+    },
+    tls: {
+      rejectUnauthorized: false // Temporarily bypass certificate validation
+    }
+  });
+
+  let info = await transporter.sendMail({
+    from: 'Kushel Digi Solutions" <info@kusheldigi.com>',
+    to: `${users1.email}`,
+    subject: "Regarding Warning",
+    html: `<div>
+      <div>Complain From: ${complainFrom}</div>
+      <div>Title: ${title}</div>
+      <div>Complain Date: ${complainDate}</div>
+      <div>Description: ${description}</div>
+      </div>`
+  });
+
+  console.log(`mail send to ${users1}`);
+
+  const updateTermination = await Complain.findByIdAndUpdate(
     id,
     {
       $set: updateObj,
