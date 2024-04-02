@@ -29,7 +29,15 @@ import {
   updateAnnouncement,
   getAnnouncement,
   deleteAnnouncement,
-  fetchAllEmployee
+  fetchAllEmployee,
+  postTermination,
+  getTermination,
+  updateTermination,
+  deleteTermination,
+  postWarning,
+  getWarning,
+  deleteWarning,
+  updateWarning
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -84,6 +92,16 @@ router.post('/postAnnouncement',postAnnouncement);
 router.get('/getAnnouncement', getAnnouncement);
 router.delete("/deleteAnnouncement/:id",deleteAnnouncement);
 router.put("/updateAnnouncement/:id", updateAnnouncement);
+
+router.post('/postTermination',postTermination);
+router.get('/getTermination', getTermination);
+router.delete("/deleteTermination/:id",deleteTermination);
+router.put("/updateTermination/:id", updateTermination);
+
+router.post('/postWarning',postWarning);
+router.get('/getWarning', getWarning);
+router.delete("/deleteWarning/:id",deleteWarning);
+router.put("/updateWarning/:id", updateWarning);
 
 
 export default router;

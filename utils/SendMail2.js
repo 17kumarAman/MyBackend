@@ -17,7 +17,7 @@ export const mailSender = async(email , subject = "This is an indicator mail") =
             from: 'Kushel Digi Solutions" <info@kusheldigi.com>',
             to: `${email}`,
             subject: subject,
-            html: '<div>This is an indicator HTML</div>'
+            html: '<div>This is an indicator</div>'
         });
 
         console.log("Email sent info: ", info);
