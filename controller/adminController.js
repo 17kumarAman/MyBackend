@@ -560,9 +560,11 @@ export const updateIndicator = asyncHandler(async (req, res) => {
   //  Extract email addresses from the retrieved user 
   const emailList = users.map(user => user.email);
 
+
   for (const email of emailList) {
-    await mailSender(email);
-    console.log(`Email sent to ${email}`);
+    await mailSender(email , `Regarding UpdateIndicator` ,`<div>
+      <div>Description: ${updateObj}</div>
+      </div>` );
   }
 
 
@@ -588,7 +590,12 @@ export const postApprisal = asyncHandler(async (req, res) => {
   // retreiving all the user of same department and designation 
   const userDetail = await User.findOne({ fullName: Employee });
 
-  await mailSender(userDetail.email);
+  await mailSender(userDetail.email , `Regarding Create Apprisal` , `<div>
+    <div>Branch By: ${Branch}</div>
+    <div>SelectMonth: ${SelectMonth}</div>
+    <div>Employee: ${Employee}</div>
+    <div>remarks: ${remarks}</div>
+    </div>`);
 
   const apprisal = await Apprisal.create({
     Branch,
@@ -665,7 +672,13 @@ export const updateApprisal = asyncHandler(async (req, res) => {
   // retreiving all the user of same department and designation 
   const userDetail = await User.findOne({ fullName: Employee });
 
-  await mailSender(userDetail.email);
+  await mailSender(userDetail.email , "Regarding Update Apprisal" ,  `<div>
+  <div>Branch: ${Branch}</div>
+  <div>SelectMonth: ${SelectMonth}</div>
+  <div>Employee: ${Employee}</div>
+  <div>remarks: ${remarks}</div>
+  </div>`);
+
 
   let updateObj = removeUndefined({ Branch, SelectMonth, Employee, remarks });
 
@@ -697,7 +710,12 @@ export const postAssets = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ fullName: Employee });
 
-  await mailSender(users.email);
+  await mailSender(users.email , "Regarding Create Assets" , `<div>
+  <div>Name: ${Name}</div>
+  <div>amount: ${amount}</div>
+  <div> purchaseDate: ${purchaseDate}</div>
+  <div>supportedDate: ${supportedDate}</div>
+  </div>`);
 
   console.log(`mail send to ${users}`);
 
@@ -760,7 +778,15 @@ export const updateAssets = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ _id: id });
 
-  await mailSender(users.email);
+  await mailSender(users.email  ,"Regarding Update Assets" ,`<div>
+  <div>Name: ${Name}</div>
+  <div>amount: ${amount}</div>
+  <div> purchaseDate: ${purchaseDate}</div>
+  <div>supportedDate: ${supportedDate}</div>
+  </div>`
+);
+  
+
 
   let updateObj = removeUndefined({
     Name,
@@ -789,13 +815,6 @@ export const updateAssets = asyncHandler(async (req, res) => {
 export const postTracking = asyncHandler(async (req, res) => {
 
   const { Branch, GoalType, startDate, endDate, subject, target, description, status, rating, progress } = req.body;
-
-  // const users = await User.findOne({fullName: Employee});
-
-  // await mailSender(users.email);
-
-  // console.log(`mail send to ${users}`);
-
 
   const tracking = await Tracking.create({ Branch, GoalType, startDate, endDate, subject, target, description, status, rating, progress });
   return res
@@ -849,10 +868,18 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
 
     const users = await User.find({ department: Department });
 
-    console.log('users ', users);
-
     for (const user of users) {
-      await mailSender(user.email);
+      await mailSender(user.email ,"Create Annnouncement " , `<div>
+      <div>title: ${title}</div>
+      <div>Branch: ${Branch}</div>
+      <div>Department: ${Department}</div>
+      <div>Employee: ${Employee}</div>
+      <div>startDate: ${startDate}</div>
+      <div>endDate: ${endDate}</div>
+      <div>description: ${description}</div>
+      </div>`)
+  
+
     }
 
 
@@ -860,8 +887,16 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
   else {
 
     const user = await User.findOne({ fullName: Employee });
-    console.log("single ", user);
-    await mailSender(user.email);
+    await mailSender(user.email ,"Create Annnouncement " , `<div>
+    <div>title: ${title}</div>
+    <div>Branch: ${Branch}</div>
+    <div>Department: ${Department}</div>
+    <div>Employee: ${Employee}</div>
+    <div>startDate: ${startDate}</div>
+    <div>endDate: ${endDate}</div>
+    <div>description: ${description}</div>
+    </div>`)
+
   }
 
 
@@ -909,11 +944,17 @@ export const updateAnnouncement = asyncHandler(async (req, res) => {
   if (Employee === "All Employee") {
 
     const users = await User.find({ department: Department });
-
-    console.log('users ', users);
-
     for (const user of users) {
-      await mailSender(user.email);
+      await mailSender(user.email ,"update Annnouncement " , `<div>
+      <div>title: ${title}</div>
+      <div>Branch: ${Branch}</div>
+      <div>Department: ${Department}</div>
+      <div>Employee: ${Employee}</div>
+      <div>startDate: ${startDate}</div>
+      <div>endDate: ${endDate}</div>
+      <div>description: ${description}</div>
+      </div>`)
+  
     }
 
 
@@ -921,9 +962,15 @@ export const updateAnnouncement = asyncHandler(async (req, res) => {
   else {
 
     const user = await User.findOne({ fullName: Employee });
-    console.log("single ", user);
-    await mailSender(user.email);
-  }
+    await mailSender(user.email ,"update Annnouncement " , `<div>
+    <div>title: ${title}</div>
+    <div>Branch: ${Branch}</div>
+    <div>Department: ${Department}</div>
+    <div>Employee: ${Employee}</div>
+    <div>startDate: ${startDate}</div>
+    <div>endDate: ${endDate}</div>
+    <div>description: ${description}</div>
+    </div>`)  }
 
 
   const updateAnnouncement = await Announcement.findByIdAndUpdate(
@@ -952,8 +999,6 @@ export const postTermination = asyncHandler(async (req, res) => {
   } = req.body;
 
   const users = await User.findOne({ fullName: Employee });
-
-  // await mailSender(users.email);
 
   let transporter = createTransport({
     host: "smtp.gmail.com",
@@ -1021,10 +1066,6 @@ export const updateTermination = asyncHandler(async (req, res) => {
   // const users = await User.findOne({ _id: id });
   const users = await User.findOne({ fullName: Employee });
 
-  // await mailSender(users.email);
-
-
-
   let updateObj = removeUndefined({
     Employee,
     type,
@@ -1085,8 +1126,6 @@ export const postWarning = asyncHandler(async (req, res) => {
 
   // const users = await User.findOne({ fullName: warningBy });
   const users1 = await User.findOne({ fullName: warningTo });
-
-  // await mailSender(users.email);
 
   let transporter = createTransport({
     host: "smtp.gmail.com",
