@@ -1368,10 +1368,3 @@ export const updateComplain = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, updateTermination, "Updated  Successfully"));
 });
-
-
-
-
-
-
-
