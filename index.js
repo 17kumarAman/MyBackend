@@ -14,6 +14,7 @@ import taskRouter from "./router/taskRouter.js";
 import chatRouter from "./router/chatRouter.js";
 import notification from "./router/notification.js"
 import clock from "./router/clockRouter.js"
+import award from "./router/awardRouter.js"
 
 // import announcementRouter from "./router/announcementRouter.js";
 import attendanceRouter from "./router/attendanceRouter.js";
@@ -72,6 +73,7 @@ app.use("/task", taskRouter);
 app.use("/chat", chatRouter);
 app.use("/notification", notification);
 app.use("/clock", clock);
+app.use("/award" ,award);
 
 // app.use("/announcement", announcementRouter);
 app.use("/attendance", attendanceRouter);

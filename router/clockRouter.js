@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createClock , getClockByUserDate} from "../controller/clockController.js"
+import {createClock , getClockByUserDate , getClockByUser} from "../controller/clockController.js"
 
 const router = Router();
 
