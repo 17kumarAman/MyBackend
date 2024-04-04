@@ -13,6 +13,9 @@ export const createClock = async(req ,res)=>{
 
       const clockDetails = await Clock.create({Date:date , clockIn:clockInDetail , clockOut:clockOutDetail ,user: userId , breakTime:breakTime});
 
+    //   console.log(clockDetails);
+    console.log(clockDetails)
+
 
        return res.status(200).json({
         status:true ,
