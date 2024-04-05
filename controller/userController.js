@@ -585,31 +585,21 @@ export const deleteUsers = asyncHandler(async (req, res) => {
 });
 
 //! check this 
-
 export const getActiveUsers = asyncHandler(async (req, res) => {
+  // Get the timestamp for 12 hours ago
+  const twelveHoursAgo = new Date();
+  twelveHoursAgo.setHours(twelveHoursAgo.getHours() - 12);
 
-  const activeUsers = await ActivityTracker.find({ clockOut: '0' });
+  // Query for active users who have clocked in within the past 12 hours
+  const activeUsers = await ActivityTracker.find({
+    clockOut: '0',
+    clockIn: { $gte: twelveHoursAgo.getTime() } // Filter for clockIn time greater than or equal to twelve hours ago
+  });
 
-  // const currentDate = new Date().toLocaleDateString("en-GB");
-  // const data = await ActivityTracker.find({ date: currentDate }).populate([
-  //   "user",
-  // ]);
-
+  console.log("ac ",activeUsers);
 
   return res.status(200).json(new ApiResponse(200, activeUsers, "Active users fetched successfully"));
 });
-
-// export const getActiveUsersCount = asyncHandler(async (req, res) => {
-//   const currentDate = new Date().toLocaleDateString("en-GB");
-//   const data = await ActivityTracker.countDocuments({ date: currentDate });
-
-//    console.log("data ",data);
-//   return res
-//     .status(200)
-//     .json(
-//       new ApiResponse(200, data, "Active Users count fetched successfully")
-//     );
-// });
 
 
 export const getActiveUsersCount = asyncHandler(async (req, res) => {

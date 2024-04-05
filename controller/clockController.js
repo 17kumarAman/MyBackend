@@ -37,13 +37,18 @@ export const getClockByUserDate = async (req, res) => {
         const { date } = req.body;
         const { userId } = req.params;
 
-        const searchDate = new Date(date);
-
-
+        
+        const searchDateUTC = new Date(date);
+        searchDateUTC.setHours(0, 0, 0, 0); // Reset time to midnight
+        const searchDateEndUTC = new Date(searchDateUTC.getTime() + 24 * 60 * 60 * 1000); // Next day's midnight
+        
         const clockEntries = await Clock.findOne({
             user: userId,
-            Date: { $gte: searchDate, $lt: new Date(searchDate.getTime() + 24 * 60 * 60 * 1000) } 
+            Date: { $gte: searchDateUTC, $lt: searchDateEndUTC }
         }).select('clockIn clockOut breakTime');
+        
+        
+
 
 
         return res.status(200).json({
