@@ -16,7 +16,8 @@ import notification from "./router/notification.js"
 import clock from "./router/clockRouter.js"
 import award from "./router/awardRouter.js"
 import tranfer from "./router/tranferRoute.js"
-
+// import trainer from "./router/TrainerRouter.js"
+// import trainer from "./router/trainerRouter.js";
 // import announcementRouter from "./router/announcementRouter.js";
 import attendanceRouter from "./router/attendanceRouter.js";
 import authRouter from "./router/authRouter.js";
@@ -32,6 +33,8 @@ import cron from 'node-cron';
 import dotenv from "dotenv";
 import User from "./models/User/User.js";
 import ActivityTracker from "./models/ActivityTracker/ActivityTracker.js";
+// import Trainer from "./models/Trainer/Trainer.js";
+
 dotenv.config();
 const port = process.env.PORT;
 
@@ -76,6 +79,7 @@ app.use("/notification", notification);
 app.use("/clock", clock);
 app.use("/award" ,award);
 app.use("/tranfer" , tranfer);
+// app.use("/trainer",trainer);
 
 // app.use("/announcement", announcementRouter);
 app.use("/attendance", attendanceRouter);

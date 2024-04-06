@@ -12,6 +12,7 @@ import Resignation from "../models/Resignation/Resignation.js";
 import Promotion from "../models/Promotion/Promotion.js";
 import User from "../models/User/User.js";
 import Project from "../models/Project/Project.js";
+import Trainer from "../models/Trainer/Trainer.js";
 import { createTransport } from "nodemailer";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
@@ -1603,5 +1604,109 @@ export const updatePromotion = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatePromotion, "Updated  Successfully"));
 });
 
+
+// =========================trainer controller=================
+
+export const createTrainer = async (req, res) => {
+  try {
+
+      const {Branch, firstName, lastName, contact, email,expertise,address} = req.body;
+
+      // const userDetail = await User.findOne({ fullName: Employee });
+
+      // await mailSender(userDetail.email, `Regarding Transfer`, `<div>
+      //  <div>Branch By: ${branch}</div>
+      //  <div>Department: ${Department}</div>
+      //  <div>Employee: ${Employee}</div>
+      //  <div>TransferDate: ${TransferDate}</div>
+      //  <div>Description: ${Description}</div>
+      //  </div>`);
+
+
+      const tranerDetail = await Trainer.create({Branch, firstName, lastName, contact, email,expertise,address});
+
+
+      return res.status(200).json({
+          status: true,
+          message: 'Trainer created successfully',
+          data: tranerDetail,
+      });
+
+
+
+  } catch (error) {
+      console.log("error ", error);
+
+      return res.status(500).json({
+          status: 500,
+          message: "Internal server error "
+      })
+  }
+}
+
+export const getTrainer = async (req, res) => {
+  try {
+
+      // Find notifications where the user ID is in the user array
+      const transfer = await Trainer.find({});
+
+
+      return res.status(200).json({
+          status: 200,
+          message: "tranfer fetched successfully",
+          data: transfer
+      });
+
+
+
+  } catch (error) {
+      return res.status(500).json({
+          status: 500,
+          message: "Internal server error "
+      })
+  }
+}
+
+export const deleteTrainer = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await Trainer.findByIdAndDelete(id);
+  return res
+      .status(200)
+      .json(new ApiResponse(200, data, "Deleted Successfully"));
+});
+
+export const updateTrainer = asyncHandler(async (req, res) => {
+  const { Branch, firstName, lastName, contact, email,expertise,address } = req.body;
+
+  const { id } = req.params;
+
+  // const userDetail = await User.findOne({ fullName: Employee });
+
+  let updateObj = removeUndefined({
+      Branch, firstName, lastName, contact, email,expertise,address
+  });
+
+  // await mailSender(userDetail.email, `Regarding Transfer`, `<div>
+  //      <div>Branch By: ${branch}</div>
+  //      <div>Department: ${Department}</div>
+  //      <div>Employee: ${Employee}</div>
+  //      <div>TransferDate: ${TransferDate}</div>
+  //      <div>Description: ${Description}</div>
+  //      </div>`);
+
+
+  const updateTrainer = await Trainer.findByIdAndUpdate(
+      id,
+      {
+          $set: updateObj,
+      },
+      {
+          new: true,
+      }
+  );
+  return res
+      .status(200)
+      .json(new ApiResponse(200, updateTrainer, "Updated  Successfully"));
+});
 
 

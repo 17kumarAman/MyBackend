@@ -49,7 +49,11 @@ import {
   postPromotion,
   getPromotion,
   deletePromotion,
-  updatePromotion
+  updatePromotion,
+  createTrainer,
+  getTrainer,
+  deleteTrainer,
+  updateTrainer
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -129,5 +133,10 @@ router.post('/postPromotion',postPromotion);
 router.get('/getPromotion', getPromotion);
 router.delete("/deletePromotion/:id",deletePromotion);
 router.put("/updatePromotion/:id",updatePromotion);
+
+router.post('/postTrainer',createTrainer);
+router.get('/getTrainer', getTrainer);
+router.delete("/deleteTrainer/:id",deleteTrainer);
+router.put("/updateTrainer/:id",updateTrainer);
 
 export default router;

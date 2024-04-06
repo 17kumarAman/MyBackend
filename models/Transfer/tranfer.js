@@ -4,21 +4,24 @@ const transferSchema = new mongoose.Schema({
     branch: {
         type: String,
     },
+    user: {
+        type:mongoose.Types.ObjectId,
+        ref:"user"
+    },
     Employee: {
-        type: mongoose.Types.ObjectId,
-        ref: "User"
+        type:String
     },
     Department: {
         type: String,
     },
     TransferDate: {
-        type: Date,
+        type: String,
     } , 
     Description:{
         type:String,
     }
 });
 
-const transfer = mongoose.model('Transfer', transferSchema);
+const Transfer = mongoose.model('Transfer', transferSchema);
 
-export default transfer;
+export default Transfer;
