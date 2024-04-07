@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { removeUndefined } from "../utils/util.js";
 
-export const createTransfer = async (req, res) => {
+export const createTransfer = asyncHandler(async(req, res) => {
     try {
 
         const { branch, Employee, Department, TransferDate, Description } = req.body;
@@ -40,10 +40,10 @@ export const createTransfer = async (req, res) => {
             message: "Internal server error "
         })
     }
-}
+})
 
 
-export const getTransfer = async (req, res) => {
+export const getTransfer = asyncHandler(async(req, res) => {
     try {
 
         // Find notifications where the user ID is in the user array
@@ -64,7 +64,7 @@ export const getTransfer = async (req, res) => {
             message: "Internal server error "
         })
     }
-}
+})
 
 export const deleteTransfer = asyncHandler(async (req, res) => {
     const { id } = req.params;
