@@ -57,7 +57,11 @@ import {
   createTrainingList,
   getTrainingList,
   deleteTrainngList,
-  updateTrainingList
+  updateTrainingList,
+  createTransfer,
+  getTransfer,
+  updateTransfer,
+  deleteTransfer
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -147,6 +151,11 @@ router.post('/postList',createTrainingList);
 router.get('/getList', getTrainingList);
 router.delete("/deleteList/:id",deleteTrainngList);
 router.put("/updateList/:id",updateTrainingList);
+
+router.post('/createTransfer',createTransfer);
+router.get('/getTransfer', getTransfer);
+router.delete("/deleteTransfer/:id",deleteTransfer);
+router.put("/updateTransfer/:id",updateTransfer);
 
 
 export default router;
