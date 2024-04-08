@@ -14,6 +14,8 @@ import User from "../models/User/User.js";
 import Project from "../models/Project/Project.js";
 import Trainer from "../models/Trainer/Trainer.js";
 import TrainingList from "../models/TrainingList/TrainingList.js";
+import Holiday from "../models/Holiday/Holiday.js";
+import Transfer from "../models/Transfer/tranfer.js";
 import { createTransport } from "nodemailer";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
@@ -706,20 +708,24 @@ export const updateApprisal = asyncHandler(async (req, res) => {
 export const postAssets = asyncHandler(async (req, res) => {
 
   const { Employee,
-    Name,
-    amount,
+    designation,
+    department,
+    product,
     purchaseDate,
-    supportedDate,
+    additonal,
     description
   } = req.body;
 
-  const users = await User.findOne({ fullName: Employee });
+  const users = await User.findOne({ fullName: Employee })
 
   await mailSender(users.email, "Regarding Create Assets", `<div>
-  <div>Name: ${Name}</div>
-  <div>amount: ${amount}</div>
-  <div> purchaseDate: ${purchaseDate}</div>
-  <div>supportedDate: ${supportedDate}</div>
+  <div>Employee: ${Employee}</div>
+  <div>designation: ${designation}</div>
+  <div>Department: ${department}</div>
+  <div>product: ${product}</div>
+  <div>To Date: ${purchaseDate}</div>
+  <div>Additional Product: ${additonal}</div>
+  <div>description: ${description}</div>
   </div>`);
 
   console.log(`mail send to ${users}`);
@@ -727,10 +733,11 @@ export const postAssets = asyncHandler(async (req, res) => {
 
   const apprisal = await Assets.create({
     Employee,
-    Name,
-    amount,
+    designation,
+    department,
+    product,
     purchaseDate,
-    supportedDate,
+    additonal,
     description
   });
   return res
@@ -772,32 +779,40 @@ export const deleteAssets = asyncHandler(async (req, res) => {
 });
 
 export const updateAssets = asyncHandler(async (req, res) => {
-  const { Name,
-    amount,
+  const { Employee,
+    designation,
+    department,
+    product,
     purchaseDate,
-    supportedDate,
-    description
-  } = req.body;
+    additonal,
+    description } = req.body;
 
   const { id } = req.params;
 
-  const users = await User.findOne({ _id: id });
+  // const users = await User.findOne({ _id: id });
+  const users = await User.findOne({ fullName: Employee })
 
-  await mailSender(users.email, "Regarding Update Assets", `<div>
-  <div>Name: ${Name}</div>
-  <div>amount: ${amount}</div>
-  <div> purchaseDate: ${purchaseDate}</div>
-  <div>supportedDate: ${supportedDate}</div>
-  </div>`
-  );
+  await mailSender(users.email, "Regarding Create Assets", `<div>
+  <div>Employee: ${Employee}</div>
+  <div>designation: ${designation}</div>
+  <div>Department: ${department}</div>
+  <div>product: ${product}</div>
+  <div>To Date: ${purchaseDate}</div>
+  <div>Additional Product: ${additonal}</div>
+  <div>description: ${description}</div>
+  </div>`);
+
+  console.log(`mail send to ${users}`);
 
 
 
   let updateObj = removeUndefined({
-    Name,
-    amount,
+    Employee,
+    designation,
+    department,
+    product,
     purchaseDate,
-    supportedDate,
+    additonal,
     description
   });
 
@@ -1375,7 +1390,7 @@ export const updateComplain = asyncHandler(async (req, res) => {
 
 export const postResignation = asyncHandler(async (req, res) => {
 
-  const {  Employee,
+  const { Employee,
     noticeDate,
     resignationDate,
     description
@@ -1438,14 +1453,14 @@ export const deleteResignation = asyncHandler(async (req, res) => {
 });
 
 export const updateResignation = asyncHandler(async (req, res) => {
-  const {Employee,
+  const { Employee,
     noticeDate,
     resignationDate,
-    description} = req.body;
+    description } = req.body;
 
   const { id } = req.params;
 
-  const users1 = await User.findOne({ fullName:Employee });
+  const users1 = await User.findOne({ fullName: Employee });
 
   let updateObj = removeUndefined({
     Employee,
@@ -1497,7 +1512,7 @@ export const updateResignation = asyncHandler(async (req, res) => {
 
 export const postPromotion = asyncHandler(async (req, res) => {
 
-  const {Employee,Designation,title,promotionDate, description} = req.body;
+  const { Employee, Designation, title, promotionDate, description } = req.body;
 
   // const users = await User.findOne({ fullName: warningBy });
   const users1 = await User.findOne({ fullName: Employee });
@@ -1533,11 +1548,11 @@ export const postPromotion = asyncHandler(async (req, res) => {
 
 
   const promotion = await Promotion.create({
-    Employee,Designation,title,promotionDate, description
+    Employee, Designation, title, promotionDate, description
   });
   return res
     .status(200)
-    .json(new ApiResponse(200,  promotion, " successfully posted"));
+    .json(new ApiResponse(200, promotion, " successfully posted"));
 });
 
 export const getPromotion = asyncHandler(async (req, res) => {
@@ -1556,14 +1571,14 @@ export const deletePromotion = asyncHandler(async (req, res) => {
 });
 
 export const updatePromotion = asyncHandler(async (req, res) => {
-  const {Employee,Designation,title,promotionDate, description} = req.body;
+  const { Employee, Designation, title, promotionDate, description } = req.body;
 
   const { id } = req.params;
 
-  const users1 = await User.findOne({ fullName:Employee });
+  const users1 = await User.findOne({ fullName: Employee });
 
   let updateObj = removeUndefined({
-    Employee,Designation,title,promotionDate, description
+    Employee, Designation, title, promotionDate, description
   });
 
   let transporter = createTransport({
@@ -1611,60 +1626,60 @@ export const updatePromotion = asyncHandler(async (req, res) => {
 export const createTrainer = async (req, res) => {
   try {
 
-      const {Branch, firstName, lastName, contact, email,expertise,address} = req.body;
+    const { Branch, firstName, lastName, contact, email, expertise, address } = req.body;
 
-      // const userDetail = await User.findOne({ fullName: Employee });
+    // const userDetail = await User.findOne({ fullName: Employee });
 
-      // await mailSender(userDetail.email, `Regarding Transfer`, `<div>
-      //  <div>Branch By: ${branch}</div>
-      //  <div>Department: ${Department}</div>
-      //  <div>Employee: ${Employee}</div>
-      //  <div>TransferDate: ${TransferDate}</div>
-      //  <div>Description: ${Description}</div>
-      //  </div>`);
-
-
-      const tranerDetail = await Trainer.create({Branch, firstName, lastName, contact, email,expertise,address});
+    // await mailSender(userDetail.email, `Regarding Transfer`, `<div>
+    //  <div>Branch By: ${branch}</div>
+    //  <div>Department: ${Department}</div>
+    //  <div>Employee: ${Employee}</div>
+    //  <div>TransferDate: ${TransferDate}</div>
+    //  <div>Description: ${Description}</div>
+    //  </div>`);
 
 
-      return res.status(200).json({
-          status: true,
-          message: 'Trainer created successfully',
-          data: tranerDetail,
-      });
+    const tranerDetail = await Trainer.create({ Branch, firstName, lastName, contact, email, expertise, address });
+
+
+    return res.status(200).json({
+      status: true,
+      message: 'Trainer created successfully',
+      data: tranerDetail,
+    });
 
 
 
   } catch (error) {
-      console.log("error ", error);
+    console.log("error ", error);
 
-      return res.status(500).json({
-          status: 500,
-          message: "Internal server error "
-      })
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
   }
 }
 
 export const getTrainer = async (req, res) => {
   try {
 
-      // Find notifications where the user ID is in the user array
-      const transfer = await Trainer.find({});
+    // Find notifications where the user ID is in the user array
+    const transfer = await Trainer.find({});
 
 
-      return res.status(200).json({
-          status: 200,
-          message: "tranfer fetched successfully",
-          data: transfer
-      });
+    return res.status(200).json({
+      status: 200,
+      message: "tranfer fetched successfully",
+      data: transfer
+    });
 
 
 
   } catch (error) {
-      return res.status(500).json({
-          status: 500,
-          message: "Internal server error "
-      })
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
   }
 }
 
@@ -1672,19 +1687,19 @@ export const deleteTrainer = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const data = await Trainer.findByIdAndDelete(id);
   return res
-      .status(200)
-      .json(new ApiResponse(200, data, "Deleted Successfully"));
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
 });
 
 export const updateTrainer = asyncHandler(async (req, res) => {
-  const { Branch, firstName, lastName, contact, email,expertise,address } = req.body;
+  const { Branch, firstName, lastName, contact, email, expertise, address } = req.body;
 
   const { id } = req.params;
 
   // const userDetail = await User.findOne({ fullName: Employee });
 
   let updateObj = removeUndefined({
-      Branch, firstName, lastName, contact, email,expertise,address
+    Branch, firstName, lastName, contact, email, expertise, address
   });
 
   // await mailSender(userDetail.email, `Regarding Transfer`, `<div>
@@ -1697,17 +1712,17 @@ export const updateTrainer = asyncHandler(async (req, res) => {
 
 
   const updateTrainer = await Trainer.findByIdAndUpdate(
-      id,
-      {
-          $set: updateObj,
-      },
-      {
-          new: true,
-      }
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
   );
   return res
-      .status(200)
-      .json(new ApiResponse(200, updateTrainer, "Updated  Successfully"));
+    .status(200)
+    .json(new ApiResponse(200, updateTrainer, "Updated  Successfully"));
 });
 
 // ==========================trainingList=======================
@@ -1715,56 +1730,56 @@ export const updateTrainer = asyncHandler(async (req, res) => {
 export const createTrainingList = async (req, res) => {
   try {
 
-      const {Branch, trainerOption, trainingType, trainer, trainingCost,Employee,startDate,endDate,description} = req.body;
+    const { Branch, trainerOption, trainingType, trainer, trainingCost, Employee, startDate, endDate, description } = req.body;
 
-      const userDetail = await User.findOne({ fullName: Employee });
+    const userDetail = await User.findOne({ fullName: Employee });
 
-      await mailSender(userDetail.email, `Regarding TrainingList`, `<div>
+    await mailSender(userDetail.email, `Regarding TrainingList`, `<div>
        <div>Branch By: ${userDetail.fullName} is assigned to the trainer ${trainer} </div>
        </div>`);
 
 
-      const tranerDetail = await TrainingList.create({Branch, trainerOption, trainingType, trainer, trainingCost,Employee,startDate,endDate,description});
+    const tranerDetail = await TrainingList.create({ Branch, trainerOption, trainingType, trainer, trainingCost, Employee, startDate, endDate, description });
 
 
-      return res.status(200).json({
-          status: true,
-          message: 'Trainer created successfully',
-          data: tranerDetail,
-      });
+    return res.status(200).json({
+      status: true,
+      message: 'Trainer created successfully',
+      data: tranerDetail,
+    });
 
 
 
   } catch (error) {
-      console.log("error ", error);
+    console.log("error ", error);
 
-      return res.status(500).json({
-          status: 500,
-          message: "Internal server error "
-      })
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
   }
 }
 
 export const getTrainingList = async (req, res) => {
   try {
 
-      // Find notifications where the user ID is in the user array
-      const transfer = await TrainingList.find({});
+    // Find notifications where the user ID is in the user array
+    const transfer = await TrainingList.find({});
 
 
-      return res.status(200).json({
-          status: 200,
-          message: "TrainingList fetched successfully",
-          data: transfer
-      });
+    return res.status(200).json({
+      status: 200,
+      message: "TrainingList fetched successfully",
+      data: transfer
+    });
 
 
 
   } catch (error) {
-      return res.status(500).json({
-          status: 500,
-          message: "Internal server error "
-      })
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
   }
 }
 
@@ -1772,19 +1787,19 @@ export const deleteTrainngList = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const data = await TrainingList.findByIdAndDelete(id);
   return res
-      .status(200)
-      .json(new ApiResponse(200, data, "Deleted Successfully"));
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
 });
 
 export const updateTrainingList = asyncHandler(async (req, res) => {
-  const {Branch, trainerOption, trainingType, trainer, trainingCost,Employee,startDate,endDate,description,status,performance,remarks} = req.body;
+  const { Branch, trainerOption, trainingType, trainer, trainingCost, Employee, startDate, endDate, description, status, performance, remarks } = req.body;
 
   const { id } = req.params;
 
   const userDetail = await User.findOne({ fullName: Employee });
 
   let updateObj = removeUndefined({
-    Branch, trainerOption, trainingType, trainer, trainingCost,Employee,startDate,endDate,description,status,performance,remarks
+    Branch, trainerOption, trainingType, trainer, trainingCost, Employee, startDate, endDate, description, status, performance, remarks
   });
 
 
@@ -1794,29 +1809,29 @@ export const updateTrainingList = asyncHandler(async (req, res) => {
 
 
   const updateTrainer = await TrainingList.findByIdAndUpdate(
-      id,
-      {
-          $set: updateObj,
-      },
-      {
-          new: true,
-      }
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
   );
   return res
-      .status(200)
-      .json(new ApiResponse(200, updateTrainer, "Updated  Successfully"));
+    .status(200)
+    .json(new ApiResponse(200, updateTrainer, "Updated  Successfully"));
 });
 
 // ==================transfer====================
 
-export const createTransfer = asyncHandler(async(req, res) => {
+export const createTransfer = asyncHandler(async (req, res) => {
   try {
 
-      const { branch, Employee, Department, TransferDate, Description } = req.body;
+    const { branch, Employee, Department, TransferDate, Description } = req.body;
 
-      const userDetail = await User.findOne({ fullName: Employee });
+    const userDetail = await User.findOne({ fullName: Employee });
 
-      await mailSender(userDetail.email, `Regarding Transfer`, `<div>
+    await mailSender(userDetail.email, `Regarding Transfer`, `<div>
        <div>Branch By: ${branch}</div>
        <div>Department: ${Department}</div>
        <div>Employee: ${Employee}</div>
@@ -1825,48 +1840,48 @@ export const createTransfer = asyncHandler(async(req, res) => {
        </div>`);
 
 
-      const tranferDetail = await Transfer.create({ Employee, branch: branch, Department: Department, TransferDate: TransferDate, Description: Description });
+    const tranferDetail = await Transfer.create({ Employee, branch: branch, Department: Department, TransferDate: TransferDate, Description: Description });
 
 
-      return res.status(200).json({
-          status: true,
-          message: 'Notification created successfully',
-          data: tranferDetail,
-      });
+    return res.status(200).json({
+      status: true,
+      message: 'Notification created successfully',
+      data: tranferDetail,
+    });
 
 
 
   } catch (error) {
-      console.log("error ", error);
+    console.log("error ", error);
 
-      return res.status(500).json({
-          status: 500,
-          message: "Internal server error "
-      })
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
   }
 })
 
 
-export const getTransfer = asyncHandler(async(req, res) => {
+export const getTransfer = asyncHandler(async (req, res) => {
   try {
 
-      // Find notifications where the user ID is in the user array
-      const transfer = await Transfer.find({}).populate("Employee");
+    // Find notifications where the user ID is in the user array
+    const transfer = await Transfer.find({}).populate("Employee");
 
 
-      return res.status(200).json({
-          status: 200,
-          message: "tranfer fetched successfully",
-          data: transfer
-      });
+    return res.status(200).json({
+      status: 200,
+      message: "tranfer fetched successfully",
+      data: transfer
+    });
 
 
 
   } catch (error) {
-      return res.status(500).json({
-          status: 500,
-          message: "Internal server error "
-      })
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
   }
 })
 
@@ -1874,8 +1889,8 @@ export const deleteTransfer = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const data = await Transfer.findByIdAndDelete(id);
   return res
-      .status(200)
-      .json(new ApiResponse(200, data, "Deleted Successfully"));
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
 });
 
 export const updateTransfer = asyncHandler(async (req, res) => {
@@ -1886,7 +1901,7 @@ export const updateTransfer = asyncHandler(async (req, res) => {
   const userDetail = await User.findOne({ fullName: Employee });
 
   let updateObj = removeUndefined({
-      branch, Employee, Department, TransferDate, Description
+    branch, Employee, Department, TransferDate, Description
   });
 
   await mailSender(userDetail.email, `Regarding Transfer`, `<div>
@@ -1899,16 +1914,128 @@ export const updateTransfer = asyncHandler(async (req, res) => {
 
 
   const updateTransfer = await Transfer.findByIdAndUpdate(
-      id,
-      {
-          $set: updateObj,
-      },
-      {
-          new: true,
-      }
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
   );
   return res
-      .status(200)
-      .json(new ApiResponse(200, updateTransfer, "Updated  Successfully"));
+    .status(200)
+    .json(new ApiResponse(200, updateTransfer, "Updated  Successfully"));
 });
+
+// =====================holiday controller=============
+export const createHoliday = asyncHandler(async(req, res) => {
+  try {
+
+    const { holidayName, startDate, endDate } = req.body;
+
+    const users = await User.find({});
+
+    //  Extract email addresses from the retrieved user 
+    const emailList = users.map(user => user.email);
+
+    for (const email of emailList) {
+      // await SendEmail(email);
+      await mailSender(email, `Regarding Holiday`, `<div>
+       <div>Holiday: ${holidayName}</div>
+       <div>Start Date: ${startDate}</div>
+       <div>endDate: ${endDate}</div>
+       </div>`);
+      console.log(`Email sent to ${email}`);
+    }
+
+    const holiday = await Holiday.create({ holidayName, startDate, endDate });
+
+
+    return res.status(200).json({
+      status: true,
+      message: 'Holiday created successfully',
+      data: holiday,
+    });
+
+
+
+  } catch (error) {
+    console.log("error ", error);
+
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+})
+
+export const getHoliday = asyncHandler(async(req, res) => {
+  try {
+
+    // Find notifications where the user ID is in the user array
+    const transfer = await Holiday.find({});
+
+
+    return res.status(200).json({
+      status: 200,
+      message: "tranfer fetched successfully",
+      data: transfer
+    });
+
+
+
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+})
+
+export const deleteHoliday = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await Holiday.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
+});
+
+export const updateHoliday = asyncHandler(async (req, res) => {
+  const { holidayName, startDate, endDate } = req.body;
+
+  const { id } = req.params;
+
+  let updateObj = removeUndefined({
+    holidayName, startDate, endDate
+  });
+
+  const users = await User.find({});
+
+  //  Extract email addresses from the retrieved user 
+  const emailList = users.map(user => user.email);
+
+  for (const email of emailList) {
+    // await SendEmail(email);
+    await mailSender(email, `Regarding Holiday`, `<div>
+     <div>Holiday: ${holidayName}</div>
+     <div>Start Date: ${startDate}</div>
+     <div>endDate: ${endDate}</div>
+     </div>`);
+    console.log(`Email sent to ${email}`);
+  }
+
+  const updateHoliday = await Holiday.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateHoliday, "Updated  Successfully"));
+});
+
 

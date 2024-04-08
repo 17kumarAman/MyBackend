@@ -61,7 +61,11 @@ import {
   createTransfer,
   getTransfer,
   updateTransfer,
-  deleteTransfer
+  deleteTransfer,
+  createHoliday,
+  getHoliday,
+  deleteHoliday,
+  updateHoliday
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -156,6 +160,11 @@ router.post('/createTransfer',createTransfer);
 router.get('/getTransfer', getTransfer);
 router.delete("/deleteTransfer/:id",deleteTransfer);
 router.put("/updateTransfer/:id",updateTransfer);
+
+router.post('/createHoliday',createHoliday);
+router.get('/getHoliday', getHoliday);
+router.delete("/deleteHoliday/:id",deleteHoliday);
+router.put("/updateHoliday/:id",updateHoliday);
 
 
 export default router;

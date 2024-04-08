@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const mySchema = new mongoose.Schema({
     admin: String,
     holidayName: String,
-    holidayDate: String
+    startDate: String,
+    endDate:String
 });
 
 const Holiday = mongoose.model('Holiday', mySchema);

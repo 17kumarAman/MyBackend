@@ -3,20 +3,23 @@ const mySchema = new mongoose.Schema({
     Employee: {
         type: String,
     },
-    Name: {
+    designation: {
         type: String
     },
     user: {
         type: mongoose.Types.ObjectId,
         ref: "user"
     },
-    amount:{
-        type:Number
+    department:{
+        type:String
+    },
+    product:{
+        type:String
     },
     purchaseDate: {
         type: String,
     },
-    supportedDate:{
+    additonal:{
         type:String
     },
     description:{
