@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const clockSchema = new mongoose.Schema({
     Date: {
-        type: Date,
+        type: String,
     },
     user: {
         type: mongoose.Types.ObjectId,

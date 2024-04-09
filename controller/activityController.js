@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 import ActivityTracker from "../models/ActivityTracker/ActivityTracker.js";
-import Holiday from "../models/Holiday/Holiday.js";
-import User from "../models/User/User.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 
@@ -12,8 +10,9 @@ const startOfWeek = (date) => {
 
 export const postActivity = asyncHandler(async (req, res) => {
   const { clockIn, clockOut, late, overtime, total, message, date1 } = req.body;
+
   try {
-    if(clockOut===0 || clockOut==='0')
+    if(clockOut === 0 || clockOut==='0')
     {
       let newActivity=new ActivityTracker({
         user: req.user, date: new Date().getTime(), date1, clockIn, clockOut, late, overtime, total, message
@@ -27,8 +26,7 @@ export const postActivity = asyncHandler(async (req, res) => {
     }
     else
     {
-      let id=await ActivityTracker.findOne({"user._id": req.user._id, date1 });
-      console.log(id);
+      let id= await ActivityTracker.findOne({"user._id": req.user._id, date1 });
       await ActivityTracker.findByIdAndDelete(id._id);
       return res.json({
         success: true,

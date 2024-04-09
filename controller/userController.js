@@ -586,17 +586,16 @@ export const deleteUsers = asyncHandler(async (req, res) => {
 
 //! check this 
 export const getActiveUsers = asyncHandler(async (req, res) => {
-  // Get the timestamp for 12 hours ago
+
   const twelveHoursAgo = new Date();
   twelveHoursAgo.setHours(twelveHoursAgo.getHours() - 12);
 
-  // Query for active users who have clocked in within the past 12 hours
   const activeUsers = await ActivityTracker.find({
     clockOut: '0',
-    clockIn: { $gte: twelveHoursAgo.getTime() } // Filter for clockIn time greater than or equal to twelve hours ago
+    clockIn: { $gte: twelveHoursAgo.getTime() } 
   });
 
-  console.log("ac ",activeUsers);
+  console.log("active users  ",activeUsers);
 
   return res.status(200).json(new ApiResponse(200, activeUsers, "Active users fetched successfully"));
 });

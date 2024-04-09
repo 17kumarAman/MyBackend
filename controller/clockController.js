@@ -6,11 +6,11 @@ export const createClock = async(req ,res)=>{
 
      const {  clockInDetail , clockOutDetail , date ,breakTime} = req.body;
 
+     console.log("cc ",date);
+
       const {userId} = req.params;
 
       const clockDetails = await Clock.create({Date:date , clockIn:clockInDetail , clockOut:clockOutDetail ,user: userId , breakTime:breakTime});
-
-       console.log('clokde ',clockDetails);
 
        return res.status(200).json({
         status:true ,
@@ -32,19 +32,13 @@ export const getClockByUserDate = async (req, res) => {
         const { date } = req.body;
         const { userId } = req.params;
 
-        
-        const searchDateUTC = new Date(date);
-        searchDateUTC.setHours(0, 0, 0, 0); // Reset time to midnight
-        const searchDateEndUTC = new Date(searchDateUTC.getTime() + 24 * 60 * 60 * 1000); // Next day's midnight
+        console.log('date ',date , userId);
         
         const clockEntries = await Clock.findOne({
             user: userId,
-            Date: { $gte: searchDateUTC, $lt: searchDateEndUTC }
-        }).select('clockIn clockOut breakTime');
-        
-        
-
-
+            Date: date ,
+        }).select('clockIn clockOut breakTime').populate("user");
+      
 
         return res.status(200).json({
             status: true,
@@ -60,73 +54,54 @@ export const getClockByUserDate = async (req, res) => {
     }
 };
 
-function getMonthDates(monthNumber) {
-    console.log("monthNumber ",monthNumber);
-    const today = new Date();
-    const year = today.getFullYear();
-  
-    // Create a new Date object for the desired month (0 for January, 11 for December)
-    const monthStart = new Date(year, monthNumber-1, 1);
-  
-    // Get the last day of the month by setting the date to 0 and letting it roll over
-    const monthEnd = new Date(year, monthNumber, 0);
-  
-    // Format the dates in yy-dd-mm format
-    const formattedStart = `${year.toString().slice(-2)}-${monthStart.getDate().toString().padStart(2, '0')}-${(monthNumber + 1).toString().padStart(2, '0')}`;
-    const formattedEnd = `${year.toString().slice(-2)}-${monthEnd.getDate().toString().padStart(2, '0')}-${(monthNumber + 1).toString().padStart(2, '0')}`;
-  
-    return {
-      startDate: formattedStart,
-      endDate: formattedEnd
-    };
-  }
-
-
 
 
 export const getAttendanceDetails = async (req, res) => {
-    try {
-      const { type, month, userId } = req.body;
+  
+   const {type ,date , month,userId} = req.body;
 
-       if(type === "monthly"){
-
-          if(month){
-            let subMonth = month.substring(5, 7); 
-            let final ;
-            if(subMonth[0] == '0'){
-               final = subMonth.slice(1);
-               }
-               
-            const monthData = getMonthDates(final-1); 
-
-            console.log("Start date:", monthData.startDate);  
-            console.log("End date:", monthData.endDate); 
-
-            const employdata = await Clock.find({user: userId});
-
-            console.log("ee ",employdata);
-
-            
-          }
+    console.log("type ",type ,"date ",date , "month ",month , "USERiD ",userId);
 
 
+     if(type === "monthly"){
 
-          else {
-            console.log("month not available");
+        if(userId){
 
-          }
+           console.log('month ',month);
+         
+           const startDate = new Date(`2024-${month}-01`);
+           const formattedStartDate = startDate.toLocaleDateString("en-GB", {
+               day: '2-digit',
+               month: '2-digit',
+               year: '2-digit'
+           });
+         
+          // Get the last day of the month
+const lastDay = new Date(2024, month, 0).getDate();
 
-       }
+// Construct the endDate using the last day of the month
+const endDate = new Date(2024, month - 1, lastDay);
 
-    
-    
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: false,
-        message: "Internal server error",
-      });
-    }
+// Format the endDate
+const formattedEndDate = endDate.toLocaleDateString("en-GB", {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit'
+});
+           console.log("start ",formattedStartDate , "end ",formattedEndDate);
+
+           const userAttendance = await Clock.find({
+            user: userId,
+            Date: { $gte: formattedStartDate, $lte: formattedEndDate }
+        }).populate('user'); 
+
+        console.log('user deta ',userAttendance);
+
+        }
+       
+
+     }
+
   };
   
 
