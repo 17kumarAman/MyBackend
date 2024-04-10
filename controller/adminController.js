@@ -16,6 +16,7 @@ import Trainer from "../models/Trainer/Trainer.js";
 import TrainingList from "../models/TrainingList/TrainingList.js";
 import Holiday from "../models/Holiday/Holiday.js";
 import Transfer from "../models/Transfer/tranfer.js";
+import Trip from "../models/Trip/Trip.js";
 import { createTransport } from "nodemailer";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
@@ -1533,7 +1534,7 @@ export const postPromotion = asyncHandler(async (req, res) => {
   let info = await transporter.sendMail({
     from: 'Kushel Digi Solutions" <info@kusheldigi.com>',
     to: `${users1.email}`,
-    subject: "Regarding Resignation",
+    subject: "Regarding Promotion",
     html: `<div>
       <div>Employee: ${Employee}</div>
       <div>Designation: ${Designation}</div>
@@ -1595,14 +1596,18 @@ export const updatePromotion = asyncHandler(async (req, res) => {
   let info = await transporter.sendMail({
     from: 'Kushel Digi Solutions" <info@kusheldigi.com>',
     to: `${users1.email}`,
-    subject: "Regarding Resignation",
+    subject: "Regarding Promotion",
     html: `<div>
       <div>Employee: ${Employee}</div>
-      <div>Notice Date: ${noticeDate}</div>
-      <div>Resignation Date: ${resignationDate}</div>
+      <div>Designation: ${Designation}</div>
+      <div>title: ${title}</div>
+      <div>Promotion Date: ${promotionDate}</div>
       <div>Description: ${description}</div>
       </div>`
   });
+
+
+  
 
   console.log(`mail send to ${users1}`);
 
@@ -1928,7 +1933,7 @@ export const updateTransfer = asyncHandler(async (req, res) => {
 });
 
 // =====================holiday controller=============
-export const createHoliday = asyncHandler(async(req, res) => {
+export const createHoliday = asyncHandler(async (req, res) => {
   try {
 
     const { holidayName, startDate, endDate } = req.body;
@@ -1969,7 +1974,7 @@ export const createHoliday = asyncHandler(async(req, res) => {
   }
 })
 
-export const getHoliday = asyncHandler(async(req, res) => {
+export const getHoliday = asyncHandler(async (req, res) => {
   try {
 
     // Find notifications where the user ID is in the user array
@@ -2038,4 +2043,109 @@ export const updateHoliday = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updateHoliday, "Updated  Successfully"));
 });
 
+// ============================== trip controller==================
+
+export const createTrip = asyncHandler(async (req, res) => {
+  try {
+
+    const { Employee, startDate, endDate, purpose, country, description } = req.body;
+
+    const userDetail = await User.findOne({ fullName: Employee });
+
+    await mailSender(userDetail.email, `Regarding Trip`, `<div>
+       <div>Employee: ${Employee}</div>
+       <div>StartDate: ${startDate}</div>
+       <div>EndDate: ${endDate}</div>
+       <div>Purpose: ${purpose}</div>
+       <div>Country: ${country}</div>
+       <div>Description: ${description}</div>
+       </div>`);
+
+
+    const tranferDetail = await Trip.create({ Employee, startDate, endDate, purpose, country, description });
+
+
+    return res.status(200).json({
+      status: true,
+      message: 'Trip created successfully',
+      data: tranferDetail,
+    });
+
+
+
+  } catch (error) {
+    console.log("error ", error);
+
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+})
+
+export const getTrip = asyncHandler(async (req, res) => {
+  try {
+
+    // Find notifications where the user ID is in the user array
+    const transfer = await Trip.find();
+
+
+    return res.status(200).json({
+      status: 200,
+      message: "Trip fetched successfully",
+      data: transfer
+    });
+
+
+
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+})
+
+export const deleteTrip = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await Trip.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
+});
+
+export const updateTrip = asyncHandler(async (req, res) => {
+  const { Employee, startDate, endDate, purpose, country, description } = req.body;
+
+  const { id } = req.params;
+
+  const userDetail = await User.findOne({ fullName: Employee });
+
+  let updateObj = removeUndefined({
+    Employee, startDate, endDate, purpose, country, description
+  });
+
+  await mailSender(userDetail.email, `Regarding Trip`, `<div>
+  <div>Employee: ${Employee}</div>
+  <div>StartDate: ${startDate}</div>
+  <div>EndDate: ${endDate}</div>
+  <div>Purpose: ${purpose}</div>
+  <div>Country: ${country}</div>
+  <div>Description: ${description}</div>
+  </div>`);
+
+
+  const updateTransfer = await Trip.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateTransfer, "Updated  Successfully"));
+});
 
