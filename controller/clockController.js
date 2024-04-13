@@ -8,6 +8,7 @@ export const createClock = async(req ,res)=>{
      const {  clockInDetail , clockOutDetail , date ,breakTime} = req.body;
 
       const {userId} = req.params;
+      console.log("userId ",userId);
 
       let overTime = "00";
 
@@ -20,6 +21,7 @@ export const createClock = async(req ,res)=>{
        })
 
     } catch(error){
+      console.log('errors ',error);
         return res.status(500).json({
             status:500 , 
             message:"Internal server error "

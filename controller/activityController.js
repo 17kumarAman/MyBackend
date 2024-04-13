@@ -27,6 +27,7 @@ export const postActivity = asyncHandler(async (req, res) => {
     else
     {
       let id= await ActivityTracker.findOne({"user._id": req.user._id, date1 });
+      console.log("idd ",id , date1);
       await ActivityTracker.findByIdAndDelete(id._id);
       return res.json({
         success: true,
