@@ -26,6 +26,7 @@ import { SendEmail } from "../utils/SendEmail.js";
 import bcrypt from "bcryptjs";
 import { removeUndefined } from "../utils/util.js";
 import { mailSender } from "../utils/SendMail2.js";
+import Lead from "../models/Lead/Lead.js";
 
 
 export const getAdmins = asyncHandler(async (req, res) => {
@@ -1607,7 +1608,7 @@ export const updatePromotion = asyncHandler(async (req, res) => {
   });
 
 
-  
+
 
   console.log(`mail send to ${users1}`);
 
@@ -2149,3 +2150,83 @@ export const updateTrip = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updateTransfer, "Updated  Successfully"));
 });
 
+// ============= lead backend start==========
+
+export const createLeads = asyncHandler(async (req, res) => {
+  try {
+
+    const { } = req.body;
+    const tranferDetail = await Lead.create({});
+
+    return res.status(200).json({
+      status: true,
+      message: 'Lead created successfully',
+      data: tranferDetail,
+    });
+
+  } catch (error) {
+    console.log("error ", error);
+
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+})
+
+export const getLeads = asyncHandler(async (req, res) => {
+  try {
+
+    // Find notifications where the user ID is in the user array
+    const transfer = await Lead.find();
+
+
+    return res.status(200).json({
+      status: 200,
+      message: "Lead fetched successfully",
+      data: transfer
+    });
+
+
+
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+})
+
+export const deleteLeads = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await Lead.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
+});
+
+export const updateLeads = asyncHandler(async (req, res) => {
+  const {} = req.body;
+
+  const { id } = req.params;
+
+  // const userDetail = await User.findOne({ fullName: Employee });
+
+  let updateObj = removeUndefined({});
+
+  
+
+
+  const updateTransfer = await Trip.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateTransfer, "Updated  Successfully"));
+});

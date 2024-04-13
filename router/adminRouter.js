@@ -69,7 +69,11 @@ import {
   createTrip,
   getTrip,
   deleteTrip,
-  updateTrip
+  updateTrip,
+  getLeads,
+  createLeads,
+  updateLeads,
+  deleteLeads
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -174,6 +178,11 @@ router.post('/createTrip',createTrip);
 router.get('/getTrip', getTrip);
 router.delete("/deleteTrip/:id",deleteTrip);
 router.put("/updateTrip/:id",updateTrip);
+
+router.post('/createTrip',createLeads);
+router.get('/getTrip', getLeads);
+router.delete("/deleteTrip/:id",deleteLeads);
+router.put("/updateTrip/:id",updateLeads);
 
 
 export default router;
