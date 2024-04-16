@@ -117,3 +117,15 @@ export const postImage = async(req ,res)=>{
     })
 
 }
+
+export const deleteLeads = async (req, res) => {
+    const { id } = req.params;
+  
+    const data = await Lead.findByIdAndDelete(id);
+
+    return{
+      data:data,
+      status:true,
+      message:"delete successfully"
+    }
+  }
