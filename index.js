@@ -15,6 +15,7 @@ import chatRouter from "./router/chatRouter.js";
 import notification from "./router/notification.js"
 import clock from "./router/clockRouter.js"
 import award from "./router/awardRouter.js"
+import lead from "./router/leadRouter.js"
 
 // import trainer from "./router/TrainerRouter.js"
 // import trainer from "./router/trainerRouter.js";
@@ -78,6 +79,7 @@ app.use("/chat", chatRouter);
 app.use("/notification", notification);
 app.use("/clock", clock);
 app.use("/award" ,award);
+app.use("/lead" , lead);
 // app.use("/tranfer" , tranfer);
 // app.use("/trainer",trainer);
 

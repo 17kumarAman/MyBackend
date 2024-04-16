@@ -1,30 +1,36 @@
 import mongoose from "mongoose";
 
 const mySchema = new mongoose.Schema({
-    user: {
+    LeadOwner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User' // Reference to the User model
+      ref: 'User'
     },
-    leadType: {
-      type: Object,
-      default: {}
-    },
-    from: String,
-    to: String,
-    days: String,
-    createBy: String,
-    appliedOn:{
-      type: Date ,
-      default: Date.now()
-    },
-    status: {
-      type: String,
-      default: ""
-    },
-    ts: {
-      type: String,
-      default: new Date().getTime()
-    }
+    Company: String,
+    FirstName: String,
+    LastName: String,
+    Title: String,
+    Email: String,
+    Phone: Number,
+    Fax: String,
+    Mobile:  Number,
+    Website:  String,
+    LeadSource:  String,
+    NoOfEmployee:  String,
+    Industry:  String,
+    LeadStatus:  String,
+    AnnualRevenue:  String,
+    Rating:  String,
+    EmailOptOut:  String,
+    SkypeID:  String,
+    SecondaryEmail:  String,
+    Twitter:  String,
+     Street:String ,
+     City:String ,
+     State:String ,
+     ZipCode:String ,
+     Country:String ,
+     DescriptionInfo:String ,
+     image:String
   });
 
   const Lead = mongoose.model("Lead", mySchema);

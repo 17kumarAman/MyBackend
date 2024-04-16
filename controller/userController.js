@@ -368,8 +368,6 @@ export const updateProfile = asyncHandler(async (req, res) => {
 export const updateProfileImage = asyncHandler(async (req, res) => {
   try {
     const {id} = req.params;
-
-  
  
     const {image}  = req.files;
 
