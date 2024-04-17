@@ -84,7 +84,8 @@ export const createLead = async(req ,res)=>{
 }
 
 
-export const getAllLead = async({id,query, page, perPage})=>{
+export const getAllLead = async({id,query, page, perPage , userId})=>{
+
     let and = [];
     if (id && id !== "" && id !== "undefined") {
         and.push({ _id: id });
@@ -97,7 +98,31 @@ export const getAllLead = async({id,query, page, perPage})=>{
         and.push({});
     }
 
-    // const count = await User.count({ $and: and });
+    let data;
+    if (page && page !== "" && page !== "undefined") {
+        data = await User.find({ $and: and }).skip((page - 1) * perPage).limit(perPage);
+    }
+    else {
+        // data = await Lead.find({ $and: and }).populate("LeadOwner")
+        data = await Lead.find({LeadOwner: userId}).populate("LeadOwner");
+    }
+    return { status: true, data };
+
+}
+
+export const getAllLead2 = async({id,query, page, perPage })=>{
+
+    let and = [];
+    if (id && id !== "" && id !== "undefined") {
+        and.push({ _id: id });
+    }
+    if (query && query !== "" && query !== "undefined") {
+        console.log(query);
+        and.push({ name: { $regex: query, $options: "i" } });
+    }
+    if (and.length === 0) {
+        and.push({});
+    }
 
     let data;
     if (page && page !== "" && page !== "undefined") {
@@ -108,8 +133,8 @@ export const getAllLead = async({id,query, page, perPage})=>{
     }
     return { status: true, data };
 
-        // const allLead = await Lead.find({}).populate("LeadOwner");  
 }
+
 
 export const postImage = async(req ,res)=>{
 
@@ -136,3 +161,86 @@ export const deleteLeads = async (req, res) => {
       message:"delete successfully"
     }
   }
+  export const editLead = async (req, res) => {
+    try {
+        const { 
+            LeadOwner,
+            image,
+            Company,
+            FirstName,
+            LastName,
+            Title,
+            Email,
+            Phone,
+            Fax,
+            Mobile,
+            Website,
+            LeadSource,
+            NoOfEmployee,
+            Industry,
+            LeadStatus,
+            AnnualRevenue,
+            Rating,
+            EmailOptOut,
+            SkypeID,
+            SecondaryEmail,
+            Twitter,
+            Street,
+            City,
+            State,
+            ZipCode,
+            Country,
+            DescriptionInfo
+        } = req.body;
+
+        // Ensure id is passed as a parameter
+        const id = req.params.id;
+
+        console.log("id ", id);
+
+        // Update lead details
+        const leadDetail = await Lead.findByIdAndUpdate(id, {
+            LeadOwner,
+            image,
+            Company,
+            FirstName,
+            LastName,
+            Title,
+            Email,
+            Phone,
+            Fax,
+            Mobile,
+            Website,
+            LeadSource,
+            NoOfEmployee,
+            Industry,
+            LeadStatus,
+            AnnualRevenue,
+            Rating,
+            EmailOptOut,
+            SkypeID,
+            SecondaryEmail,
+            Twitter,
+            Street,
+            City,
+            State,
+            ZipCode,
+            Country,
+            DescriptionInfo
+        }, { new: true });
+
+        console.log("lead ", leadDetail);
+
+        return res.status(200).json({
+            status: true,
+            message: "Successfully updated",
+            data: leadDetail
+        });
+    } catch (error) {
+        console.log("error ", error);
+        return res.status(500).json({
+            message: "Internal server error",
+            error: error.message // Sending specific error message to client
+        });
+    }
+};
