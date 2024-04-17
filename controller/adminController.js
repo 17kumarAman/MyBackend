@@ -2206,18 +2206,68 @@ export const deleteLeads = asyncHandler(async (req, res) => {
 });
 
 export const updateLeads = asyncHandler(async (req, res) => {
-  const {} = req.body;
+  const { LeadOwner,
+  Company,
+  FirstName,
+  LastName,
+  Title,
+  Email,
+  Phone,
+  Fax,
+  Mobile,
+  Website,
+  LeadSource,
+  NoOfEmployee,
+  Industry,
+  LeadStatus,
+  AnnualRevenue,
+  Rating,
+  EmailOptOut,
+  SkypeID,
+  SecondaryEmail,
+  Twitter,
+   Street ,
+   City ,
+   State ,
+   ZipCode ,
+   Country ,
+   DescriptionInfo} = req.body;
 
   const { id } = req.params;
 
   // const userDetail = await User.findOne({ fullName: Employee });
 
-  let updateObj = removeUndefined({});
+  let updateObj = removeUndefined({ LeadOwner,
+  Company,
+  FirstName,
+  LastName,
+  Title,
+  Email,
+  Phone,
+  Fax,
+  Mobile,
+  Website,
+  LeadSource,
+  NoOfEmployee,
+  Industry,
+  LeadStatus,
+  AnnualRevenue,
+  Rating,
+  EmailOptOut,
+  SkypeID,
+  SecondaryEmail,
+  Twitter,
+   Street ,
+   City ,
+   State ,
+   ZipCode ,
+   Country ,
+   DescriptionInfo});
 
   
 
 
-  const updateTransfer = await Trip.findByIdAndUpdate(
+  const updateLead = await Lead.findByIdAndUpdate(
     id,
     {
       $set: updateObj,
@@ -2228,5 +2278,34 @@ export const updateLeads = asyncHandler(async (req, res) => {
   );
   return res
     .status(200)
-    .json(new ApiResponse(200, updateTransfer, "Updated  Successfully"));
+    .json(new ApiResponse(200, updateLead, "Updated  Successfully"));
 });
+
+export const updateLeadImage = asyncHandler(async (req, res) => {
+  try {
+    const {id} = req.params;
+ 
+    const {image}  = req.files;
+
+      const details = await uploadToCloudinary(image.tempFilePath);
+
+    const updateLead = await Lead.findByIdAndUpdate(
+      id,
+      { profileImage: details.secure_url }, // Assuming 'profileImage' is the field in the User schema
+      { new: true } // To return the updated document after the update operation
+    );
+
+           
+     console.log("a ",updateLead);
+  
+    return res
+      .status(200)
+      .json(new ApiResponse(200, updateLead, "Updated Lead image Details Successfully"));
+  } catch (error) {
+    console.log("error is ", error.message);
+    throw new ApiError(error.status || 500, "internal server error");
+  }
+});
+
+
+

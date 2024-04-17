@@ -84,24 +84,31 @@ export const createLead = async(req ,res)=>{
 }
 
 
-export const getAllLead = async(req ,res)=>{
-    try{
-
-        const allLead = await Lead.find({}).populate("LeadOwner");
-
-        return res.status(200).json({
-            status:true,
-            data: allLead
-        })
-
-    } catch(error){
-        console.log("error ",error);
-        return res.status(500).json({
-           status:false,
-           message:"Internal server error "
-        })
-           
+export const getAllLead = async({id,query, page, perPage})=>{
+    let and = [];
+    if (id && id !== "" && id !== "undefined") {
+        and.push({ _id: id });
     }
+    if (query && query !== "" && query !== "undefined") {
+        console.log(query);
+        and.push({ name: { $regex: query, $options: "i" } });
+    }
+    if (and.length === 0) {
+        and.push({});
+    }
+
+    // const count = await User.count({ $and: and });
+
+    let data;
+    if (page && page !== "" && page !== "undefined") {
+        data = await User.find({ $and: and }).skip((page - 1) * perPage).limit(perPage);
+    }
+    else {
+        data = await Lead.find({ $and: and }).populate("LeadOwner")
+    }
+    return { status: true, data };
+
+        // const allLead = await Lead.find({}).populate("LeadOwner");  
 }
 
 export const postImage = async(req ,res)=>{
