@@ -2,89 +2,89 @@ import Lead from "../models/Lead/Lead.js"
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 
-export const createLead = async(req ,res)=>{
-    try{
-
-        
-     const { 
-        LeadOwner,
-        image,
-      Company,
-      FirstName,
-      LastName,
-      Title,
-      Email,
-      Phone,
-      Fax,
-      Mobile,
-      Website,
-      LeadSource,
-      NoOfEmployee,
-      Industry,
-      LeadStatus,
-      AnnualRevenue,
-      Rating,
-      EmailOptOut,
-      SkypeID,
-      SecondaryEmail,
-      Twitter,
-       Street ,
-       City ,
-       State ,
-       ZipCode ,
-       Country ,
-       DescriptionInfo } = req.body;
+export const createLead = async (req, res) => {
+    try {
 
 
-    
-     const leadDetail = await Lead.create({
-         LeadOwner:LeadOwner,
-        Company:Company,
-        FirstName,
-        LastName,
-        Title,
-        Email,
-        Phone,
-        Fax,
-        Mobile,
-        Website,
-        LeadSource,
-        NoOfEmployee,
-        Industry,
-        LeadStatus,
-        AnnualRevenue,
-        Rating,
-        EmailOptOut,
-        SkypeID,
-        SecondaryEmail,
-        Twitter,
-         Street ,
-         City ,
-         State ,
-         ZipCode ,
-         Country ,
-         DescriptionInfo , 
-         image
+        const {
+            LeadOwner,
+            image,
+            Company,
+            FirstName,
+            LastName,
+            Title,
+            Email,
+            Phone,
+            Fax,
+            Mobile,
+            Website,
+            LeadSource,
+            NoOfEmployee,
+            Industry,
+            LeadStatus,
+            AnnualRevenue,
+            Rating,
+            EmailOptOut,
+            SkypeID,
+            SecondaryEmail,
+            Twitter,
+            Street,
+            City,
+            State,
+            ZipCode,
+            Country,
+            DescriptionInfo } = req.body;
+
+
+
+        const leadDetail = await Lead.create({
+            LeadOwner: LeadOwner,
+            Company: Company,
+            FirstName,
+            LastName,
+            Title,
+            Email,
+            Phone,
+            Fax,
+            Mobile,
+            Website,
+            LeadSource,
+            NoOfEmployee,
+            Industry,
+            LeadStatus,
+            AnnualRevenue,
+            Rating,
+            EmailOptOut,
+            SkypeID,
+            SecondaryEmail,
+            Twitter,
+            Street,
+            City,
+            State,
+            ZipCode,
+            Country,
+            DescriptionInfo,
+            image
         });
 
 
-         return res.status(200).json({
-            status:true ,
-            message:"Successfuly created ",
-            data:leadDetail
-         })
+        return res.status(200).json({
+            status: true,
+            message: "Successfuly created ",
+            data: leadDetail
+        })
 
-    } catch(error){
- console.log("error ",error);
- return res.status(500).json({
-    status:false,
-    message:"Internal server error "
- })
-    } 
+    } catch (error) {
+        console.log("error ", error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error "
+        })
+    }
 }
 
 
-export const getAllLead = async({id,query, page, perPage , userId})=>{
+export const getAllLead = async ({ id, query, page, perPage, userId }) => {
 
     let and = [];
     if (id && id !== "" && id !== "undefined") {
@@ -104,13 +104,13 @@ export const getAllLead = async({id,query, page, perPage , userId})=>{
     }
     else {
         // data = await Lead.find({ $and: and }).populate("LeadOwner")
-        data = await Lead.find({LeadOwner: userId}).populate("LeadOwner");
+        data = await Lead.find({ LeadOwner: userId }).populate("LeadOwner");
     }
     return { status: true, data };
 
 }
 
-export const getAllLead2 = async({id,query, page, perPage })=>{
+export const getAllLead2 = async ({ id, query, page, perPage }) => {
 
     let and = [];
     if (id && id !== "" && id !== "undefined") {
@@ -136,15 +136,15 @@ export const getAllLead2 = async({id,query, page, perPage })=>{
 }
 
 
-export const postImage = async(req ,res)=>{
+export const postImage = async (req, res) => {
 
-    const {image}  = req.files;
- 
+    const { image } = req.files;
+
     const details = await uploadToCloudinary(image.tempFilePath);
-    console.log("detail ",details);
+    console.log("detail ", details);
 
     return res.status(200).json({
-        status:true ,
+        status: true,
         data: details?.secure_url
     })
 
@@ -152,18 +152,18 @@ export const postImage = async(req ,res)=>{
 
 export const deleteLeads = async (req, res) => {
     const { id } = req.params;
-  
+
     const data = await Lead.findByIdAndDelete(id);
 
-    return{
-      data:data,
-      status:true,
-      message:"delete successfully"
+    return {
+        data: data,
+        status: true,
+        message: "delete successfully"
     }
-  }
-  export const editLead = async (req, res) => {
+}
+export const editLead = async (req, res) => {
     try {
-        const { 
+        const {
             LeadOwner,
             image,
             Company,
