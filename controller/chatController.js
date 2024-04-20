@@ -11,8 +11,6 @@ export const getChats = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, data, "Successfully fetched all the chats"));
 });
 
-
-
 export const getChat = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const data = await Chat.findById(id);
@@ -159,9 +157,6 @@ export const postMessage = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-
 export const deleteChat = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await Chat.findByIdAndDelete(id);
@@ -170,11 +165,15 @@ export const deleteChat = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Chat Deleted Successfully"));
 });
 
-
-
 export const deleteChats = asyncHandler(async (req, res) => {
   await Chat.deleteMany();
   return res
     .status(200)
     .json(new ApiResponse(200, {}, "Chats Deleted Successfully"));
 });
+
+export const postChat = asyncHandler(async(req,res)=>{
+    const {name,chatDetails} = req.body;
+
+    
+})

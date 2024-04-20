@@ -1,4 +1,5 @@
 import Lead from "../models/Lead/Lead.js"
+import { asyncHandler } from "../utils/AsyncHandler.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 
@@ -244,3 +245,32 @@ export const editLead = async (req, res) => {
         });
     }
 };
+
+// ==============apis of lead things===============
+
+export const leadByeveryUser = asyncHandler(async()=>{
+    const {name,email} = req.body;
+    const leadBy = (await Lead.create({name,email})).populate("firstName");
+
+    return{
+        status:true,
+        message:"Lead by every user create successfully",
+        data:leadBy,
+        code:"404"
+    }
+})
+
+export const leadEditByUser = asyncHandler(async()=>{
+    const {name,email} = req.body;
+
+    console.log({name,email});
+
+    const leadBy = await Lead.findByIdAndUpdate({
+       name: req.body.name,
+       email: req.body.email
+    })
+    console.log(leadBy);
+});
+
+
+
