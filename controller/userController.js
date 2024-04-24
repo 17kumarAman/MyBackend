@@ -28,6 +28,19 @@ const generateRefreshToken = async (userId) => {
   }
 };
 
+ export const uploadImgToCloudinary = asyncHandler(async(req ,res)=>{
+
+  const {image}  = req.files;
+  
+   const details = await uploadToCloudinary(image.tempFilePath);
+
+   return res.status(200).json({
+    status:true , 
+    data: details.secure_url
+   })
+
+})
+
 export const RegisterUser = asyncHandler(async (req, res) => {
   const {
     fullName,

@@ -17,13 +17,16 @@ import {
   getUsers,
   getEmployeesByEmployee,
   DeleteUser , 
-  uploadDocuments
+  uploadDocuments , 
+  uploadImgToCloudinary
 } from "../controller/userController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
 const router = Router();
 
 router.route("/register").post(RegisterUser);
+
+router.route("/uploadToCloudinary").post(uploadImgToCloudinary);
 
 router.route("/login").post(login);
 
