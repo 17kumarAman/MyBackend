@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createLead ,getAllLead ,getAllLead2, postImage,deleteLeads , editLead} from "../controller/leadController.js"
+import {createLead ,getAllLead, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead} from "../controller/leadController.js"
 
 const router = Router();
 
@@ -18,4 +18,6 @@ router.post("/postImage", postImage);
 router.delete("/deleteLead/:id",deleteLeads);
 router.post("/editLead/:id" ,editLead );
 
+
+router.post("/updateLeadStatus/:id" , editLeadStatus);
 export default router;

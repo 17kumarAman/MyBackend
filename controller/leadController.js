@@ -162,6 +162,7 @@ export const deleteLeads = async (req, res) => {
         message: "delete successfully"
     }
 }
+
 export const editLead = async (req, res) => {
     try {
         const {
@@ -272,5 +273,31 @@ export const leadEditByUser = asyncHandler(async()=>{
     console.log(leadBy);
 });
 
+
+export const editLeadStatus = asyncHandler(async(req ,res)=>{
+   try{
+
+    const {LeadStatus} = req.body;
+    console.log("start ");
+
+    const {id} = req.params;
+    console.log("id ",id);
+     
+     console.log("ladstatus ",LeadStatus);
+
+     const lead = await Lead.findByIdAndUpdate(id, { LeadStatus: LeadStatus }, { new: true });
+
+     res.status(200).json({ message: "Lead status updated successfully", lead });
+
+   } catch(error){
+    console.log("error ",error);
+    return res.status(500).json({
+        status:false ,
+        message:"internal server error "
+    })
+   }
+
+        
+})
 
 
