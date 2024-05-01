@@ -30,7 +30,9 @@ const mySchema = new mongoose.Schema({
      ZipCode:String ,
      Country:String ,
      DescriptionInfo:String ,
-     image:String
+     image:String , 
+     Note: String,
+     NoteDate: Date,
   });
 
   const Lead = mongoose.model("Lead", mySchema);

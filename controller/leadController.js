@@ -278,16 +278,34 @@ export const editLeadStatus = asyncHandler(async(req ,res)=>{
    try{
 
     const {LeadStatus} = req.body;
-    console.log("start ");
 
     const {id} = req.params;
-    console.log("id ",id);
      
-     console.log("ladstatus ",LeadStatus);
-
      const lead = await Lead.findByIdAndUpdate(id, { LeadStatus: LeadStatus }, { new: true });
 
      res.status(200).json({ message: "Lead status updated successfully", lead });
+
+   } catch(error){
+    console.log("error ",error);
+    return res.status(500).json({
+        status:false ,
+        message:"internal server error "
+    })
+   }
+
+        
+})
+
+export const editLeadNote = asyncHandler(async(req ,res)=>{
+   try{
+
+    const {Note} = req.body;
+
+    const {id} = req.params;
+     
+     const lead = await Lead.findByIdAndUpdate(id, { Note: Note ,NoteDate: Date.now() }, { new: true });
+
+     res.status(200).json({ message: "Lead Note updated successfully", lead });
 
    } catch(error){
     console.log("error ",error);
