@@ -74,7 +74,11 @@ import {
   createLeads,
   updateLeads,
   deleteLeads,
-  updateLeadImage
+  updateLeadImage,
+  createInvoice,
+  getInvoice,
+  deleteInvoice,
+  updateInvoice
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -183,6 +187,12 @@ router.put("/updateTrip/:id",updateTrip);
 router.delete("/deleteLead/:id",deleteLeads);
 router.put("/updateLead/",updateLeads);
 router.post("/updateLead/:id",updateLeadImage);
+
+router.post("/createInvoice", createInvoice);
+router.get('/getInvoice', getInvoice);
+router.delete("/deleteInvoice/:id",deleteInvoice);
+router.put("/updateInvoice/:id",updateInvoice);
+
 
 
 

@@ -27,7 +27,7 @@ import bcrypt from "bcryptjs";
 import { removeUndefined } from "../utils/util.js";
 import { mailSender } from "../utils/SendMail2.js";
 import Lead from "../models/Lead/Lead.js";
-
+import Invoice from "../models/Invoice/Invoice.js";
 
 export const getAdmins = asyncHandler(async (req, res) => {
   const admin = await Admin.find({}).select("-password ");
@@ -2307,5 +2307,105 @@ export const updateLeadImage = asyncHandler(async (req, res) => {
   }
 });
 
+
+// ===================invoice backend=============
+
+export const createInvoice = async (req, res) => {
+  try {
+
+    const {InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note} = req.body;
+
+    
+
+
+    const createIn = await Invoice.create({InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note});
+
+
+    return res.status(200).json({
+      status: true,
+      message: 'Invoice created successfully',
+      data: createIn,
+    });
+
+
+
+  } catch (error) {
+    console.log("error ", error);
+
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+}
+
+export const getInvoice = async (req, res) => {
+  try {
+
+    // Find notifications where the user ID is in the user array
+    const transfer = await Invoice.find({});
+
+
+    return res.status(200).json({
+      status: 200,
+      message: "tranfer fetched successfully",
+      data: transfer
+    });
+
+
+
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+}
+
+export const deleteInvoice = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await Invoice.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
+});
+
+export const updateInvoice = asyncHandler(async (req, res) => {
+  const {InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note} = req.body;
+
+  const { id } = req.params;
+
+  // const userDetail = await User.findOne({ fullName: Employee });
+
+  let updateObj = removeUndefined({
+    InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note
+  });
+
+  
+  const updateInvoice = await Invoice.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateInvoice, "Updated  Successfully"));
+});
+
+export const getEveryUserInvoice = asyncHandler(async (req,res) =>{
+  const lens = await Invoice.find({
+    user:req.params.id
+  });
+
+  res.json({
+    data: lens,
+    status:true,
+    message:"successfully get everyUser"
+  })
+});
 
 
