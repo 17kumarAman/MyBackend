@@ -2295,9 +2295,7 @@ export const updateLeadImage = asyncHandler(async (req, res) => {
       { new: true } // To return the updated document after the update operation
     );
 
-           
-     console.log("a ",updateLead);
-  
+             
     return res
       .status(200)
       .json(new ApiResponse(200, updateLead, "Updated Lead image Details Successfully"));
@@ -2313,12 +2311,10 @@ export const updateLeadImage = asyncHandler(async (req, res) => {
 export const createInvoice = async (req, res) => {
   try {
 
-    const {InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note} = req.body;
-
-    
+    const {User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note} = req.body;
 
 
-    const createIn = await Invoice.create({InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note});
+    const createIn = await Invoice.create({User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note});
 
 
     return res.status(200).json({
@@ -2397,9 +2393,13 @@ export const updateInvoice = asyncHandler(async (req, res) => {
 });
 
 export const getEveryUserInvoice = asyncHandler(async (req,res) =>{
+
+  console.log("rq  ",req.params.id);
   const lens = await Invoice.find({
-    user:req.params.id
+    User:req.params.id
   });
+
+  console.log('lesn ',lens);
 
   res.json({
     data: lens,

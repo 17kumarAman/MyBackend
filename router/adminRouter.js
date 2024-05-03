@@ -78,7 +78,8 @@ import {
   createInvoice,
   getInvoice,
   deleteInvoice,
-  updateInvoice
+  updateInvoice,
+  getEveryUserInvoice
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -192,6 +193,7 @@ router.post("/createInvoice", createInvoice);
 router.get('/getInvoice', getInvoice);
 router.delete("/deleteInvoice/:id",deleteInvoice);
 router.put("/updateInvoice/:id",updateInvoice);
+router.get("/getEveryUserInvoice/:id" , getEveryUserInvoice);
 
 
 
