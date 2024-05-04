@@ -51,6 +51,29 @@ export const getNotification = async(req ,res)=>{
            // Find notifications where the user ID is in the user array
            const notifications = await Notification.find({ user: { $in: [userId] } }).populate("user");
 
+           return res.status(200).json({
+               status: 200,
+               message: "Notifications fetched successfully",
+               notifications: notifications
+           });
+
+         
+
+    } catch(error){
+        return res.status(500).json({
+            status:500 , 
+            message:"Internal server error "
+        })
+    }
+}
+
+export const getNotificationHR = async(req ,res)=>{
+    try{
+
+         const userDeatail = await User.findOne({fullName:"shubham gupta"});
+
+           // Find notifications where the user ID is in the user array
+           const notifications = await Notification.find({ user: { $in: [userDeatail?._id] } }).populate("user");
 
            return res.status(200).json({
                status: 200,

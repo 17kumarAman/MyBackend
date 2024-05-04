@@ -17,11 +17,10 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   });
 
 
-
   const saveLeave = await newLeave.save();
 
   await mailSender("pooja@kusheldigi.com" , "Regarding Leave" ,  `<div>
-  <div>from: ${from}</div>
+  <div>from: ${auth?.fullName}</div>
   <div>to: ${to}</div>
   <div>days: ${days}</div>
   <div>reason: ${reason}</div>

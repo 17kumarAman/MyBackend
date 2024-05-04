@@ -61,8 +61,8 @@ export const getClockByUserDate = async (req, res) => {
 // for compare dates 
 function compareDates(date1, date2) {
   // Split the date strings into arrays of [year, month, day]
-  const date1Parts = date1.split('/');
-  const date2Parts = date2.split('/');
+  const date1Parts = date1?.split('/');
+  const date2Parts = date2?.split('/');
 
   // Convert each part to integers for comparison
   const year1 = parseInt(date1Parts[2], 10);

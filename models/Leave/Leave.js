@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const mySchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User' // Reference to the User model
+    ref: 'User' 
   },
   leaveType: {
     type: Object,
