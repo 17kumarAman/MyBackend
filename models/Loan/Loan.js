@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 const mySchema = new mongoose.Schema({
     user: {
         type: mongoose.Types.ObjectId,
-        ref: "user"
+        ref: "User"
     },
     LoanOption:{
         type:String
@@ -10,10 +10,15 @@ const mySchema = new mongoose.Schema({
     title:{
         type:String
     },
-    type:String,
+    type:{
+        type:String , 
+    },
     loanAmount:{
         type:String
     },
+    reason:{
+        type:String,
+    }
     
 });
 
