@@ -16,10 +16,10 @@ const userSchema = new mongoose.Schema({
     required: false,
     set: (b) => (b === "" ? undefined : b),
   },
-  document:[{
+  document: [{
     name: String, // Name of the document
     url: String,  // URL of the document
-    require:false
+    require: false
   }],
 
   mobile: {
@@ -297,6 +297,13 @@ const userSchema = new mongoose.Schema({
     required: false,
     set: (yy) => (yy === "" ? undefined : yy),
   },
+  paySlipType: {
+    type: String,
+    default: "Monthly Payslip"
+  },
+  salary: {
+    type: String
+  }
 });
 
 userSchema.methods.generateAuthToken = function () {

@@ -79,7 +79,9 @@ import {
   getInvoice,
   deleteInvoice,
   updateInvoice,
-  getEveryUserInvoice
+  getEveryUserInvoice,
+  SetSallary,
+  getSallary
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -195,8 +197,9 @@ router.delete("/deleteInvoice/:id",deleteInvoice);
 router.put("/updateInvoice/:id",updateInvoice);
 router.get("/getEveryUserInvoice/:id" , getEveryUserInvoice);
 
+router.post("/createSallary",SetSallary);
 
-
+router.get("/getSallary",getSallary);
 
 
 export default router;

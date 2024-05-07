@@ -28,6 +28,7 @@ import { removeUndefined } from "../utils/util.js";
 import { mailSender } from "../utils/SendMail2.js";
 import Lead from "../models/Lead/Lead.js";
 import Invoice from "../models/Invoice/Invoice.js";
+import Salary from "../models/Salary/Salary.js";
 
 export const getAdmins = asyncHandler(async (req, res) => {
   const admin = await Admin.find({}).select("-password ");
@@ -2407,5 +2408,88 @@ export const getEveryUserInvoice = asyncHandler(async (req,res) =>{
     message:"successfully get everyUser"
   })
 });
+
+// =========================Employee salary api=================
+
+export const SetSallary = async (req, res) => {
+  try {
+
+    const {salary,paySlipType} = req.body;
+
+
+    const createSallary = await Salary.create({salary,paySlipType});
+
+
+    return res.status(200).json({
+      status: true,
+      message: 'salary created successfully',
+      data: createSallary,
+    });
+
+
+
+  } catch (error) {
+    console.log("error ", error);
+
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+}
+
+export const getSallary = async (req, res,) => {
+  try {
+
+    // Find notifications where the user ID is in the user array
+    const tosting = await Salary.find({}).populate("user")
+
+
+    return res.status(200).json({
+      status: 200,
+      message: "Sallary fetched successfully",
+      data: tosting
+    });
+
+
+
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+}
+
+export const updateSalary = asyncHandler(async (req, res) => {
+  const {salary,paySlipType} = req.body;
+
+  const { id } = req.params;
+
+  // const userDetail = await User.findOne({ fullName: Employee });
+
+  let updateObj = removeUndefined({
+    salary,paySlipType
+  });
+
+  
+  const updateInvoice = await Salary.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateInvoice, "Updated  Successfully"));
+});
+
+
+
+
+
 
 
