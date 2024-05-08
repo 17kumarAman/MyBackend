@@ -16,7 +16,6 @@ export const setUserNetSalary = async (id) => {
         // Find the user's salary
         const userSalary = await User.findOne({ _id: id });
         
-        console.log("usercom ",userComm , "uerlaoo ",userAllow , "loan ",userLoan , "useaslar" , userSalary , "id" , id);
         // Calculate total commission
         let totalComm = 0;
         if (userComm.length > 0) {
@@ -35,12 +34,8 @@ export const setUserNetSalary = async (id) => {
             totalLoan = userLoan.reduce((acc, curr) => acc + curr.loanAmount, 0);
         }
 
-         console.log("asar" , userSalary.salary , "total com " , totalComm , "allow ",totalAllow , "loan ",totalLoan);
-
         // Calculate net salary
         const netSalary = parseInt(userSalary.salary) + parseInt(totalComm) + parseInt(totalAllow) - parseInt(totalLoan);
-
-        console.log("netsalar ",netSalary);
 
          userSalary.netSalary = netSalary;
        await userSalary.save();

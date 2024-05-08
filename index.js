@@ -35,6 +35,7 @@ import cron from 'node-cron';
 import dotenv from "dotenv";
 import User from "./models/User/User.js";
 import ActivityTracker from "./models/ActivityTracker/ActivityTracker.js";
+import payslip from "./router/paySlipRouter.js";
 // import Trainer from "./models/Trainer/Trainer.js";
 
 dotenv.config();
@@ -90,6 +91,7 @@ app.use("/payroll" , payrollRouter);
 app.use("/attendance", attendanceRouter);
 app.use("/auth", authRouter);
 app.use("/system", systemRouter); 
+app.use("/payslip" , payslip);
 
 const task = cron.schedule('55 23 * * *', async () => {
 // const task = cron.schedule('* * * * *', async () => {
