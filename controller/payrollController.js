@@ -3,105 +3,105 @@ import Allowance from "../models/Allowance/Allowance.js";
 import Commission from "../models/Commission/Commission.js";
 import Loan from "../models/Loan/Loan.js";
 
-export const getAllUserPayroll = async(req ,res)=>{
-    try{
+export const getAllUserPayroll = async (req, res) => {
+    try {
 
-        const {id} = req.params;
+        const { id } = req.params;
 
-const userDetails = await User.findOne(
-    { _id: id }, // Your query condition
-    { paySlipType: 1, salary: 1, _id: 0 } 
-);
+        const userDetails = await User.findOne(
+            { _id: id }, // Your query condition
+            { paySlipType: 1, salary: 1, _id: 0 }
+        );
 
-const allowance =  await Allowance.find({user: id});
+        const allowance = await Allowance.find({ user: id });
 
- const commission = await Commission.find({user:id});
+        const commission = await Commission.find({ user: id });
 
-  const loan = await Loan.find({user:id});
+        const loan = await Loan.find({ user: id });
 
-  return res.status(200).json({
-    status:true ,
-    message:'Successfuly ',
-    data:{
-        allowance , commission , loan , userDetails
-    }
-  })
-         
+        return res.status(200).json({
+            status: true,
+            message: 'Successfuly ',
+            data: {
+                allowance, commission, loan, userDetails
+            }
+        })
 
-    } catch(error){
+
+    } catch (error) {
         console.log(error);
         return res.status(500).json({
-            status:false ,
-            message:"Internal server error "
+            status: false,
+            message: "Internal server error "
         })
     }
 }
 
-export const editUserSalary = async(req ,res)=>{
-    try{
+export const editUserSalary = async (req, res) => {
+    try {
 
-        const {id} = req.params;
-        console.log("idd ",id);
+        const { id } = req.params;
+        console.log("idd ", id);
 
-         const {paySlipType , salary} = req.body;
+        const { paySlipType, salary } = req.body;
 
-            if(!paySlipType && !salary){
-                return res.status(404).json({
-                    status:false ,
-                    message:"please send the data "
-                })
-            }
-
-            const userdetail  =  await User.findOne({_id:id});
-
-             userdetail.paySlipType = paySlipType;
-              userdetail.salary = salary;
-
-            await  userdetail.save();
-
-            return res.status(200).json({
-                status:true ,
-                message:"Successfully "
+        if (!paySlipType && !salary) {
+            return res.status(404).json({
+                status: false,
+                message: "please send the data "
             })
+        }
 
-    } catch(error){
+        const userdetail = await User.findOne({ _id: id });
+
+        userdetail.paySlipType = paySlipType;
+        userdetail.salary = salary;
+
+        await userdetail.save();
+
+        return res.status(200).json({
+            status: true,
+            message: "Successfully "
+        })
+
+    } catch (error) {
         console.log(error);
         return res.status(500).json({
-            status:false ,
-            message:"Internal server error "
+            status: false,
+            message: "Internal server error "
         })
     }
-    
+
 }
 
 // allowance 
-export const createAllowance = async(req ,res)=>{
-    try{
+export const createAllowance = async (req, res) => {
+    try {
 
-        const {id} = req.params;
+        const { id } = req.params;
 
-         const {allowanceOption , title , type , amount} = req.body;
+        const { allowanceOption, title, type, amount } = req.body;
 
-          if(!allowanceOption || !title || !type || !amount){
-                   return res.status(403).json({
-                    status:false ,
-                    message:"send the complete data"
-                   })
-          }
+        if (!allowanceOption || !title || !type || !amount) {
+            return res.status(403).json({
+                status: false,
+                message: "send the complete data"
+            })
+        }
 
-           const allowDetail = await Allowance.create({user:id , amount , allowanceOption , title , type});
+        const allowDetail = await Allowance.create({ user: id, amount, allowanceOption, title, type });
 
-           return res.status(200).json({
-            status:true ,
-            message:"Successfuly" , 
+        return res.status(200).json({
+            status: true,
+            message: "Successfuly",
             allowDetail
-           })
+        })
 
-    } catch(error){
+    } catch (error) {
         console.log(error);
         return res.status(500).json({
-            status:false ,
-            message:"Internal server error "
+            status: false,
+            message: "Internal server error "
         })
     }
 }
@@ -147,60 +147,60 @@ export const editAllowance = async (req, res) => {
     }
 };
 
-export const deleteAllowance = async(req ,res)=>{
+export const deleteAllowance = async (req, res) => {
 
-   try{
+    try {
 
-     //  this is alloance id 
-     const {allowanceId} = req.params;
+        //  this is alloance id 
+        const { allowanceId } = req.params;
 
-     const allowanceDetail = await Allowance.findByIdAndDelete({_id:allowanceId} , {new:true});
+        const allowanceDetail = await Allowance.findByIdAndDelete({ _id: allowanceId }, { new: true });
 
-     return res.status(200).json({
-       status:true ,
-       mesage:"successfuly "
-     })
+        return res.status(200).json({
+            status: true,
+            mesage: "successfuly "
+        })
 
-   } catch(error){
+    } catch (error) {
 
-    console.log("error ",error);
-    return res.status(500).json({
-        status: false,
-        message: "Internal server error"
-    });
-    
-   }
+        console.log("error ", error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        });
+
+    }
 
 }
 
 // this is for commision
-export const createCommission = async(req ,res)=>{
-    try{
+export const createCommission = async (req, res) => {
+    try {
 
-        const {id} = req.params;
+        const { id } = req.params;
 
-         const { title , type , amount} = req.body;
+        const { title, type, amount } = req.body;
 
-          if( !title || !type || !amount){
-                   return res.status(403).json({
-                    status:false ,
-                    message:"send the complete data"
-                   })
-          }
+        if (!title || !type || !amount) {
+            return res.status(403).json({
+                status: false,
+                message: "send the complete data"
+            })
+        }
 
-           const allowDetail = await Commission.create({user:id , amount , title , type});
+        const allowDetail = await Commission.create({ user: id, amount, title, type });
 
-           return res.status(200).json({
-            status:true ,
-            message:"Successfuly" , 
+        return res.status(200).json({
+            status: true,
+            message: "Successfuly",
             allowDetail
-           })
+        })
 
-    } catch(error){
+    } catch (error) {
         console.log(error);
         return res.status(500).json({
-            status:false ,
-            message:"Internal server error "
+            status: false,
+            message: "Internal server error "
         })
     }
 }
@@ -234,7 +234,7 @@ export const editCommission = async (req, res) => {
         return res.status(200).json({
             status: true,
             message: "Allowance updated successfully",
-            updatedAllowance: {title, type, amount }
+            updatedAllowance: { title, type, amount }
         });
     } catch (error) {
         console.log(error);
@@ -245,69 +245,69 @@ export const editCommission = async (req, res) => {
     }
 };
 
-export const deleteCommission = async(req ,res)=>{
+export const deleteCommission = async (req, res) => {
 
-   try{
+    try {
 
-     //  this is alloance id 
-     const {allowanceId} = req.params;
+        //  this is alloance id 
+        const { allowanceId } = req.params;
 
-     const allowanceDetail = await Commission.findByIdAndDelete({_id:allowanceId} , {new:true});
+        const allowanceDetail = await Commission.findByIdAndDelete({ _id: allowanceId }, { new: true });
 
-     return res.status(200).json({
-       status:true ,
-       mesage:"successfuly "
-     })
+        return res.status(200).json({
+            status: true,
+            mesage: "successfuly "
+        })
 
-   } catch(error){
+    } catch (error) {
 
-    console.log("error ",error);
-    return res.status(500).json({
-        status: false,
-        message: "Internal server error"
-    });
-    
-   }
+        console.log("error ", error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        });
+
+    }
 
 }
 
 
 // Loan 
 
-export const createLoan = async(req ,res)=>{
-    try{
+export const createLoan = async (req, res) => {
+    try {
 
-        const {id} = req.params;
+        const { id } = req.params;
 
-         const {LoanOption , title , type , loanAmount , reason} = req.body;
+        const { LoanOption, title, type, loanAmount, reason } = req.body;
 
-          if(!LoanOption || !title || !type || !loanAmount || !reason){
-                   return res.status(403).json({
-                    status:false ,
-                    message:"send the complete data"
-                   })
-          }
+        if (!LoanOption || !title || !type || !loanAmount || !reason) {
+            return res.status(403).json({
+                status: false,
+                message: "send the complete data"
+            })
+        }
 
-           const allowDetail = await Loan.create({user:id , loanAmount , LoanOption , title , type , reason});
+        const allowDetail = await Loan.create({ user: id, loanAmount, LoanOption, title, type, reason });
 
-           return res.status(200).json({
-            status:true ,
-            message:"Successfuly" , 
+        return res.status(200).json({
+            status: true,
+            message: "Successfuly",
             allowDetail
-           })
+        })
 
-    } catch(error){
+    } catch (error) {
         console.log(error);
         return res.status(500).json({
-            status:false ,
-            message:"Internal server error "
+            status: false,
+            message: "Internal server error "
         })
     }
 }
 
 export const editLoan = async (req, res) => {
     try {
-        const { allowanceId, LoanOption, title, type, loanAmount ,reason  } = req.body;
+        const { allowanceId, LoanOption, title, type, loanAmount, reason } = req.body;
 
         // Find the allowance details by ID
         const allowDetails = await Loan.findOne({ _id: allowanceId });
@@ -326,8 +326,8 @@ export const editLoan = async (req, res) => {
                 LoanOption: LoanOption,
                 title: title,
                 type: type,
-                loanAmount: loanAmount , 
-                reason:reason
+                loanAmount: loanAmount,
+                reason: reason
             },
             { new: true } // Return the updated document
         );
@@ -347,29 +347,29 @@ export const editLoan = async (req, res) => {
     }
 };
 
-export const deleteLoan = async(req ,res)=>{
+export const deleteLoan = async (req, res) => {
 
-   try{
+    try {
 
-     //  this is alloance id 
-     const {allowanceId} = req.params;
+        //  this is alloance id 
+        const { allowanceId } = req.params;
 
-     const allowanceDetail = await Loan.findByIdAndDelete({_id:allowanceId} , {new:true});
+        const allowanceDetail = await Loan.findByIdAndDelete({ _id: allowanceId }, { new: true });
 
-     return res.status(200).json({
-       status:true ,
-       mesage:"successfuly "
-     })
+        return res.status(200).json({
+            status: true,
+            mesage: "successfuly "
+        })
 
-   } catch(error){
+    } catch (error) {
 
-    console.log("error ",error);
-    return res.status(500).json({
-        status: false,
-        message: "Internal server error"
-    });
-    
-   }
+        console.log("error ", error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        });
+
+    }
 
 }
 
