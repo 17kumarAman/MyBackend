@@ -3,6 +3,57 @@ import Allowance from "../models/Allowance/Allowance.js";
 import Commission from "../models/Commission/Commission.js";
 import Loan from "../models/Loan/Loan.js";
 
+
+export const setUserNetSalary = async (id) => {
+    try {
+        // Find the user's commissions, allowances, and loans
+        const userComm = await Commission.find({ user: id });
+        const userAllow = await Allowance.find({ user: id });
+        const userLoan = await Loan.find({ user: id });
+
+
+        
+        // Find the user's salary
+        const userSalary = await User.findOne({ _id: id });
+        
+        console.log("usercom ",userComm , "uerlaoo ",userAllow , "loan ",userLoan , "useaslar" , userSalary , "id" , id);
+        // Calculate total commission
+        let totalComm = 0;
+        if (userComm.length > 0) {
+            totalComm = userComm.reduce((acc, curr) => acc + curr.amount, 0);
+        }
+
+        // Calculate total allowance
+        let totalAllow = 0;
+        if (userAllow.length > 0) {
+            totalAllow = userAllow.reduce((acc, curr) => acc + curr.amount, 0);
+        }
+
+        // Calculate total loan
+        let totalLoan = 0;
+        if (userLoan.length > 0) {
+            totalLoan = userLoan.reduce((acc, curr) => acc + curr.loanAmount, 0);
+        }
+
+         console.log("asar" , userSalary.salary , "total com " , totalComm , "allow ",totalAllow , "loan ",totalLoan);
+
+        // Calculate net salary
+        const netSalary = parseInt(userSalary.salary) + parseInt(totalComm) + parseInt(totalAllow) - parseInt(totalLoan);
+
+        console.log("netsalar ",netSalary);
+
+         userSalary.netSalary = netSalary;
+       await userSalary.save();
+       
+       return ;
+
+    } catch (error) {
+        console.error("Error in calculating net salary:", error);
+        throw error;
+    }
+};
+
+
 export const getAllUserPayroll = async (req, res) => {
     try {
 
@@ -10,7 +61,7 @@ export const getAllUserPayroll = async (req, res) => {
 
         const userDetails = await User.findOne(
             { _id: id }, // Your query condition
-            { paySlipType: 1, salary: 1, _id: 0 }
+            { paySlipType: 1, salary: 1,  _id: 0 }
         );
 
         const allowance = await Allowance.find({ user: id });
@@ -41,7 +92,6 @@ export const editUserSalary = async (req, res) => {
     try {
 
         const { id } = req.params;
-        console.log("idd ", id);
 
         const { paySlipType, salary } = req.body;
 
@@ -53,11 +103,15 @@ export const editUserSalary = async (req, res) => {
         }
 
         const userdetail = await User.findOne({ _id: id });
+         
+      
 
         userdetail.paySlipType = paySlipType;
         userdetail.salary = salary;
 
         await userdetail.save();
+
+        setUserNetSalary(id);
 
         return res.status(200).json({
             status: true,
@@ -91,6 +145,8 @@ export const createAllowance = async (req, res) => {
 
         const allowDetail = await Allowance.create({ user: id, amount, allowanceOption, title, type });
 
+         setUserNetSalary(id);
+
         return res.status(200).json({
             status: true,
             message: "Successfuly",
@@ -109,6 +165,8 @@ export const createAllowance = async (req, res) => {
 export const editAllowance = async (req, res) => {
     try {
         const { allowanceId, allowanceOption, title, type, amount } = req.body;
+
+        const {id} = req.params;
 
         // Find the allowance details by ID
         const allowDetails = await Allowance.findOne({ _id: allowanceId });
@@ -132,6 +190,9 @@ export const editAllowance = async (req, res) => {
             { new: true } // Return the updated document
         );
 
+        setUserNetSalary(id);
+
+
         // If you need to send back the updated allowance details in the response, you can do so
         return res.status(200).json({
             status: true,
@@ -152,9 +213,12 @@ export const deleteAllowance = async (req, res) => {
     try {
 
         //  this is alloance id 
-        const { allowanceId } = req.params;
+        const { allowanceId , id } = req.params;
 
-        const allowanceDetail = await Allowance.findByIdAndDelete({ _id: allowanceId }, { new: true });
+
+          await Allowance.findByIdAndDelete({ _id: allowanceId }, { new: true });
+
+        setUserNetSalary(id);
 
         return res.status(200).json({
             status: true,
@@ -190,6 +254,8 @@ export const createCommission = async (req, res) => {
 
         const allowDetail = await Commission.create({ user: id, amount, title, type });
 
+        setUserNetSalary(id);
+
         return res.status(200).json({
             status: true,
             message: "Successfuly",
@@ -208,6 +274,8 @@ export const createCommission = async (req, res) => {
 export const editCommission = async (req, res) => {
     try {
         const { allowanceId, title, type, amount } = req.body;
+
+        const {id} = req.params;
 
         // Find the allowance details by ID
         const allowDetails = await Commission.findOne({ _id: allowanceId });
@@ -230,6 +298,9 @@ export const editCommission = async (req, res) => {
             { new: true } // Return the updated document
         );
 
+
+        setUserNetSalary(id);
+
         // If you need to send back the updated allowance details in the response, you can do so
         return res.status(200).json({
             status: true,
@@ -250,9 +321,12 @@ export const deleteCommission = async (req, res) => {
     try {
 
         //  this is alloance id 
-        const { allowanceId } = req.params;
+        const { allowanceId , id } = req.params;
 
-        const allowanceDetail = await Commission.findByIdAndDelete({ _id: allowanceId }, { new: true });
+          await Commission.findByIdAndDelete({ _id: allowanceId }, { new: true });
+
+          setUserNetSalary(id);
+
 
         return res.status(200).json({
             status: true,
@@ -289,6 +363,8 @@ export const createLoan = async (req, res) => {
         }
 
         const allowDetail = await Loan.create({ user: id, loanAmount, LoanOption, title, type, reason });
+        setUserNetSalary(id);
+
 
         return res.status(200).json({
             status: true,
@@ -308,6 +384,7 @@ export const createLoan = async (req, res) => {
 export const editLoan = async (req, res) => {
     try {
         const { allowanceId, LoanOption, title, type, loanAmount, reason } = req.body;
+        const {id} = req.params;
 
         // Find the allowance details by ID
         const allowDetails = await Loan.findOne({ _id: allowanceId });
@@ -332,6 +409,9 @@ export const editLoan = async (req, res) => {
             { new: true } // Return the updated document
         );
 
+        setUserNetSalary(id);
+
+
         // If you need to send back the updated allowance details in the response, you can do so
         return res.status(200).json({
             status: true,
@@ -352,14 +432,18 @@ export const deleteLoan = async (req, res) => {
     try {
 
         //  this is alloance id 
-        const { allowanceId } = req.params;
+        const { allowanceId , id } = req.params;
 
         const allowanceDetail = await Loan.findByIdAndDelete({ _id: allowanceId }, { new: true });
+
+        setUserNetSalary(id);
+
 
         return res.status(200).json({
             status: true,
             mesage: "successfuly "
         })
+
 
     } catch (error) {
 

@@ -8,18 +8,18 @@ router.post("/editUserSalary/:id" , editUserSalary);
 
 // for allowance 
 router.post("/createAllowance/:id" , createAllowance);
-router.post("/editAllowance" , editAllowance);
-router.delete("/deleteAllowance/:allowanceId" , deleteAllowance);
+router.post("/editAllowance/:id" , editAllowance);
+router.delete("/deleteAllowance/:allowanceId/:id" , deleteAllowance);
 
 // for commision
 router.post("/createCommission/:id" , createCommission);
-router.post("/editCommission" , editCommission);
-router.delete("/deleteCommission/:allowanceId" , deleteCommission);
+router.post("/editCommission/:id" , editCommission);
+router.delete("/deleteCommission/:allowanceId/:id" , deleteCommission);
 
 // for loan 
 router.post("/createLoan/:id" , createLoan);
-router.post("/editLoan" , editLoan);
-router.delete("/deleteLoan/:allowanceId" , deleteLoan);
+router.post("/editLoan/:id" , editLoan);
+router.delete("/deleteLoan/:allowanceId/:id" , deleteLoan);
 
 
 export default router;

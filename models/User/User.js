@@ -11,7 +11,10 @@ const userSchema = new mongoose.Schema({
     required: false,
     set: (a) => (a === "" ? undefined : a),
   },
- 
+  netSalary:{
+    type:String,
+    default:"00"
+  },
   dob: {
     type: String,
     required: false,
