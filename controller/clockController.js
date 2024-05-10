@@ -64,12 +64,17 @@ function compareDates(date1, date2) {
   const date1Parts = date1?.split('/');
   const date2Parts = date2?.split('/');
 
+  if (!date1Parts || date1Parts.length < 3 || !date2Parts || date2Parts.length < 3) {
+    console.error("Invalid date format");
+    return;
+  }
+
   // Convert each part to integers for comparison
   const year1 = parseInt(date1Parts[2], 10);
   const day1 = parseInt(date1Parts[0], 10); 
   const month1 = parseInt(date1Parts[1], 10);
 
-  const year2 = parseInt(date2Parts[2], 10);
+  const year2 =  parseInt(date2Parts[2], 10);
   const day2 = parseInt(date2Parts[0], 10);
   const month2 = parseInt(date2Parts[1], 10);
 
