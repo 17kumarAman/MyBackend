@@ -99,3 +99,47 @@ export const togglePayslip = async (req, res) => {
         });
     }
 };
+
+export const bulkPayslip = async (req, res) => {
+    try {
+        const { month, year } = req.body;
+
+        // Get all users
+        const users = await User.find();
+
+        // Iterate over each user and create payslip
+        for (const user of users) {
+            // Check if the user already has a payslip for the given month and year
+            let payslip = await Payslip.findOne({
+                user: user._id,
+                month: month,
+                year: year
+            });
+
+            if (!payslip) {
+                // If payslip doesn't exist, create a new one and mark it as paid
+                payslip = await Payslip.create({
+                    user: user._id,
+                    month: month,
+                    year: year,
+                    status: "Paid"
+                });
+            } else {
+                // If payslip exists, update its status to "Paid"
+                payslip.status = "Paid";
+                await payslip.save();
+            }
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: `Bulk payslips for ${month}-${year} created successfully`
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        });
+    }
+};
