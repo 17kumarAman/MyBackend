@@ -1,14 +1,13 @@
 import Clock from "../models/Clock/clock.js"
 
 
-
 export const createClock = async(req ,res)=>{
     try{
 
      const {  clockInDetail , clockOutDetail , date ,breakTime} = req.body;
 
       const {userId} = req.params;
-      console.log("userId ",userId);
+      console.log('suerid ',userId);
 
       let overTime = "00";
 
@@ -34,8 +33,6 @@ export const getClockByUserDate = async (req, res) => {
     try {
         const { date } = req.body;
         const { userId } = req.params;
-
-        console.log('date ',date , userId);
         
         const clockEntries = await Clock.findOne({
             user: userId,
@@ -104,7 +101,6 @@ function compareDates(date1, date2) {
 export const getAttendanceDetails = async (req, res) => {
   
    const {type ,date , month,userId ,department} = req.body;
-   console.log("at ",date);
 
      if(type === "monthly"){
 
@@ -171,7 +167,7 @@ const formattedEndDate = endDate.toLocaleDateString("en-GB", {
           console.log("aa ",clockData);
 
            const ans = clockData.filter((item)=>{
-             return item.user.department === department
+             return item?.user?.department === department
            })
 
            return res.status(200).json({

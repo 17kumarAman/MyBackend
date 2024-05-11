@@ -434,3 +434,4 @@ export const getAttendanceByUser = asyncHandler(async (req, res) => {
     console.log("error is ", error.message);
   }
 });
+

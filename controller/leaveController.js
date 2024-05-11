@@ -19,6 +19,7 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
 
   const saveLeave = await newLeave.save();
 
+
   await mailSender("pooja@kusheldigi.com" , "Regarding Leave" ,  `<div>
   <div>from: ${auth?.fullName}</div>
   <div>to: ${to}</div>
@@ -44,7 +45,7 @@ export const updateLeave = async ({ auth,employeeName ,  id, leaveType, from, to
    const employe = await User.findOne({fullName: employeeName});
 
    await mailSender(employe.email ,"update Leave " , `<div>
-   <div>from: ${from}</div>
+   <div>from: ${auth?.fullName}</div>
    <div>to: ${to}</div>
    <div>days: ${days}</div>
    <div>reason: ${reason}</div>
