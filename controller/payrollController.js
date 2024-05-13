@@ -20,6 +20,7 @@ export const setUserNetSalary = async (id) => {
         let totalComm = 0;
         if (userComm.length > 0) {
             totalComm = userComm.reduce((acc, curr) => acc + curr.amount, 0);
+            console.log(totalComm);
         }
 
         // Calculate total allowance
@@ -450,5 +451,29 @@ export const deleteLoan = async (req, res) => {
 
     }
 
+}
+
+export const getUserDetailsByLoan = async (req,res) =>{
+    try {
+       const {userId} = req.body;
+
+       const loanDetails = await Loan.findById({id: userId}).populate("user");
+
+       const userLoan = await User.findByIdAndUpdate({
+          $push:{loanDetails}
+       })
+
+       return(
+        {
+           status:true,
+           message:"user loan successfully fetched",
+           data: userLoan
+        }
+       )
+    } 
+    
+    catch (error) {
+        console.log(error);
+    }
 }
 
