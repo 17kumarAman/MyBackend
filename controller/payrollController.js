@@ -459,8 +459,12 @@ export const getUserDetailsByLoan = async (req,res) =>{
 
        const loanDetails = await Loan.findById({id: userId}).populate("user");
 
+       console.log(loanDetails);
+
        const userLoan = await User.findByIdAndUpdate({
-          $push:{loanDetails}
+          $push:{loanDetails},
+          status: true,
+          message:"user loan successfully fetching"
        })
 
        return(
