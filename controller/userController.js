@@ -684,13 +684,22 @@ export const getEmployeesByEmployee = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, data, "data  fetched successfully"));
 });
 
-
 // upload to cloucindary
 export const uploadDocuments = async (req, res) => {
 
   const {id} = req.params;
    
-   const {adharCard , monthSalary , cancelCheque , pancard , educationCert , prevOrgOffer}  = req.files;
+   const {   
+     adharCard,
+    pancard,
+    tenCert,
+    twevelCert,
+    cancelCheque,
+    LastOrganization,
+    RelievingLetter,
+    OfferLetter,
+    ExperienceLetter
+  }  = req.files;
  
   try {
 
@@ -700,9 +709,9 @@ export const uploadDocuments = async (req, res) => {
       const details = await uploadToCloudinary(adharCard.tempFilePath);
       newDocuments.push({ name: 'adharCard', url: details.secure_url });
     }
-    if (monthSalary) {
-      const details = await uploadToCloudinary(monthSalary.tempFilePath);
-      newDocuments.push({ name: 'monthSalary', url: details.secure_url });    }
+    if (tenCert) {
+      const details = await uploadToCloudinary(tenCert.tempFilePath);
+      newDocuments.push({ name: 'tenCert', url: details.secure_url });    }
     if (cancelCheque) {
       const details = await uploadToCloudinary(cancelCheque.tempFilePath);
       newDocuments.push({ name: 'cancelCheque', url: details.secure_url });   
@@ -712,15 +721,26 @@ export const uploadDocuments = async (req, res) => {
       const details = await uploadToCloudinary(pancard.tempFilePath);
       newDocuments.push({ name: 'pancard', url: details.secure_url });   
     }
-    if (educationCert) {
-      const details = await uploadToCloudinary(educationCert.tempFilePath);
-      newDocuments.push({ name: 'educationCert', url: details.secure_url });   
+    if (twevelCert) {
+      const details = await uploadToCloudinary(twevelCert.tempFilePath);
+      newDocuments.push({ name: 'twevelCert', url: details.secure_url });   
     }
-    if (prevOrgOffer) {
-      const details = await uploadToCloudinary(prevOrgOffer.tempFilePath);
-      newDocuments.push({ name: 'prevOrgOffer', url: details.secure_url });   
+    if (LastOrganization) {
+      const details = await uploadToCloudinary(LastOrganization.tempFilePath);
+      newDocuments.push({ name: 'LastOrganization', url: details.secure_url });   
     }
-    
+    if (RelievingLetter) {
+      const details = await uploadToCloudinary(RelievingLetter.tempFilePath);
+      newDocuments.push({ name: 'RelievingLetter', url: details.secure_url });   
+    }
+    if (OfferLetter) {
+      const details = await uploadToCloudinary(OfferLetter.tempFilePath);
+      newDocuments.push({ name: 'OfferLetter', url: details.secure_url });   
+    }
+    if (ExperienceLetter) {
+      const details = await uploadToCloudinary(ExperienceLetter.tempFilePath);
+      newDocuments.push({ name: 'ExperienceLetter', url: details.secure_url });   
+    }
    
   
   // Find the user by ID

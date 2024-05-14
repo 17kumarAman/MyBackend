@@ -29,6 +29,7 @@ import { mailSender } from "../utils/SendMail2.js";
 import Lead from "../models/Lead/Lead.js";
 import Invoice from "../models/Invoice/Invoice.js";
 import Salary from "../models/Salary/Salary.js";
+import EmployeeType from "../models/EmployeeType/employeeType.js"
 
 export const getAdmins = asyncHandler(async (req, res) => {
   const admin = await Admin.find({}).select("-password ");
@@ -286,6 +287,7 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       AccountNumber,
       confirmAccount,
       Branch,
+      employeeType
     } = req.body;
 
     const employeeCode = makeid(7);
@@ -305,7 +307,6 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       department,
       password,
       fullName,
-
       gmail,
       reportingManager,
       designation,
@@ -358,6 +359,8 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       Branch,
       createdBy: req.user.role,
     });
+
+     const empType = await EmployeeType.create({type:employeeType , users:adminUser?._id})
 
     return res.status(200).json(
       new ApiResponse(
