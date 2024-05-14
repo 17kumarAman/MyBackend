@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
   },
   joiningDate: {
     type: String,
-    default: Date,
+    default: new Date().toLocaleDateString(),
     required: false,
     set: (f) => (f === "" ? undefined : f),
   },
