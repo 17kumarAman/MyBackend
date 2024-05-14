@@ -547,7 +547,7 @@ export const getUsers = asyncHandler(async (req, res) => {
   let data;
 
   if (!userId || userId === "undefined" || userId === "") {
-    data = await User.find({ role: { $ne: "ADMIN" } });
+    data = await User.find({});
   } else {
     data = await User.findById(userId);
   }
