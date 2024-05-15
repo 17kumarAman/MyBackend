@@ -13,9 +13,11 @@ export const createClock = async(req ,res)=>{
 
       const clockDetails = await Clock.create({Date:date , clockIn:clockInDetail , clockOut:clockOutDetail ,user: userId , breakTime:breakTime , overTime:overTime});
 
+      console.log(clockDetails);
+
        return res.status(200).json({
         status:true ,
-        message:"Succesful created ",
+        message:"Succesful created",
         data: clockDetails
        })
 
@@ -95,6 +97,18 @@ function compareDates(date1, date2) {
       }
     }
   }
+}
+
+function compareDates1(date3, date4){
+ const date3Parts = date3?.split('/');
+ const date4Parts = date4?.split('/');
+
+ console.log(date3Parts, date4Parts);
+
+ if(!date3Parts || date3Parts.length < 3 || !date4Parts || !date4Parts.length){
+  console.log("Invalid Dates");
+  return
+ }
 }
 
 
