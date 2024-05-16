@@ -358,6 +358,7 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       confirmAccount,
       Branch,
       createdBy: req.user.role,
+      EmployeeType: employeeType
     });
 
      const empType = await EmployeeType.create({type:employeeType , users:adminUser?._id})

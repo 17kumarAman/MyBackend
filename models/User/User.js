@@ -25,7 +25,9 @@ const userSchema = new mongoose.Schema({
     url: String,  // URL of the document
     require: false
   }],
-
+EmployeeType:{
+  type:String, 
+} , 
   mobile: {
     type: String,
     required: false,

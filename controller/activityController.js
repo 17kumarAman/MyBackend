@@ -11,12 +11,10 @@ const startOfWeek = (date) => {
 export const postActivity = asyncHandler(async (req, res) => {
   const { clockIn, clockOut, late, overtime, total, message, date1 } = req.body;
 
-  console.log('clock out ',clockOut , "dagt1 ",date1);
 
   try {
     if(clockOut === 0 || clockOut==='0')
     {
-      console.log("if");
       let newActivity=new ActivityTracker({
         user: req.user, date: new Date().getTime(), date1, clockIn, clockOut, late, overtime, total, message
       });
@@ -29,9 +27,7 @@ export const postActivity = asyncHandler(async (req, res) => {
     }
     else
     {
-      
-      console.log("else ",req.user._id);
-        
+            
       let id= await ActivityTracker.findOne({"user._id": req.user._id, date1 });
       console.log('iddd ',id);
       await ActivityTracker.findByIdAndDelete(id._id);
