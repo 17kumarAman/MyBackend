@@ -210,3 +210,50 @@ const formattedEndDate = endDate.toLocaleDateString("en-GB", {
         console.log(error);
     }
   }
+
+  
+export const updateAttendance =async(req ,res)=>{
+  try{
+
+    const {id} = req.params;
+    const {Date , clockIn , clockOut} = req.body;
+      
+     const details = await Clock.findByIdAndUpdate(id, {
+      Date,
+      clockIn,
+      clockOut
+  }, { new: true });
+
+  return res.status(200).json({
+    status:true ,
+     details
+  });
+
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      status:false ,
+      message:"Internal server error"
+    })
+  }
+}
+
+
+export const deleteAttendence = async(req ,res)=>{
+  try{
+
+    const {id} = req.params;
+        await Clock.findByIdAndDelete(id);
+      
+       return res.status(200).json({
+        status:true ,
+        message:"Deleted successfully"
+       })
+
+  } catch(error){
+    return res.status(500).json({
+      status:false,
+      message:"internal server error "
+    })
+  }
+}
