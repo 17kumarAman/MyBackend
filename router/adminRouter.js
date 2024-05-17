@@ -198,8 +198,8 @@ router.put("/updateInvoice/:id",updateInvoice);
 router.get("/getEveryUserInvoice/:id" , getEveryUserInvoice);
 
 router.post("/createSallary",SetSallary);
-
 router.get("/getSallary",getSallary);
+
 
 
 export default router;

@@ -5,6 +5,9 @@ import LeaveType from "../models/LeaveType/LeaveType.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { removeUndefined } from "../utils/util.js";
+import Document from "../models/Document/Document.js";
+
+
 import User from "../models/User/User.js";
 export const postLeaveType = asyncHandler(async (req, res) => {
   const { name, days } = req.body;
@@ -260,3 +263,98 @@ export const deleteDesignation = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, data, "Deleted   Successfully"));
 });
+
+
+export const createDocSetup = asyncHandler(async(req ,res)=>{
+ try{
+  const {name , requiredField} = req.body;
+  console.log('naesm ',name , requiredField);
+
+
+  const details = await Document.create({name , requiredField:requiredField});
+
+   console.log('details ',details);
+
+   return res.status(200).json({
+    status:true ,
+    message:"Successfuly created "
+   })
+ } catch(error){
+  console.log(error);
+ }
+})
+
+
+export const updateDocSetup = asyncHandler(async (req, res) => {
+  const { name, requiredField } = req.body;
+  const { id } = req.params;
+
+  try {
+    const details = await Document.findByIdAndUpdate(
+      id,
+      { name, requiredField },
+      { new: true, runValidators: true }
+    );
+
+    if (!details) {
+      return res.status(404).json({
+        status: false,
+        message: "Document not found",
+      });
+    }
+
+    console.log('details', details);
+
+    return res.status(200).json({
+      status: true,
+      message: "Successfully updated",
+      data: details,
+    });
+  } catch (error) {
+    console.error('Error updating document:', error);
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+    });
+  }
+});
+
+
+export const deleteDocSetup = asyncHandler(async(req ,res)=>{
+  try{
+
+    const {id} = req.params;
+
+     const details = await Document.findByIdAndDelete(id);
+
+
+     return res.status(200).json({
+      status:true ,
+      message:"Successfuly deleted"
+     })
+     
+  }catch(error){
+    console.log(error);
+    return res.status(500).json({
+      status:false ,
+      message:"INTERNAL Server error "
+    })
+  }
+})
+
+
+export const fetchAllDocs = asyncHandler(async(req ,res)=>{
+  try{
+
+    const allDocs = await Document.find({});
+
+    return res.status(200).json({
+      status:true ,
+      message:"done " , 
+      data:allDocs
+    })
+
+  } catch(error){
+ console.log(error);
+  }
+})
