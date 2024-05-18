@@ -9,7 +9,7 @@ import {
   getDesignations,
   postDesignation,
   updateDesignation,
-
+  fetchAllDocs,
   deleteDepartment,
   getDepartments,
   postDepartment,
@@ -19,7 +19,10 @@ import {
   getBranchs,
   postBranch,
   updateBranch,
-  getEmployess
+  getEmployess ,
+  createDocSetup , 
+  updateDocSetup , 
+  deleteDocSetup
 } from "../controller/systemController.js";
 
 const router = Router();
@@ -57,5 +60,11 @@ router.get("/getEmployeess/:id",getEmployess);
 router.get("/getDesignation", getDesignation);
 
 router.delete("/deleteDesignation/:id", deleteDesignation);
+
+router.post("/createDocSetup" , createDocSetup);
+router.post("/updateDocSetup/:id" , updateDocSetup);
+router.delete("/deleteDocSetup/:id" , deleteDocSetup);
+router.get("/fetchAllDocs" , fetchAllDocs);
+
 
 export default router;
