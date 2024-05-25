@@ -194,7 +194,7 @@ router.post("/updateLead/:id",updateLeadImage);
 router.post("/createInvoice", createInvoice);
 router.get('/getInvoice', getInvoice);
 router.delete("/deleteInvoice/:id",deleteInvoice);
-router.put("/updateInvoice/:id",updateInvoice);
+router.post("/updateInvoice/:id",updateInvoice);
 router.get("/getEveryUserInvoice/:id" , getEveryUserInvoice);
 
 router.post("/createSallary",SetSallary);

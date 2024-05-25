@@ -20,8 +20,13 @@ const mySchema = new mongoose.Schema({
     Price:String,
     Amount:String,
     BalanceAmount:String,
-    Note:String
-  });
+    Note:String,
+    currency:String,
+    ts: {
+      type: String,
+      default: new Date().getTime()
+  },
+  },{timestamps:true});
 
   const Invoice = mongoose.model("Invoice", mySchema);
 

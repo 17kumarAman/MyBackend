@@ -2316,10 +2316,10 @@ export const updateLeadImage = asyncHandler(async (req, res) => {
 export const createInvoice = async (req, res) => {
   try {
 
-    const {User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note} = req.body;
+    const {User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency} = req.body;
 
 
-    const createIn = await Invoice.create({User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note});
+    const createIn = await Invoice.create({User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency,ts: new Date().getTime(),});
 
 
     return res.status(200).json({
@@ -2372,14 +2372,17 @@ export const deleteInvoice = asyncHandler(async (req, res) => {
 });
 
 export const updateInvoice = asyncHandler(async (req, res) => {
-  const {InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note} = req.body;
+  const {InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency} = req.body;
 
-  const { id } = req.params;
+  // const { id } = req.params;
+  const id = req.params.id;
+
+  console.log("id ", id);
 
   // const userDetail = await User.findOne({ fullName: Employee });
 
-  let updateObj = removeUndefined({
-    InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note
+  let updateObj = removeUndefined(id,{
+    InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency
   });
 
   
