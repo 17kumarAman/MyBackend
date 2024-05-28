@@ -2381,16 +2381,20 @@ export const updateInvoice = asyncHandler(async (req, res) => {
 
   // const userDetail = await User.findOne({ fullName: Employee });
 
-  let updateObj = removeUndefined(id,{
-    InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency
-  });
+  // let updateObj = removeUndefined(id,{
+  //   InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency
+  // });
 
   
   const updateInvoice = await Invoice.findByIdAndUpdate(
     id,
+    // {
+    //   $set: updateObj,
+    // },
     {
-      $set: updateObj,
+      InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency
     },
+
     {
       new: true,
     }
