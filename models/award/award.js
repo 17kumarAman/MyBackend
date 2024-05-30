@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 const awardSchema = new mongoose.Schema({
 
     employee: {
-        type: String
+        type: String,
+         
     },
     awardType: {
         type: String, 

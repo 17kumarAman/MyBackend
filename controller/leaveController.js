@@ -42,6 +42,8 @@ export const updateLeave = async ({ auth,employeeName ,  id, leaveType, from, to
     { new: true }
   );
 
+  console.log(updateLeave);
+
    const employe = await User.findOne({fullName: employeeName});
 
    await mailSender(employe.email ,"update Leave " , `<div>

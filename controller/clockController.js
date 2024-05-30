@@ -4,7 +4,7 @@ import Clock from "../models/Clock/clock.js"
 export const createClock = async(req ,res)=>{
     try{
 
-     const {  clockInDetail , clockOutDetail , date ,breakTime} = req.body;
+     const {clockInDetail , clockOutDetail , date ,breakTime} = req.body;
 
       const {userId} = req.params;
       console.log('suerid ',userId);
