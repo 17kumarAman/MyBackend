@@ -1,59 +1,59 @@
 import Clock from "../models/Clock/clock.js"
 
 
-export const createClock = async(req ,res)=>{
-    try{
+export const createClock = async (req, res) => {
+  try {
 
-     const {clockInDetail , clockOutDetail , date ,breakTime} = req.body;
+    const { clockInDetail, clockOutDetail, date, breakTime } = req.body;
 
-      const {userId} = req.params;
-      console.log('suerid ',userId);
+    const { userId } = req.params;
+    console.log('suerid ', userId);
 
-      let overTime = "00";
+    let overTime = "00";
 
-      const clockDetails = await Clock.create({Date:date , clockIn:clockInDetail , clockOut:clockOutDetail ,user: userId , breakTime:breakTime , overTime:overTime});
+    const clockDetails = await Clock.create({ Date: date, clockIn: clockInDetail, clockOut: clockOutDetail, user: userId, breakTime: breakTime, overTime: overTime });
 
-      console.log(clockDetails);
+    console.log(clockDetails);
 
-       return res.status(200).json({
-        status:true ,
-        message:"Succesful created",
-        data: clockDetails
-       })
+    return res.status(200).json({
+      status: true,
+      message: "Succesful created",
+      data: clockDetails
+    })
 
-    } catch(error){
-      console.log('errors ',error);
-        return res.status(500).json({
-            status:500 , 
-            message:"Internal server error "
-        })
-    }
+  } catch (error) {
+    console.log('errors ', error);
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
 }
 
 
 export const getClockByUserDate = async (req, res) => {
-    try {
-        const { date } = req.body;
-        const { userId } = req.params;
-        
-        const clockEntries = await Clock.findOne({
-            user: userId,
-            Date: date ,
-        }).select('clockIn clockOut breakTime').populate("user");
-      
+  try {
+    const { date } = req.body;
+    const { userId } = req.params;
 
-        return res.status(200).json({
-            status: true,
-            message: "Clock details fetched successfully",
-            data: clockEntries
-        });
+    const clockEntries = await Clock.findOne({
+      user: userId,
+      Date: date,
+    }).select('clockIn clockOut breakTime').populate("user");
 
-    } catch (error) {
-        return res.status(500).json({
-            status: 500,
-            message: "Internal server error"
-        });
-    }
+
+    return res.status(200).json({
+      status: true,
+      message: "Clock details fetched successfully",
+      data: clockEntries
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error"
+    });
+  }
 };
 
 
@@ -70,10 +70,10 @@ function compareDates(date1, date2) {
 
   // Convert each part to integers for comparison
   const year1 = parseInt(date1Parts[2], 10);
-  const day1 = parseInt(date1Parts[0], 10); 
+  const day1 = parseInt(date1Parts[0], 10);
   const month1 = parseInt(date1Parts[1], 10);
 
-  const year2 =  parseInt(date2Parts[2], 10);
+  const year2 = parseInt(date2Parts[2], 10);
   const day2 = parseInt(date2Parts[0], 10);
   const month2 = parseInt(date2Parts[1], 10);
 
@@ -99,161 +99,174 @@ function compareDates(date1, date2) {
   }
 }
 
-function compareDates1(date3, date4){
- const date3Parts = date3?.split('/');
- const date4Parts = date4?.split('/');
+function compareDates1(date3, date4) {
+  const date3Parts = date3?.split('/');
+  const date4Parts = date4?.split('/');
 
- console.log(date3Parts, date4Parts);
+  console.log(date3Parts, date4Parts);
 
- if(!date3Parts || date3Parts.length < 3 || !date4Parts || !date4Parts.length){
-  console.log("Invalid Dates");
-  return
- }
+  if (!date3Parts || date3Parts.length < 3 || !date4Parts || !date4Parts.length) {
+    console.log("Invalid Dates");
+    return
+  }
+
+  else if(!date3Parts || date3Parts.length < 5 || date4Parts || date4Parts.length){
+    console.log("date length is not greater than 5");
+    return 
+  }
+
+  else{
+    const date4 = (date3Parts * date4Parts) / date3;
+    const data5 =  date4.split('/',``).splice(0,4).toTimeString();
+    console.log(data5);
+    return data5;
+  }
 }
 
 
 export const getAttendanceDetails = async (req, res) => {
-  
-   const {type ,date , month,userId ,department} = req.body;
 
-     if(type === "monthly"){
+  const { type, date, month, userId, department } = req.body;
 
-        if(userId){         
-           const startDate = new Date(`2024-${month}-01`);
-           const formattedStartDate = startDate.toLocaleDateString("en-GB", {
-               day: '2-digit',
-               month: '2-digit',
-               year: 'numeric' // Use 'numeric' for full year format
-              });
-         const lastDay = new Date(2024, month, 0).getDate();
+  if (type === "monthly") {
 
-const endDate = new Date(2024, month - 1, lastDay);
+    if (userId) {
+      const startDate = new Date(`2024-${month}-01`);
+      const formattedStartDate = startDate.toLocaleDateString("en-GB", {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric' // Use 'numeric' for full year format
+      });
+      const lastDay = new Date(2024, month, 0).getDate();
 
-const formattedEndDate = endDate.toLocaleDateString("en-GB", {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric' // Use 'numeric' for full year format
-});
-           const userAttendance = await Clock.find({
-            user: userId   }).populate('user'); 
+      const endDate = new Date(2024, month - 1, lastDay);
 
-         const ans =    userAttendance.filter((item)=>{
+      const formattedEndDate = endDate.toLocaleDateString("en-GB", {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric' // Use 'numeric' for full year format
+      });
+      const userAttendance = await Clock.find({
+        user: userId
+      }).populate('user');
 
-              const result1 = compareDates(formattedStartDate, item?.Date);
-              const result2 = compareDates(item?.Date , formattedEndDate);
+      const ans = userAttendance.filter((item) => {
 
-              if(result1 && result2){
-                return item;
-              }
-              
-            })
+        const result1 = compareDates(formattedStartDate, item?.Date);
+        const result2 = compareDates(item?.Date, formattedEndDate);
 
-     return res.status(200).json({
-      status:true ,
-      message:"Succesfuly",
-      data:ans 
-     })
-
-
+        if (result1 && result2) {
+          return item;
         }
-       
 
-     }
-     else if(type === "daily"){
+      })
 
-         if(department === "All"){
+      return res.status(200).json({
+        status: true,
+        message: "Succesfuly",
+        data: ans
+      })
 
-          const clockData = await Clock.find({ Date: date }).populate("user");
- 
-           console.log("clokda ",clockData);
 
-           return res.status(200).json({
-            status:true ,
-            message:"Successful ",
-            data :clockData
-           })
-           
-         }
-         else {
-          
-          const clockData = await Clock.find({ Date: date }).populate("user");
+    }
 
-          console.log("aa ",clockData);
 
-           const ans = clockData.filter((item)=>{
-             return item?.user?.department === department
-           })
+  }
+  else if (type === "daily") {
 
-           return res.status(200).json({
-            status:true ,
-            message:"Succesful ",
-            data:ans
-           })
+    if (department === "All") {
 
-         }
-     }
+      const clockData = await Clock.find({ Date: date }).populate("user");
 
-  };
-  
+      console.log("clokda ", clockData);
 
-  export const getAllAttendence = async(req ,res)=>{
-    try{
+      return res.status(200).json({
+        status: true,
+        message: "Successful ",
+        data: clockData
+      })
 
-         const allAtt = await Clock.find({}).populate("user");
+    }
+    else {
 
-         return res.status(200).json({
-            status:200 , 
-             data:allAtt
-         })
+      const clockData = await Clock.find({ Date: date }).populate("user");
 
-    } catch(error){
-        console.log(error);
+      console.log("aa ", clockData);
+
+      const ans = clockData.filter((item) => {
+        return item?.user?.department === department
+      })
+
+      return res.status(200).json({
+        status: true,
+        message: "Succesful ",
+        data: ans
+      })
+
     }
   }
 
-  
-export const updateAttendance =async(req ,res)=>{
-  try{
+};
 
-    const {id} = req.params;
-    const {Date , clockIn , clockOut} = req.body;
-      
-     const details = await Clock.findByIdAndUpdate(id, {
+
+export const getAllAttendence = async (req, res) => {
+  try {
+
+    const allAtt = await Clock.find({}).populate("user");
+
+    return res.status(200).json({
+      status: 200,
+      data: allAtt
+    })
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+export const updateAttendance = async (req, res) => {
+  try {
+
+    const { id } = req.params;
+    const { Date, clockIn, clockOut } = req.body;
+
+    const details = await Clock.findByIdAndUpdate(id, {
       Date,
       clockIn,
       clockOut
-  }, { new: true });
+    }, { new: true });
 
-  return res.status(200).json({
-    status:true ,
-     details
-  });
+    return res.status(200).json({
+      status: true,
+      details
+    });
 
-  } catch(error){
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false ,
-      message:"Internal server error"
+      status: false,
+      message: "Internal server error"
     })
   }
 }
 
 
-export const deleteAttendence = async(req ,res)=>{
-  try{
+export const deleteAttendence = async (req, res) => {
+  try {
 
-    const {id} = req.params;
-        await Clock.findByIdAndDelete(id);
-      
-       return res.status(200).json({
-        status:true ,
-        message:"Deleted successfully"
-       })
+    const { id } = req.params;
+    await Clock.findByIdAndDelete(id);
 
-  } catch(error){
+    return res.status(200).json({
+      status: true,
+      message: "Deleted successfully"
+    })
+
+  } catch (error) {
     return res.status(500).json({
-      status:false,
-      message:"internal server error "
+      status: false,
+      message: "internal server error "
     })
   }
 }

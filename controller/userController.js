@@ -581,7 +581,7 @@ export const DeleteUserProfile = asyncHandler(async (req, res) => {
 
 export const DeleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  await User.findByIdAndDelete(id);
+  await User.findByIdAndDelete(id)
   return res.status(200).json(new ApiResponse(200, {}, "successfully deleted"));
 });
 
@@ -763,3 +763,14 @@ export const uploadDocuments = async (req, res) => {
   }
 };
 
+export const DeactivateUser = asyncHandler(async (req, res) => {
+  const {id} = req.params
+  const deact = await User.findByIdAndDelete(id);
+
+  console.log(deact);
+  
+
+  return res.status(200).json(new ApiResponse(200, {}, "successfully deleted",{
+    data:deact
+  }));
+});

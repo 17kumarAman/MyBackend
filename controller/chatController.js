@@ -174,6 +174,15 @@ export const deleteChats = asyncHandler(async (req, res) => {
 
 export const postChat = asyncHandler(async(req,res)=>{
     const {name,chatDetails} = req.body;
+    
+    const chatUser = await Chat.create({
+      name,chatDetails,user:User?._id,
+      User: req.params.id,
+      message: req.user.message
+    });
 
+    console.log(chatUser);
+
+    return({status:false, data:chatUser, message:"successfully created all the chats"})
     
 })

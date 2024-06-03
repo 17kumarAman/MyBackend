@@ -18,7 +18,8 @@ import {
   getEmployeesByEmployee,
   DeleteUser , 
   uploadDocuments , 
-  uploadImgToCloudinary
+  uploadImgToCloudinary,
+  DeactivateUser
 } from "../controller/userController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -53,6 +54,8 @@ router.route("/resetPassword/:token").put(resetPassword);
 router.route("/deleteprofile").delete(isAuthenticated, DeleteUserProfile);
 
 router.route("/deleteUsers").delete(deleteUsers);
+
+router.route("/deactivateUsers").delete(DeactivateUser);
 
 router.delete("/deleteUser/:id", DeleteUser);
 
