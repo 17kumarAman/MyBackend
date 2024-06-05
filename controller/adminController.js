@@ -1071,7 +1071,7 @@ export const getTermination = asyncHandler(async (req, res) => {
   const data = await Termination.find();
   return res
     .status(200)
-    .json(new ApiResponse(200, data, " Successfully fetched all the Termination"));
+    .json(new ApiResponse(200, data, "Successfully fetched all the Termination"));
 });
 
 export const deleteTermination = asyncHandler(async (req, res) => {
@@ -1278,7 +1278,7 @@ export const postComplain = asyncHandler(async (req, res) => {
     description
   } = req.body;
 
-  // const users = await User.findOne({ fullName: warningBy });
+ 
   const users1 = await User.findOne({ fullName: complainAgain });
 
   let transporter = createTransport({

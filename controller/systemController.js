@@ -267,17 +267,28 @@ export const deleteDesignation = asyncHandler(async (req, res) => {
 
 export const createDocSetup = asyncHandler(async(req ,res)=>{
  try{
-  const {name , requiredField} = req.body;
+  const {name , requiredField,documentType} = req.body;
   console.log('naesm ',name , requiredField);
 
 
-  const details = await Document.create({name , requiredField:requiredField});
+  const details = await Document.create({name , requiredField:requiredField, documentType:documentType});
 
    console.log('details ',details);
 
+  //  console.log({documentType:documentType});
+
+   const userEmployee = await User.findOne({fullName: req.user._id});
+
+   console.log(userEmployee);
+
+   for (user of userEmployee){
+      const ans = await details.save();
+      console.log(ans);
+   }
+
    return res.status(200).json({
     status:true ,
-    message:"Successfuly created "
+    message:"Successfuly created"
    })
  } catch(error){
   console.log(error);

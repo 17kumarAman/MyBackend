@@ -18,7 +18,7 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
 
 
   const saveLeave = await newLeave.save();
-
+  // "pooja@kusheldigi.com"
 
   await mailSender("pooja@kusheldigi.com" , "Regarding Leave" ,  `<div>
   <div>from: ${auth?.fullName}</div>

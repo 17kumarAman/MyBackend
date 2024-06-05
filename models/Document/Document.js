@@ -8,6 +8,10 @@ const mySchema = new mongoose.Schema({
     requiredField: [{
         type: String,
     }],
+
+    documentType:[{
+        type:Array,
+    }]
    
 });
 
