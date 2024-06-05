@@ -79,7 +79,7 @@ import {
   getInvoice,
   deleteInvoice,
   updateInvoice,
-  getEveryUserInvoice,
+  getEveryLeadInvoice,
   SetSallary,
   getSallary
 } from "../controller/adminController.js";
@@ -195,7 +195,7 @@ router.post("/createInvoice", createInvoice);
 router.get('/getInvoice', getInvoice);
 router.delete("/deleteInvoice/:id",deleteInvoice);
 router.post("/updateInvoice/:id",updateInvoice);
-router.get("/getEveryUserInvoice/:id" , getEveryUserInvoice);
+router.get("/getEveryUserInvoice/:id" , getEveryLeadInvoice);
 
 router.post("/createSallary",SetSallary);
 router.get("/getSallary",getSallary);

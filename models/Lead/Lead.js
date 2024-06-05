@@ -33,6 +33,12 @@ const mySchema = new mongoose.Schema({
      image:String , 
      Note: String,
      NoteDate: Date,
+     invoiceId:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Invoice'
+      }
+     ]
   });
 
   const Lead = mongoose.model("Lead", mySchema);

@@ -2316,10 +2316,25 @@ export const updateLeadImage = asyncHandler(async (req, res) => {
 export const createInvoice = async (req, res) => {
   try {
 
-    const {User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency} = req.body;
+    const {User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency , leadId} = req.body;
 
+     console.log("leadId ",leadId);
 
     const createIn = await Invoice.create({User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency,ts: new Date().getTime(),});
+
+   
+     const leadDetails = await Lead.findById(leadId);
+
+    // Add the invoice ID to the lead's invoiceId array
+    leadDetails.invoiceId.push(createIn._id);
+
+    // Save the updated lead document
+    await leadDetails.save();
+
+    console.log('Updated lead details:', leadDetails);
+
+
+     
 
 
     return res.status(200).json({
@@ -2345,7 +2360,6 @@ export const getInvoice = async (req, res) => {
 
     // Find notifications where the user ID is in the user array
     const transfer = await Invoice.find({});
-
 
     return res.status(200).json({
       status: 200,
@@ -2404,14 +2418,13 @@ export const updateInvoice = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updateInvoice, "Updated  Successfully"));
 });
 
-export const getEveryUserInvoice = asyncHandler(async (req,res) =>{
+export const getEveryLeadInvoice = asyncHandler(async (req,res) =>{
+  
+   const lens1 =  await Lead.findById(req.params.id).populate("invoiceId");
 
-  console.log("rq  ",req.params.id);
-  const lens = await Invoice.find({
-    User:req.params.id
-  });
+    
+let lens = lens1?.invoiceId;
 
-  console.log('lesn ',lens);
 
   res.json({
     data: lens,
