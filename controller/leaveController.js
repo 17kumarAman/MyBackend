@@ -96,8 +96,16 @@ export const getTotalLeaveCount = async()=>{
    }
 }
 
-export const rejectLeaveHandler  = async({fullName})=>{
+export const rejectLeaveHandler  = async({fullName , id})=>{
+
+  const leaveDetails = await Leave.findById(id);
+
+  leaveDetails.status = "Rejected";
+
+  await leaveDetails.save();
+
   const userDetail = await User.findOne({fullName: fullName});
+
 
   
 await mailSender(userDetail?.email ,"Regarding holiday cancel " , `<div>
@@ -111,7 +119,13 @@ status: true ,
 message:"Successfuly send the email"
 }
 }
-export const acceptLeaveHandler  = async({fullName , days})=>{
+export const acceptLeaveHandler  = async({fullName , days , id})=>{
+
+  const leaveDetails = await Leave.findById(id);
+
+    leaveDetails.status = "Accepted";
+
+    await leaveDetails.save();
 
    const userDetail = await User.findOne({fullName: fullName});
 

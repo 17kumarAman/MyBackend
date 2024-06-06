@@ -108,9 +108,9 @@ router.delete("/deleteAllLeaves", async (req, res) => {
   }
 });
 
-router.post("/acceptLeave" , async (req, res) => {
+router.post("/acceptLeave/:id" , async (req, res) => {
   try {
-    const data = await acceptLeaveHandler({ ...req.body });
+    const data = await acceptLeaveHandler({ ...req.body , ...req.params });
     if (data.status) {
       res.json(data);
     } else {
@@ -120,9 +120,9 @@ router.post("/acceptLeave" , async (req, res) => {
     console.log(error);
   }
 });
-router.post("/rejectLeave" , async (req, res) => {
+router.post("/rejectLeave/:id" , async (req, res) => {
   try {
-    const data = await rejectLeaveHandler({ ...req.body });
+    const data = await rejectLeaveHandler({ ...req.body  , ...req.params});
     if (data.status) {
       res.json(data);
     } else {

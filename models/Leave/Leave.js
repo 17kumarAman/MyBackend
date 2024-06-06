@@ -19,7 +19,7 @@ const mySchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: ""
+    default: "Pending"
   },
   ts: {
     type: String,

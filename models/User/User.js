@@ -21,8 +21,8 @@ const userSchema = new mongoose.Schema({
     set: (b) => (b === "" ? undefined : b),
   },
   document: [{
-    name: String, // Name of the document
-    url: String,  // URL of the document
+    name: String, 
+    url: String,  
     require: false
   }],
 EmployeeType:{

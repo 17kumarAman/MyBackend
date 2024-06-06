@@ -684,13 +684,11 @@ export const getEmployeesByEmployee = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, data, "data  fetched successfully"));
 });
 
-// upload to cloucindary
 export const uploadDocuments = async (req, res) => {
+  const { id } = req.params;
 
-  const {id} = req.params;
-   
-   const {   
-     adharCard,
+  const {
+    adharCard,
     pancard,
     tenCert,
     twevelCert,
@@ -699,67 +697,56 @@ export const uploadDocuments = async (req, res) => {
     RelievingLetter,
     OfferLetter,
     ExperienceLetter
-  }  = req.files;
- 
+  } = req.files;
+
   try {
+    // Find the user by ID
+    const user = await User.findById(id);
 
-    let newDocuments = [];
-    
-    if (adharCard) {
-      const details = await uploadToCloudinary(adharCard.tempFilePath);
-      newDocuments.push({ name: 'adharCard', url: details.secure_url });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
-    if (tenCert) {
-      const details = await uploadToCloudinary(tenCert.tempFilePath);
-      newDocuments.push({ name: 'tenCert', url: details.secure_url });    }
-    if (cancelCheque) {
-      const details = await uploadToCloudinary(cancelCheque.tempFilePath);
-      newDocuments.push({ name: 'cancelCheque', url: details.secure_url });   
-     
-    }
-    if (pancard) {
-      const details = await uploadToCloudinary(pancard.tempFilePath);
-      newDocuments.push({ name: 'pancard', url: details.secure_url });   
-    }
-    if (twevelCert) {
-      const details = await uploadToCloudinary(twevelCert.tempFilePath);
-      newDocuments.push({ name: 'twevelCert', url: details.secure_url });   
-    }
-    if (LastOrganization) {
-      const details = await uploadToCloudinary(LastOrganization.tempFilePath);
-      newDocuments.push({ name: 'LastOrganization', url: details.secure_url });   
-    }
-    if (RelievingLetter) {
-      const details = await uploadToCloudinary(RelievingLetter.tempFilePath);
-      newDocuments.push({ name: 'RelievingLetter', url: details.secure_url });   
-    }
-    if (OfferLetter) {
-      const details = await uploadToCloudinary(OfferLetter.tempFilePath);
-      newDocuments.push({ name: 'OfferLetter', url: details.secure_url });   
-    }
-    if (ExperienceLetter) {
-      const details = await uploadToCloudinary(ExperienceLetter.tempFilePath);
-      newDocuments.push({ name: 'ExperienceLetter', url: details.secure_url });   
-    }
-   
-  
-  // Find the user by ID
-  const user = await User.findById(id);
 
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
-  }
+    const documentsToUpdate = [
+      { name: 'adharCard', file: adharCard },
+      { name: 'pancard', file: pancard },
+      { name: 'tenCert', file: tenCert },
+      { name: 'twevelCert', file: twevelCert },
+      { name: 'cancelCheque', file: cancelCheque },
+      { name: 'LastOrganization', file: LastOrganization },
+      { name: 'RelievingLetter', file: RelievingLetter },
+      { name: 'OfferLetter', file: OfferLetter },
+      { name: 'ExperienceLetter', file: ExperienceLetter }
+    ];
 
-    // Update the user's documents field
-    user.document = user.document.concat(newDocuments);
+    let updatedDocuments = user.document || [];
 
-    // Save the updated user
-    const updatedUser = await user.save();
+    for (let doc of documentsToUpdate) {
+      if (doc.file) {
+        const details = await uploadToCloudinary(doc.file.tempFilePath);
 
-    res.status(200).json({success:true , message: 'Files uploaded successfully'  });
+        // Check if the document already exists
+        const existingDocIndex = updatedDocuments.findIndex(d => d.name === doc.name);
+
+        if (existingDocIndex >= 0) {
+          // Update the existing document's URL
+          updatedDocuments[existingDocIndex].url = details.secure_url;
+        } else {
+          // Add a new document entry
+          updatedDocuments.push({ name: doc.name, url: details.secure_url });
+        }
+      }
+    }
+
+    // Save the updated documents to the user schema
+    user.documents = updatedDocuments;
+    await user.save();
+
+    res.status(200).json({ message: 'Documents uploaded successfully', documents: user.documents });
+
   } catch (error) {
-    console.error('Error uploading documents:', error);
-    res.status(500).json({ error: 'Failed to upload documents', message: error.message });
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while uploading documents' });
   }
 };
 
