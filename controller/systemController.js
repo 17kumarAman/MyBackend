@@ -2,6 +2,7 @@ import Branch from "../models/Branch/Branch.js";
 import Department from "../models/Department/Department.js";
 import Designation from "../models/Designation/Designation.js";
 import LeaveType from "../models/LeaveType/LeaveType.js";
+import OfferLetter from "../models/OfferLetter/OfferLetter.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { removeUndefined } from "../utils/util.js";
@@ -267,25 +268,17 @@ export const deleteDesignation = asyncHandler(async (req, res) => {
 
 export const createDocSetup = asyncHandler(async(req ,res)=>{
  try{
-  const {name , requiredField,documentType} = req.body;
+  const {name , requiredField} = req.body;
   console.log('naesm ',name , requiredField);
 
 
-  const details = await Document.create({name , requiredField:requiredField, documentType:documentType});
+  const details = await Document.create({name , requiredField:requiredField});
 
    console.log('details ',details);
 
   //  console.log({documentType:documentType});
 
-   const userEmployee = await User.findOne({fullName: req.user._id});
-
-   console.log(userEmployee);
-
-   for (user of userEmployee){
-      const ans = await details.save();
-      console.log(ans);
-   }
-
+   
    return res.status(200).json({
     status:true ,
     message:"Successfuly created"
@@ -369,3 +362,68 @@ export const fetchAllDocs = asyncHandler(async(req ,res)=>{
  console.log(error);
   }
 })
+
+export const postLetter = asyncHandler(async(req,res)=>{
+  try {
+     const {letterName,letterSlip} = req.body;
+
+     if(letterSlip === null){
+       res.json({
+         status:200,
+         msg:"letter can not be send"
+       })
+     }
+
+     else if(letterSlip === letterName.length){
+        res.json({
+           status:200,
+           msg:"letter length should not be greater than 100 words",
+           return:[{
+              status:false,    
+              message:"The letter is not reconized"
+           }]
+        })
+     }
+
+     const letter = await OfferLetter.create({letterName,letterSlip});
+
+     
+     console.log(letter);
+
+     return res.status(200).json({
+      status: true,
+      message: 'letter created successfully',
+      data: letter,
+    });
+  } 
+
+  catch (error) {
+     console.log("error",error);
+
+     return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+})
+
+export const updateOoferLetter = asyncHandler(async(req,res)=>{
+   const user = await User.find({});
+   console.log(user.fullName);
+
+   const emailList = user.map(user => user.email);
+
+   console.log(emailList);
+
+
+   const offerLetter = await OfferLetter.updateOne({emailList});
+   
+   return(
+    {
+      status:true,
+      message:"successfully updated the offer letter",
+      data:offerLetter
+    }
+   )
+
+});
