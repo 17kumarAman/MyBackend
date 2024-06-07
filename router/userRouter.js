@@ -55,7 +55,7 @@ router.route("/deleteprofile").delete(isAuthenticated, DeleteUserProfile);
 
 router.route("/deleteUsers").delete(deleteUsers);
 
-router.route("/deactivateUsers").delete(DeactivateUser);
+router.route("/deactivateUser/:id").delete(DeactivateUser);
 
 router.delete("/deleteUser/:id", DeleteUser);
 

@@ -86,7 +86,15 @@ export const deleteAllLeaves = async () => {
 };
 
 export const getTotalLeaveCount = async()=>{
-  const data = await Leave.find({});
+  // const data = await Leave.find({status:"Pending"});
+
+  const data = await Leave.find({
+    $or: [
+      { status: "Pending" },
+      { status: "" },
+      { status: { $exists: false } }
+    ]
+  });
 
   const totalLeave = data.length;
 

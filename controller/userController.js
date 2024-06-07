@@ -751,13 +751,26 @@ export const uploadDocuments = async (req, res) => {
 };
 
 export const DeactivateUser = asyncHandler(async (req, res) => {
-  const {id} = req.params
-  const deact = await User.findByIdAndDelete(id);
+  const { id } = req.params;
 
-  console.log(deact);
+  const user = await User.findById(id);
+
+  if (!user) {
+ return res.status(404).json({
+  status:false ,
+  message:"User do not exist "
+ })
+  }
+
+  const newDeactivationStatus = user.isDeactivated === "Yes" ? "No" : "Yes";
+
+  user.isDeactivated = newDeactivationStatus;
   
+  await user.save();
 
-  return res.status(200).json(new ApiResponse(200, {}, "successfully deleted",{
-    data:deact
-  }));
-});
+  return res.status(200).json({
+      status:true ,
+   message:`Account successfully ${newDeactivationStatus === "Yes" ? "deactivated" : "activated"}`
+})
+
+})

@@ -228,12 +228,13 @@ export const updateAttendance = async (req, res) => {
   try {
 
     const { id } = req.params;
-    const { Date, clockIn, clockOut } = req.body;
+    const { Date, clockIn, clockOut , breakTime } = req.body;
 
     const details = await Clock.findByIdAndUpdate(id, {
       Date,
       clockIn,
-      clockOut
+      clockOut , 
+      breakTime
     }, { new: true });
 
     return res.status(200).json({

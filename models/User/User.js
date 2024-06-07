@@ -98,6 +98,10 @@ EmployeeType:{
     required: false,
     set: (l) => (l === "" ? undefined : l),
   },
+  isDeactivated:{
+ type: String ,
+ default: "No",
+  },
   department: {
     type: String,
     required: false,
