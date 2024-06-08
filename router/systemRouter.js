@@ -23,7 +23,6 @@ import {
   createDocSetup , 
   updateDocSetup , 
   deleteDocSetup,
-  postLetter
 } from "../controller/systemController.js";
 
 const router = Router();
@@ -67,7 +66,7 @@ router.post("/updateDocSetup/:id" , updateDocSetup);
 router.delete("/deleteDocSetup/:id" , deleteDocSetup);
 router.get("/fetchAllDocs" , fetchAllDocs);
 
-router.post("/createLetter",postLetter);
+
 
 
 export default router;
