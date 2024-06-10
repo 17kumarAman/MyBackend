@@ -33,6 +33,10 @@ const mySchema = new mongoose.Schema({
      image:String , 
      Note: String,
      NoteDate: Date,
+     createAt: {
+      type: Date , 
+      default:Date.now()
+     },
      invoiceId:[
       {
         type: mongoose.Schema.Types.ObjectId,
