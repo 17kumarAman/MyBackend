@@ -270,6 +270,8 @@ export const createDocSetup = asyncHandler(async(req ,res)=>{
   const {name , requiredField,documentType} = req.body;
   console.log('naesm ',name , requiredField);
 
+  
+
 
   const details = await Document.create({name , requiredField:requiredField, documentType:documentType});
 
