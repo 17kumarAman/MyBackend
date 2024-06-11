@@ -6,29 +6,60 @@ export const getPayslip = async (req, res) => {
     try {
         const { month, year } = req.body;
 
+        console.log("month" , month , 'year ', year);
+
+        const monthNames = {
+            "January": 1,
+            "February": 2,
+            "March": 3,
+            "April": 4,
+            "May": 5,
+            "June": 6,
+            "July": 7,
+            "August": 8,
+            "September": 9,
+            "October": 10,
+            "November": 11,
+            "December": 12
+        };
+
         // Find all users
         const allUsers = await User.find({});
 
-        // Array to store user details with payslip status
+        let filteredUsers = allUsers.filter(user => {
+            const { joiningDate } = user;
+
+             const [yearPart, monthPart, datePart] = joiningDate.split("-");
+
+             const dumYear = parseInt(yearPart);
+const dumMonth = parseInt(monthPart);
+
+const numMonth = monthNames[month];
+
+ if(numMonth <= dumMonth && dumYear >= year){
+    return true;
+ }
+ else {
+    return false;
+ }
+                 
+        });
+
         let usersWithPayslipStatus = [];
 
-        // Iterate through each user
-        for (const user of allUsers) {
-            // Find payslip for the user for the given month and year
+        for (const user of filteredUsers) {
             const payslip = await Payslip.findOne({
                 user: user._id,
                 month: month,
                 year: year
             });
 
-            // If payslip doesn't exist for the user, consider it unpaid
             if (!payslip) {
                 usersWithPayslipStatus.push({
                     user: user,
                     status: "Unpaid"
                 });
             } else {
-                // Payslip exists, check its status
                 usersWithPayslipStatus.push({
                     user: user,
                     status: payslip.status
@@ -36,12 +67,13 @@ export const getPayslip = async (req, res) => {
             }
         }
 
-        // Send the response with users' details and payslip status
         return res.status(200).json({
             status: true,
             message: "Payslip details fetched successfully",
             payslipDetails: usersWithPayslipStatus
         });
+
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
