@@ -27,28 +27,28 @@ export const getPayslip = async (req, res) => {
         let filteredUsers = allUsers.filter(user => {
             const { joiningDate } = user;
 
-             const [yearPart, monthPart, datePart] = joiningDate.split("-");
+            const [yearPart, monthPart, datePart] = joiningDate.split("-");
 
-             const dumYear = parseInt(yearPart);
-const dumMonth = parseInt(monthPart);
+            const dumYear = parseInt(yearPart);
+            const dumMonth = parseInt(monthPart);
 
-const numMonth = monthNames[month];
+            const numMonth = monthNames[month];
 
- if(year > dumYear){
-    return true;
- }
- else if(year <= dumYear){
-     if(dumMonth <= numMonth){
-        return true;
-     }
-     else{
-        return false;
-     }
- }
-else {
-    return  false;
-}
-              
+            if (year > dumYear) {
+                return true;
+            }
+            else if (year <= dumYear) {
+                if (dumMonth <= numMonth) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+
         });
 
         let usersWithPayslipStatus = [];
@@ -162,7 +162,8 @@ export const bulkPayslip = async (req, res) => {
                     year: year,
                     status: "Paid"
                 });
-            } else {
+            }
+             else {
                 // If payslip exists, update its status to "Paid"
                 payslip.status = "Paid";
                 await payslip.save();
