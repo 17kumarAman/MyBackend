@@ -6,8 +6,6 @@ export const getPayslip = async (req, res) => {
     try {
         const { month, year } = req.body;
 
-        console.log("month" , month , 'year ', year);
-
         const monthNames = {
             "January": 1,
             "February": 2,
@@ -36,13 +34,21 @@ const dumMonth = parseInt(monthPart);
 
 const numMonth = monthNames[month];
 
- if(numMonth <= dumMonth && dumYear >= year){
+ if(year > dumYear){
     return true;
  }
- else {
-    return false;
+ else if(year <= dumYear){
+     if(dumMonth <= numMonth){
+        return true;
+     }
+     else{
+        return false;
+     }
  }
-                 
+else {
+    return  false;
+}
+              
         });
 
         let usersWithPayslipStatus = [];
