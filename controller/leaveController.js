@@ -2,6 +2,7 @@ import Leave from "../models/Leave/Leave.js";
 import User from "../models/User/User.js";
 import { removeUndefined } from "../utils/util.js";
 import { mailSender } from "../utils/SendMail2.js";
+import EmployeeLeave from "../models/EmployeeLeave/employeeLeave.js"
 
 
 export const postLeave = async ({ auth, type, from, to, days, reason }) => {
@@ -127,7 +128,8 @@ status: true ,
 message:"Successfuly send the email"
 }
 }
-export const acceptLeaveHandler  = async({fullName , days , id})=>{
+
+export const acceptLeaveHandler  = async({fullName , days , id , userId , startDate , endDate})=>{
 
   const leaveDetails = await Leave.findById(id);
 
@@ -145,10 +147,45 @@ export const acceptLeaveHandler  = async({fullName , days , id})=>{
   </div>`)
     
 
+  const leaveDetailing = await EmployeeLeave.create({startDate , endDate , user: userId});
+
+
     return {
       status: true , 
       message:"Successfuly send the email"
     }
 
 
+}
+
+// this is employee leave controllers 
+
+export const GetTodayLeave = async(req , res)=>{
+  try{
+
+     const today = new Date();
+     const year = today.getFullYear();
+     const month = String(today.getMonth() + 1).padStart(2, '0'); 
+     const day = String(today.getDate()).padStart(2, '0');
+     const todayDate = `${year}-${month}-${day}`;
+
+    const employeesOnLeave = await EmployeeLeave.find({
+      startDate: { $lte: todayDate },
+      endDate: { $gte: todayDate }
+    }).populate('user');
+
+
+    return res.status(200).json({
+      status:true , 
+      message:"Successfuly fetched" , 
+      data : employeesOnLeave
+    })
+
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      status:false , 
+      message:"INterval server error "
+    })
+  }
 }
