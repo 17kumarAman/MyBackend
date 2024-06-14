@@ -81,10 +81,10 @@ import {
   updateInvoice,
   getEveryLeadInvoice,
   SetSallary,
-  getSallary
+  getSallary, 
+  DepartmentEmployee
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
-import { upload } from "../middleware/multer.js";
 const router = Router();
 
 router.get("/getAdmins", getAdmins);
@@ -93,6 +93,8 @@ router.post("/loginAdmin", loginAdmin);
 router.post("/changePassword", isAuthenticated, ChangeCurrentAdminPassword);
 
 router.post("/createHr", isAuthenticated, CreateNewHr);
+
+router.post("/departmentEmployee" , DepartmentEmployee);
 
 router.post("/createAdmin", createAdmin);
 

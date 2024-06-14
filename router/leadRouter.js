@@ -21,4 +21,5 @@ router.post("/editLead/:id" ,editLead );
 
 router.post("/updateLeadStatus/:id" , editLeadStatus);
 router.post("/updateLeadNote/:id" , editLeadNote);
+
 export default router;

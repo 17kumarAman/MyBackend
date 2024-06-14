@@ -90,6 +90,17 @@ const makeid = (length) => {
   return result;
 };
 
+export const DepartmentEmployee = asyncHandler(async(req ,res)=>{
+   const {department} = req.body;
+
+
+    const allUser = await User.find({department:department});
+    return res.status(200).json({
+      status:true ,
+      allUser
+    })
+})
+
 export const CreateNewHr = asyncHandler(async (req, res) => {
   try {
     const {
@@ -896,6 +907,7 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
     const users = await User.find({ department: Department });
 
     for (const user of users) {
+
       await mailSender(user.email, "Create Annnouncement ", `<div>
       <div>title: ${title}</div>
       <div>Branch: ${Branch}</div>
@@ -906,15 +918,14 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
       <div>description: ${description}</div>
       </div>`)
 
-
     }
-
-
   }
+
   else {
 
     const user = await User.findOne({ fullName: Employee });
-    await mailSender(user.email, "Create Annnouncement ", `<div>
+
+    await mailSender(user?.email, "Create Annnouncement ", `<div>
     <div>title: ${title}</div>
     <div>Branch: ${Branch}</div>
     <div>Department: ${Department}</div>
@@ -924,8 +935,9 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
     <div>description: ${description}</div>
     </div>`)
 
-  }
 
+
+  }
 
   const announcement = await Announcement.create({
     title,
@@ -937,6 +949,7 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
     description: description,
     ts: new Date().getTime(),
     status: "true",
+
   });
   return res
     .status(200)
@@ -989,6 +1002,7 @@ export const updateAnnouncement = asyncHandler(async (req, res) => {
   else {
 
     const user = await User.findOne({ fullName: Employee });
+
     await mailSender(user.email, "update Annnouncement ", `<div>
     <div>title: ${title}</div>
     <div>Branch: ${Branch}</div>
@@ -998,6 +1012,7 @@ export const updateAnnouncement = asyncHandler(async (req, res) => {
     <div>endDate: ${endDate}</div>
     <div>description: ${description}</div>
     </div>`)
+    
   }
 
 
