@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { postLeave, updateLeave, getUserLeaves,getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler } from "../controller/leaveController.js";
+import { postLeave, updateLeave, getUserLeaves,getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler   , GetTodayLeave} from "../controller/leaveController.js";
 import isAuthenticated from "../middleware/auth.js";
+
 
 const router = Router();
 
@@ -132,5 +133,9 @@ router.post("/rejectLeave/:id" , async (req, res) => {
     console.log(error);
   }
 });
+
+// this is employe on leave routes 
+
+router.get("/getTodayLeave" , GetTodayLeave);
 
 export default router;
