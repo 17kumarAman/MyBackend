@@ -3,6 +3,7 @@ const app = express();
 import cors from "cors";
 import userRouter from "./router/userRouter.js";
 import payrollRouter from "./router/payrollRouter.js";
+import openActivity from "./router/openActivity.js"
 import hrRouter from "./router/hrRouter.js";
 import activityRouter from "./router/activityRouter.js";
 import leaveRouter from "./router/leaveRouter.js";
@@ -83,6 +84,7 @@ app.use("/clock", clock);
 app.use("/award" ,award);
 app.use("/lead" , lead);
 app.use("/payroll" , payrollRouter);
+app.use("/openActivity" , openActivity);
 
 
 // app.use("/tranfer" , tranfer);
