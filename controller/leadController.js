@@ -36,7 +36,7 @@ export const createLead = async (req, res) => {
             Country,
             DescriptionInfo } = req.body;
 
-
+        
 
         const leadDetail = await Lead.create({
             LeadOwner: LeadOwner,
@@ -111,6 +111,16 @@ export const getAllLead = async ({ id, query, page, perPage, userId }) => {
 
 }
 
+export const GetAllLeadByAdmin =async(req ,res)=>{
+    const  data = await Lead.find({});
+
+     return res.status(200).json({
+        status:true , 
+        message:"Succeesul" , 
+        data
+     })
+}
+
 export const getAllLead2 = async ({ id, query, page, perPage }) => {
 
     let and = [];
@@ -136,6 +146,16 @@ export const getAllLead2 = async ({ id, query, page, perPage }) => {
 
 }
 
+export const getAllLead3 = async ({ userId }) => {
+    try {
+        const allLead = await Lead.find({ LeadOwner: { $ne: userId } });
+        console.log("allelad",allLead);
+        return { status: true, allLead };
+    } catch (error) {
+        console.error('Error fetching leads:', error);
+        throw error;
+    }
+};
 
 export const postImage = async (req, res) => {
 
