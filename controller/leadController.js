@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/AsyncHandler.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 
+
 export const createLead = async (req, res) => {
     try {
 
@@ -83,8 +84,6 @@ export const createLead = async (req, res) => {
         })
     }
 }
-
-
 export const getAllLead = async ({ id, query, page, perPage, userId }) => {
 
     let and = [];
@@ -337,5 +336,88 @@ export const editLeadNote = asyncHandler(async(req ,res)=>{
 
         
 })
+
+// ====================for doc things======================
+
+export const createDocFile = asyncHandler(async(req,res)=>{
+    console.log(req.body);
+
+    const {file}  = req.body;
+
+    const taking = Document.create({file});
+
+    return(
+        {
+            data:taking,
+            status:true,
+            message:"Doc Create Successfully"
+        }
+    )
+})
+
+export const updateDocFiles = asyncHandler(async(req,res)=>{
+    const {doc} = req.body;
+    const {id} = req.params;
+
+    console.log(doc);
+
+    const docsFile = await Lead.$where(doc,{id}).findIndex();
+
+    console.log(docsFile);
+
+    return(
+        {
+            status:true,
+            data:docsFile,
+            message:"update doc file successfullly"
+           
+        }
+    )
+})
+
+export const getDocFiles = asyncHandler(async(req,res)=>{
+    const docFileing = await Document.find();
+
+    return(
+        {
+            data: docFileing,
+            message:"get all the Data of docs",
+            status:true
+        }
+    )
+});
+
+export const deleteDocFile = asyncHandler(async(req,res)=>{
+    try {
+        const {id} = req.params;
+
+        const ans = await Document.findByIdAndDelete(id);
+        if(ans){
+            console.log("deleted the item successfully");
+            return ans;
+
+        }
+        else{
+             console.log("item deleted take some time");
+             
+        }
+    
+        return(
+            {
+                status:true,
+                message:"doc file deleted successfully",
+                data:ans
+            }
+        )
+    } catch (error) {
+        console.log(error.message);
+        return(
+           res.status(500).json({msg:"server error"})
+        )
+    }
+   
+})
+
+
 
 
