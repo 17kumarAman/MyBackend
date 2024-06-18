@@ -86,24 +86,17 @@ app.use("/lead" , lead);
 app.use("/payroll" , payrollRouter);
 app.use("/openActivity" , openActivity);
 
-
-// app.use("/tranfer" , tranfer);
-// app.use("/trainer",trainer);
-
-// app.use("/announcement", announcementRouter);
 app.use("/attendance", attendanceRouter);
 app.use("/auth", authRouter);
 app.use("/system", systemRouter); 
 app.use("/payslip" , payslip);
 
 const task = cron.schedule('55 23 * * *', async () => {
-// const task = cron.schedule('* * * * *', async () => {
-  // console.log('Cron job ran at 11:55 PM');
+
   let users = await User.find({ role: { $ne: "ADMIN" } });
   let todayDate=new Date().toLocaleDateString('en-GB');
   let todayAttendances=await ActivityTracker.find({date1: todayDate}, {'user._id': 1, _id: 0});
-  // console.log(users);
-  // console.log(todayAttendances);
+
   let arr=[];
   for(let i of todayAttendances)
   {
@@ -125,7 +118,7 @@ const task = cron.schedule('55 23 * * *', async () => {
   await ActivityTracker.insertMany(arr1, {ordered: false});
 }, {
   scheduled: true,
-  timezone: 'Asia/Kolkata' // India timezone
+  timezone: 'Asia/Kolkata' 
 });
 
 task.start();

@@ -84,6 +84,19 @@ export const createLead = async (req, res) => {
         })
     }
 }
+
+export const GetLeadById = async(req ,res)=>{
+    const {id} = req.params;
+
+     const leadDetail = await Lead.findById(id).populate("LeadOwner");
+
+     return res.status(200).json({
+        status:true ,
+        data: leadDetail
+     })
+
+}
+
 export const getAllLead = async ({ id, query, page, perPage, userId }) => {
 
     let and = [];
@@ -318,11 +331,30 @@ export const editLeadStatus = asyncHandler(async(req ,res)=>{
 export const editLeadNote = asyncHandler(async(req ,res)=>{
    try{
 
-    const {Note} = req.body;
+    const {Note , LeadStatus} = req.body;
 
     const {id} = req.params;
-     
-     const lead = await Lead.findByIdAndUpdate(id, { Note: Note ,NoteDate: Date.now() }, { new: true });
+
+     let lead;
+
+     if(LeadStatus == "Follow-up" ){
+         lead = await Lead.findByIdAndUpdate(id, { FollowNote: Note ,NoteDate: Date.now() }, { new: true });
+        
+    }
+    else if(LeadStatus == "Cold"){
+          lead = await Lead.findByIdAndUpdate(id, { ColdNote: Note ,NoteDate: Date.now() }, { new: true });
+         
+        }
+        else if(LeadStatus == "Hot"){
+          lead  =  await Lead.findByIdAndUpdate(id, { HotNote: Note ,NoteDate: Date.now() }, { new: true });
+         
+        }
+        else {
+            // for warm 
+         lead = await Lead.findByIdAndUpdate(id, { WarmNote: Note ,NoteDate: Date.now() }, { new: true });
+
+     }
+      
 
      res.status(200).json({ message: "Lead Note updated successfully", lead });
 

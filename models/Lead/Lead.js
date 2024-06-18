@@ -31,7 +31,10 @@ const mySchema = new mongoose.Schema({
      Country:String ,
      DescriptionInfo:String ,
      image:String , 
-     Note: String,
+     FollowNote: String,
+     WarmNote: String,
+     HotNote: String,
+     ColdNote: String,
      NoteDate: Date,
      createAt: {
       type: Date , 

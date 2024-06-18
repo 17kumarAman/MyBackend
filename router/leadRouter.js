@@ -1,9 +1,10 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 ,  editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin} from "../controller/leadController.js"
+import {createLead ,getAllLead,getAllLead3 ,  editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById} from "../controller/leadController.js"
 
 const router = Router();
 
 router.post("/createLead",createLead );
+router.get("/getLeadById/:id" , GetLeadById);
 
 router.post('/getAllLead', async (req, res) => {
     const {id} = req.body;
