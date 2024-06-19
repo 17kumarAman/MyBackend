@@ -7,6 +7,7 @@ import { asyncHandler } from "../utils/AsyncHandler.js";
 import { removeUndefined } from "../utils/util.js";
 import Document from "../models/Document/Document.js";
 import Industry from "../models/Industry/Industry.js";
+import LeadStatus from "../models/Leadstatus/LeadStatus.js";
 import LeadSource from "../models/LeadSource/LeadSource.js";
 
 import User from "../models/User/User.js";
@@ -276,8 +277,6 @@ export const createDocSetup = asyncHandler(async(req ,res)=>{
 
   const details = await Document.create({name , requiredField:requiredField, documentType:documentType});
 
-   console.log('details ',details);
-
   //  console.log({documentType:documentType});
 
    const userEmployee = await User.findOne({fullName: req.user._id});
@@ -459,7 +458,7 @@ export const updateIndustry = asyncHandler(async (req, res) => {
   // console.log(status, name);
   // console.log(id);
 
-  const updateIndustry = await Industry.findByIdAndUpdate(
+  const updateIndustry = await LeadStatus.findByIdAndUpdate(
     id,
     {
       $set: updateObj,
@@ -474,9 +473,10 @@ export const updateIndustry = asyncHandler(async (req, res) => {
 });
 
 export const deleteIndustry = asyncHandler(async (req, res) => {
+
   const { id } = req.params;
 
-  const data = await Industry.findByIdAndDelete(id);
+  const data = await LeadStatus.findByIdAndDelete(id);
   return res
     .status(200)
     .json(new ApiResponse(200, data, "Deleted   Successfully"));
