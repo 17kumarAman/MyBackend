@@ -1,6 +1,8 @@
 import Lead from "../models/Lead/Lead.js"
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
+import LeadStatus from "../models/Leadstatus/LeadStatus.js"
+import LeadSource from "../models/LeadSource/LeadSource.js"
 
 
 
@@ -83,6 +85,50 @@ export const createLead = async (req, res) => {
             message: "Internal server error "
         })
     }
+}
+
+export const CreateLeadStatus = async(req ,res)=>{
+    const {status} = req.body;
+
+     const ans = await LeadStatus.create({name:status});
+
+      return res.status(200).json({
+        status:true ,
+        data:ans 
+      })
+     
+}
+
+export const getLeadStatus = async(req ,res)=>{
+    const ans = await LeadStatus.find({});
+
+    return res.status(200).json({
+        status:true ,
+        data:ans 
+      })
+     
+}
+export const getLeadSource = async(req ,res)=>{
+    
+    const ans = await LeadSource.find({});
+
+    return res.status(200).json({
+        status:true ,
+        data:ans 
+      })
+     
+}
+
+export const CreateLeadSource = async(req ,res)=>{
+    const {status} = req.body;
+
+     const ans = await LeadSource.create({name:status});
+
+      return res.status(200).json({
+        status:true ,
+        data:ans 
+      })
+     
 }
 
 export const GetLeadById = async(req ,res)=>{

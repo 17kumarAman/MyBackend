@@ -1,6 +1,6 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 ,  editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById} from "../controller/leadController.js"
-
+import {createLead ,getAllLead,getAllLead3 ,  editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource} from "../controller/leadController.js"
+ 
 const router = Router();
 
 router.post("/createLead",createLead );
@@ -24,6 +24,13 @@ router.get("/getAllLeadByAdmin" , GetAllLeadByAdmin);
 router.post("/postImage", postImage);
 router.delete("/deleteLead/:id",deleteLeads);
 router.post("/editLead/:id" ,editLead );
+
+
+router.post("/createLeadStatus" , CreateLeadStatus);
+router.post("/createLeadSource" , CreateLeadSource);
+
+router.get("/allLeadStatus" , getLeadStatus);
+router.get("/allLeadSource" , getLeadSource);
 
 
 router.post("/updateLeadStatus/:id" , editLeadStatus);
