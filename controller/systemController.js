@@ -6,7 +6,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { removeUndefined } from "../utils/util.js";
 import Document from "../models/Document/Document.js";
-
+import Industry from "../models/Industry/Industry.js";
+import LeadSource from "../models/LeadSource/LeadSource.js";
 
 import User from "../models/User/User.js";
 export const postLeaveType = asyncHandler(async (req, res) => {
@@ -371,3 +372,115 @@ export const fetchAllDocs = asyncHandler(async(req ,res)=>{
  console.log(error);
   }
 })
+
+
+export const postLeadSource = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const existLeadSourceName = await LeadSource.findOne({ name });
+  if (existLeadSourceName) {
+    return res.status(400).json({
+      success: false,
+      message: "LeadSource Name Alreday Exist",
+    });
+  }
+  const newLeadSource = await LeadSource.create({
+    name,
+  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, newLeadSource, " successfully posted", existLeadSourceName));
+});
+
+export const getLeadSources = asyncHandler(async (req, res) => {
+  const data = await LeadSource.find({});
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "leadSources fetched Successfully"));
+});
+
+export const updateLeadSources = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const { id } = req.params;
+  let updateObj = removeUndefined({name});
+  // console.log(status, name);
+  // console.log(id);
+
+  const updateLeadsources = await LeadSource.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateLeadsources, "Updated  Successfully"));
+});
+
+export const deleteLeadSource = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const data = await LeadSource.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted   Successfully"));
+});
+
+export const postIndustry = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const existIndustry = await Industry.findOne({ name });
+  if (existIndustry) {
+    return res.status(400).json({
+      success: false,
+      message: "LeadSource Name Alreday Exist",
+    });
+  }
+  const newIndustry = await Industry.create({
+    name,
+  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, newIndustry, " successfully posted", existIndustry));
+});
+
+export const getIndustry = asyncHandler(async (req, res) => {
+  const data = await Industry.find({});
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Industry fetched Successfully"));
+});
+
+export const updateIndustry = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const { id } = req.params;
+  let updateObj = removeUndefined({name});
+  // console.log(status, name);
+  // console.log(id);
+
+  const updateIndustry = await Industry.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateIndustry, "Updated  Successfully"));
+});
+
+export const deleteIndustry = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const data = await Industry.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted   Successfully"));
+});
+
+
+

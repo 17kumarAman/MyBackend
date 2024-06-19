@@ -6,7 +6,9 @@ const mySchema = new mongoose.Schema({
     name: String,
     time: String,
     ts: String,
-    status: String
+    status: String,
+    Note:String,
+    noteDate:Date
 });
 
 const Task = mongoose.model('Task', mySchema);

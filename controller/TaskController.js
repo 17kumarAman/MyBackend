@@ -39,6 +39,9 @@ export const getTasks = asyncHandler(async (req, res) => {
   const data = await Task.find({
     [req.user.role === "ADMIN" ? "admin" : "user"]: req.user._id,
   });
+
+  console.log(data);
+  
   return res
     .status(200)
     .json(new ApiResponse(200, data, "task fetched Successfully"));
@@ -52,3 +55,24 @@ export const deleteTask = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, data, "Deleted   Successfully"));
 });
+
+
+// ===================task notes api========================
+export const createNote = asyncHandler(async(req,res) => {
+   try {
+      const {Note} = req.body;
+
+      const notes = Task.create({Note:Note, noteDate: Date.now(), user:req.user._id, admin: req.user.adminId,});
+
+      return res.status(200).json({
+        status: true,
+        message: "Successfuly created Note",
+        data: notes
+    })
+   } 
+   catch (error) {
+      console.log(error);
+   }
+});
+
+

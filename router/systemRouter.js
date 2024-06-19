@@ -23,6 +23,14 @@ import {
   createDocSetup , 
   updateDocSetup , 
   deleteDocSetup,
+  postLeadSource,
+  updateLeadSources,
+  getLeadSources,
+  deleteLeadSource,
+  postIndustry,
+  updateIndustry,
+  getIndustry,
+  deleteIndustry,
 } from "../controller/systemController.js";
 
 const router = Router();
@@ -65,6 +73,16 @@ router.post("/createDocSetup" , createDocSetup);
 router.post("/updateDocSetup/:id" , updateDocSetup);
 router.delete("/deleteDocSetup/:id" , deleteDocSetup);
 router.get("/fetchAllDocs" , fetchAllDocs);
+
+router.post("/postLeadSource", postLeadSource);
+router.put("/updateLeadSource/:id", updateLeadSources);
+router.get("/getLeadSource", getLeadSources);
+router.delete("/deleteLeadSource/:id", deleteLeadSource);
+
+router.post("/postIndustry", postIndustry);
+router.put("/updateIndustry/:id", updateIndustry);
+router.get("/getIndustry", getIndustry);
+router.delete("/deleteIndustry/:id", deleteIndustry);
 
 
 
