@@ -109,7 +109,7 @@ export const getLeadStatus = async(req ,res)=>{
      
 }
 export const getLeadSource = async(req ,res)=>{
-    
+
     const ans = await LeadSource.find({});
 
     return res.status(200).json({
@@ -130,6 +130,31 @@ export const CreateLeadSource = async(req ,res)=>{
       })
      
 }
+
+
+export const UpdateLeadSource = async(req ,res)=>{
+    const {status} = req.body;
+
+    const ans = await LeadSource.findByIdAndUpdate({name:status} , {new:true});
+
+     return res.status(200).json({
+       status:true ,
+       data:ans 
+     })
+    
+}
+export const UpdateLeadStatus = async(req ,res)=>{
+    const {status} = req.body;
+
+    const ans = await LeadStatus.findByIdAndUpdate({name:status} , {new:true});
+
+     return res.status(200).json({
+       status:true ,
+       data:ans 
+     })
+    
+}
+
 
 export const GetLeadById = async(req ,res)=>{
     const {id} = req.params;
