@@ -1,11 +1,14 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 ,  editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource
+import {createLead ,getAllLead,getAllLead3 , GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource
 } from "../controller/leadController.js"
  
 const router = Router();
 
 router.post("/createLead",createLead );
 router.get("/getLeadById/:id" , GetLeadById);
+
+router.get("/getLeadByUser/:id" , GetLeadByUser);
+router.get("/getDesiUser" , GetDesiUser);
 
 router.post('/getAllLead', async (req, res) => {
     const {id} = req.body;

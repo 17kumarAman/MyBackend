@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/AsyncHandler.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 import LeadStatus from "../models/Leadstatus/LeadStatus.js"
 import LeadSource from "../models/LeadSource/LeadSource.js"
+import User from "../models/User/User.js";
 
 
 
@@ -86,6 +87,31 @@ export const createLead = async (req, res) => {
         })
     }
 }
+
+export const GetDesiUser = async (req, res) => {
+
+        const users = await User.find({
+            designation: { $in: ["Intern Digital Marketing", "Business Development Manager"] }
+        });
+
+        res.status(200).json({
+            status:true ,
+            data: users
+        });
+    
+}
+
+ export const GetLeadByUser = async(req ,res)=>{
+    const {id} = req.params;
+
+     const allLead = await Lead.find({LeadOwner:id});
+
+     return res.status(200).json({
+        status:true ,
+        data:allLead
+     })
+     
+ }
 
 export const CreateLeadStatus = async(req ,res)=>{
     const {status} = req.body;
@@ -232,7 +258,6 @@ export const getAllLead2 = async ({ id, query, page, perPage }) => {
 export const getAllLead3 = async ({ userId }) => {
     try {
         const allLead = await Lead.find({ LeadOwner: { $ne: userId } });
-        console.log("allelad",allLead);
         return { status: true, allLead };
     } catch (error) {
         console.error('Error fetching leads:', error);
