@@ -6,6 +6,7 @@ import LeadSource from "../models/LeadSource/LeadSource.js"
 import User from "../models/User/User.js";
 import Role from "../models/Role/Role.js";
 import { createDocSetup } from "./systemController.js";
+import LeadNote from "../models/LeadNotes.js"
 
 
 
@@ -594,5 +595,60 @@ export const deleteRole = asyncHandler(async(req,res)=>{
 })
 
 
+// for lead notes 
+// CreateLeadNote , UpdateLeadNote , DeleteLeadNote
+export const CreateLeadNote = async(req ,res)=>{
+
+    const {LeadId} = req.params;
+
+    const {Note , Status} = req.body;
+
+     const noteDetail = await LeadNote.create({Note , Status , LeadId});
+     return res.status(200).json({
+       status:true ,
+   data:noteDetail
+      })
+    
+}
+
+export const UpdateLeadNote = async(req ,res)=>{
+
+    const {noteId} = req.params;
+
+     const {Note , Status} = req.body;
+
+      const noteDetail = await LeadNote.findByIdAndUpdate(noteId , {Note , Status} , {new:true});
+      return res.status(200).json({
+        status:true ,
+    data:noteDetail
+       })
+    
+
+}
+
+export const DeleteLeadNote = async(req ,res)=>{
+  const {leadId} = req.params;
+
+   await LeadNote.findByIdAndDelete(leadId);
+
+   return res.status(200).json({
+    status:true ,
+
+   })
+
+}
+
+
+export const GetNoteById = async(req ,res)=>{
+
+    const {leadId} = req.params;
+
+     const ans = await LeadNote.find({LeadId:leadId});
+
+     return res.status(200).json({
+        status:true , 
+        data:ans 
+     })
+}
 
 
