@@ -4,6 +4,8 @@ import { uploadToCloudinary } from "../utils/cloudinary.js";
 import LeadStatus from "../models/Leadstatus/LeadStatus.js"
 import LeadSource from "../models/LeadSource/LeadSource.js"
 import User from "../models/User/User.js";
+import Role from "../models/Role/Role.js";
+import { createDocSetup } from "./systemController.js";
 
 
 
@@ -40,7 +42,7 @@ export const createLead = async (req, res) => {
             Country,
             DescriptionInfo } = req.body;
 
-        
+
 
         const leadDetail = await Lead.create({
             LeadOwner: LeadOwner,
@@ -90,107 +92,107 @@ export const createLead = async (req, res) => {
 
 export const GetDesiUser = async (req, res) => {
 
-        const users = await User.find({
-            designation: { $in: ["Intern Digital Marketing", "Business Development Manager"] }
-        });
+    const users = await User.find({
+        designation: { $in: ["Intern Digital Marketing", "Business Development Manager"] }
+    });
 
-        res.status(200).json({
-            status:true ,
-            data: users
-        });
-    
+    res.status(200).json({
+        status: true,
+        data: users
+    });
+
 }
 
- export const GetLeadByUser = async(req ,res)=>{
-    const {id} = req.params;
+export const GetLeadByUser = async (req, res) => {
+    const { id } = req.params;
 
-     const allLead = await Lead.find({LeadOwner:id});
+    const allLead = await Lead.find({ LeadOwner: id });
 
-     return res.status(200).json({
-        status:true ,
-        data:allLead
-     })
-     
- }
+    return res.status(200).json({
+        status: true,
+        data: allLead
+    })
 
-export const CreateLeadStatus = async(req ,res)=>{
-    const {status} = req.body;
-
-     const ans = await LeadStatus.create({name:status});
-
-      return res.status(200).json({
-        status:true ,
-        data:ans 
-      })
-     
 }
 
-export const getLeadStatus = async(req ,res)=>{
+export const CreateLeadStatus = async (req, res) => {
+    const { status } = req.body;
+
+    const ans = await LeadStatus.create({ name: status });
+
+    return res.status(200).json({
+        status: true,
+        data: ans
+    })
+
+}
+
+export const getLeadStatus = async (req, res) => {
     const ans = await LeadStatus.find({});
 
     return res.status(200).json({
-        status:true ,
-        data:ans 
-      })
-     
+        status: true,
+        data: ans
+    })
+
 }
-export const getLeadSource = async(req ,res)=>{
+export const getLeadSource = async (req, res) => {
 
     const ans = await LeadSource.find({});
 
     return res.status(200).json({
-        status:true ,
-        data:ans 
-      })
-     
+        status: true,
+        data: ans
+    })
+
 }
 
-export const CreateLeadSource = async(req ,res)=>{
-    const {status} = req.body;
+export const CreateLeadSource = async (req, res) => {
+    const { status } = req.body;
 
-     const ans = await LeadSource.create({name:status});
+    const ans = await LeadSource.create({ name: status });
 
-      return res.status(200).json({
-        status:true ,
-        data:ans 
-      })
-     
-}
+    return res.status(200).json({
+        status: true,
+        data: ans
+    })
 
-
-export const UpdateLeadSource = async(req ,res)=>{
-    const {status} = req.body;
-
-    const ans = await LeadSource.findByIdAndUpdate({name:status} , {new:true});
-
-     return res.status(200).json({
-       status:true ,
-       data:ans 
-     })
-    
-}
-export const UpdateLeadStatus = async(req ,res)=>{
-    const {status} = req.body;
-
-    const ans = await LeadStatus.findByIdAndUpdate({name:status} , {new:true});
-
-     return res.status(200).json({
-       status:true ,
-       data:ans 
-     })
-    
 }
 
 
-export const GetLeadById = async(req ,res)=>{
-    const {id} = req.params;
+export const UpdateLeadSource = async (req, res) => {
+    const { status } = req.body;
 
-     const leadDetail = await Lead.findById(id).populate("LeadOwner");
+    const ans = await LeadSource.findByIdAndUpdate({ name: status }, { new: true });
 
-     return res.status(200).json({
-        status:true ,
+    return res.status(200).json({
+        status: true,
+        data: ans
+    })
+
+}
+export const UpdateLeadStatus = async (req, res) => {
+    const { status } = req.body;
+
+    const ans = await LeadStatus.findByIdAndUpdate({ name: status }, { new: true });
+
+    return res.status(200).json({
+        status: true,
+        data: ans
+    })
+
+}
+
+
+export const GetLeadById = async (req, res) => {
+    const { id } = req.params;
+
+    const leadDetail = await Lead.findById(id).populate("LeadOwner");
+
+    return res.status(200).json({
+        status: true,
         data: leadDetail
-     })
+    })
 
 }
 
@@ -220,14 +222,14 @@ export const getAllLead = async ({ id, query, page, perPage, userId }) => {
 
 }
 
-export const GetAllLeadByAdmin =async(req ,res)=>{
-    const  data = await Lead.find({});
+export const GetAllLeadByAdmin = async (req, res) => {
+    const data = await Lead.find({});
 
-     return res.status(200).json({
-        status:true , 
-        message:"Succeesul" , 
+    return res.status(200).json({
+        status: true,
+        message: "Succeesul",
         data
-     })
+    })
 }
 
 export const getAllLead2 = async ({ id, query, page, perPage }) => {
@@ -377,173 +379,218 @@ export const editLead = async (req, res) => {
 
 // ==============apis of lead things===============
 
-export const leadByeveryUser = asyncHandler(async()=>{
-    const {name,email} = req.body;
-    const leadBy = (await Lead.create({name,email})).populate("firstName");
+export const leadByeveryUser = asyncHandler(async () => {
+    const { name, email } = req.body;
+    const leadBy = (await Lead.create({ name, email })).populate("firstName");
 
-    return{
-        status:true,
-        message:"Lead by every user create successfully",
-        data:leadBy,
-        code:"404"
+    return {
+        status: true,
+        message: "Lead by every user create successfully",
+        data: leadBy,
+        code: "404"
     }
 })
 
-export const leadEditByUser = asyncHandler(async()=>{
-    const {name,email} = req.body;
+export const leadEditByUser = asyncHandler(async () => {
+    const { name, email } = req.body;
 
-    console.log({name,email});
+    console.log({ name, email });
 
     const leadBy = await Lead.findByIdAndUpdate({
-       name: req.body.name,
-       email: req.body.email
+        name: req.body.name,
+        email: req.body.email
     })
     console.log(leadBy);
 });
 
 
-export const editLeadStatus = asyncHandler(async(req ,res)=>{
-   try{
+export const editLeadStatus = asyncHandler(async (req, res) => {
+    try {
 
-    const {LeadStatus} = req.body;
+        const { LeadStatus } = req.body;
 
-    const {id} = req.params;
-     
-     const lead = await Lead.findByIdAndUpdate(id, { LeadStatus: LeadStatus }, { new: true });
+        const { id } = req.params;
 
-     res.status(200).json({ message: "Lead status updated successfully", lead });
+        const lead = await Lead.findByIdAndUpdate(id, { LeadStatus: LeadStatus }, { new: true });
 
-   } catch(error){
-    console.log("error ",error);
-    return res.status(500).json({
-        status:false ,
-        message:"internal server error "
-    })
-   }
+        res.status(200).json({ message: "Lead status updated successfully", lead });
 
-        
+    } catch (error) {
+        console.log("error ", error);
+        return res.status(500).json({
+            status: false,
+            message: "internal server error "
+        })
+    }
+
+
 })
 
-export const editLeadNote = asyncHandler(async(req ,res)=>{
-   try{
+export const editLeadNote = asyncHandler(async (req, res) => {
+    try {
 
-    const {Note , LeadStatus} = req.body;
+        const { Note, LeadStatus } = req.body;
 
-    const {id} = req.params;
+        const { id } = req.params;
 
-     let lead;
+        let lead;
 
-     if(LeadStatus == "Follow-up" ){
-         lead = await Lead.findByIdAndUpdate(id, { FollowNote: Note ,NoteDate: Date.now() }, { new: true });
-        
-    }
-    else if(LeadStatus == "Cold"){
-          lead = await Lead.findByIdAndUpdate(id, { ColdNote: Note ,NoteDate: Date.now() }, { new: true });
-         
+        if (LeadStatus == "Follow-up") {
+            lead = await Lead.findByIdAndUpdate(id, { FollowNote: Note, NoteDate: Date.now() }, { new: true });
+
         }
-        else if(LeadStatus == "Hot"){
-          lead  =  await Lead.findByIdAndUpdate(id, { HotNote: Note ,NoteDate: Date.now() }, { new: true });
-         
+        else if (LeadStatus == "Cold") {
+            lead = await Lead.findByIdAndUpdate(id, { ColdNote: Note, NoteDate: Date.now() }, { new: true });
+
+        }
+        else if (LeadStatus == "Hot") {
+            lead = await Lead.findByIdAndUpdate(id, { HotNote: Note, NoteDate: Date.now() }, { new: true });
+
         }
         else {
             // for warm 
-         lead = await Lead.findByIdAndUpdate(id, { WarmNote: Note ,NoteDate: Date.now() }, { new: true });
+            lead = await Lead.findByIdAndUpdate(id, { WarmNote: Note, NoteDate: Date.now() }, { new: true });
 
-     }
-      
+        }
 
-     res.status(200).json({ message: "Lead Note updated successfully", lead });
 
-   } catch(error){
-    console.log("error ",error);
-    return res.status(500).json({
-        status:false ,
-        message:"internal server error "
-    })
-   }
+        res.status(200).json({ message: "Lead Note updated successfully", lead });
 
-        
+    } catch (error) {
+        console.log("error ", error);
+        return res.status(500).json({
+            status: false,
+            message: "internal server error "
+        })
+    }
+
+
 })
 
 // ====================for doc things======================
 
-export const createDocFile = asyncHandler(async(req,res)=>{
+export const createDocFile = asyncHandler(async (req, res) => {
     console.log(req.body);
 
-    const {file}  = req.body;
+    const { file } = req.body;
 
-    const taking = Document.create({file});
+    const taking = Document.create({ file });
 
-    return(
+    return (
         {
-            data:taking,
-            status:true,
-            message:"Doc Create Successfully"
+            data: taking,
+            status: true,
+            message: "Doc Create Successfully"
         }
     )
 })
 
-export const updateDocFiles = asyncHandler(async(req,res)=>{
-    const {doc} = req.body;
-    const {id} = req.params;
+export const updateDocFiles = asyncHandler(async (req, res) => {
+    const { doc } = req.body;
+    const { id } = req.params;
 
     console.log(doc);
 
-    const docsFile = await Lead.$where(doc,{id}).findIndex();
+    const docsFile = await Lead.$where(doc, { id }).findIndex();
 
-    console.log(docsFile);
+    console.log(docsFile.toIndex());
 
-    return(
+    return (
         {
-            status:true,
-            data:docsFile,
-            message:"update doc file successfullly"
-           
+            status: true,
+            data: docsFile,
+            message: "update doc file successfullly"
+
         }
     )
 })
 
-export const getDocFiles = asyncHandler(async(req,res)=>{
+export const getDocFiles = asyncHandler(async (req, res) => {
     const docFileing = await Document.find();
 
-    return(
+    return (
         {
             data: docFileing,
-            message:"get all the Data of docs",
-            status:true
+            message: "get all the Data of docs",
+            status: true
         }
     )
 });
 
-export const deleteDocFile = asyncHandler(async(req,res)=>{
+export const deleteDocFile = asyncHandler(async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
 
         const ans = await Document.findByIdAndDelete(id);
-        if(ans){
+        if (ans?.user._id) {
             console.log("deleted the item successfully");
-            return ans;
+            return 
+        }
+        else {
+            console.log("item deleted take some time. please wait for seconds");
+        }
 
-        }
-        else{
-             console.log("item deleted take some time");
-             
-        }
-    
-        return(
+        return (
             {
-                status:true,
-                message:"doc file deleted successfully",
-                data:ans
+                status: true,
+                message: "doc file deleted successfully",
+                data: ans
             }
         )
     } catch (error) {
         console.log(error.message);
-        return(
-           res.status(500).json({msg:"server error"})
+        return (
+            res.status(500).json({ msg: "server error" })
         )
     }
-   
+
+})
+
+export const role = asyncHandler(async(req,res)=>{
+    try {
+        const {id}  = req.params;
+        console.log(id);
+
+        const {user,admin,name} = req.body;
+
+        const setup = await Role.create({
+            user:user._id,
+            admin:admin.adminId,
+            name
+        });
+
+        return({status:true,message:"role is created successfully",data:setup})
+    } 
+    catch (error) {
+        console.log(error);
+    }
+})
+
+export const getRole = asyncHandler(async(req,res)=>{
+    try {
+       const data = await Role.find({});
+
+       return(
+        {
+            message:"fetched all data successfully",
+            data:data,
+            status:true
+        }
+       )
+    } 
+    catch (error) {
+        console.log(error);
+    }
+})
+
+export const deleteRole = asyncHandler(async(req,res)=>{
+    try {
+      const {id} = req.params;
+    } 
+    
+    catch (error) {
+         console.log(error);
+    }
 })
 
 
