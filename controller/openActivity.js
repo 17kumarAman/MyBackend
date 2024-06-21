@@ -74,7 +74,6 @@ export const CreateMeet = async( req ,res)=>{
 }
 
 
-
 return res.status(200).json({
   status:true ,
   message:"Successfuly done",
@@ -90,6 +89,26 @@ export const EditMeet = async( req ,res)=>{
     const {meetId} = req.params;
 
     const meetDetail = await Meet.findByIdAndUpdate(meetId , {title , meetDateFrom ,  meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , LeadId,MeetingLink } , {new:true});
+
+    const emailList = Participant.split(',').map(email => email.trim());
+
+    const message = `<div>
+    <div>Meeting Link: ${MeetingLink}</div>
+    </div>
+    `;
+    const html = `
+    <div>
+    <div>Meeting Link: ${MeetingLink}</div>
+      <div>Related To:${RelatedTo}</div>
+      <div>Note :${Note}</div>
+    </div>
+  `;
+
+ // Send email to each participant
+ for (const email of emailList) {
+  await SendEmail(email, "Meeting Detail", message, html); // Assuming message and html are defined
+}
+
 
 return res.status(200).json({
   status:true ,
