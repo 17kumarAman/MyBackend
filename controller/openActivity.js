@@ -1,11 +1,12 @@
 import Task from "../models/taskModel.js";
 import Meet from "../models/MeetingModel.js"
 
+
 export const CreateTask = async( req ,res)=>{
 
-     const {  Subject, Priority ,  Status , DueDate ,  RelatedTo ,  ContactName ,  Note  , LeadId , userId} = req.body;
+     const {  LeadName, FollowUpType, Date, Time, Remark,  LeadId , userId} = req.body;
 
-      const taskDetail = await Task.create({Subject , Priority ,Status , DueDate ,  RelatedTo ,  ContactName ,  Note , LeadId , user:userId });
+      const taskDetail = await Task.create({LeadName, FollowUpType, Date, Time, Remark, LeadId , user:userId });
 
  return res.status(200).json({
     status:true ,
@@ -17,11 +18,11 @@ export const CreateTask = async( req ,res)=>{
 
 export const EditTask = async( req ,res)=>{
 
-    const {  Subject, Priority ,  Status , DueDate ,  RelatedTo ,  ContactName ,  Note  , LeadId} = req.body;
+    const {  LeadName, FollowUpType, Date, Time, Remark,  LeadId  } = req.body;
 
     const {taskId} =req.params;
 
-    const taskDetail = await Task.findByIdAndUpdate(taskId, {Subject , Priority ,Status , DueDate ,  RelatedTo ,  ContactName ,  Note , LeadId } , {new:true});
+    const taskDetail = await Task.findByIdAndUpdate(taskId, {LeadName, FollowUpType, Date, Time, Remark,  LeadId} , {new:true});
 
 return res.status(200).json({
   status:true ,
@@ -46,9 +47,12 @@ export const DeleteTask = async( req ,res)=>{
 
 export const CreateMeet = async( req ,res)=>{
 
-    const {   title , meetDateFrom ,  meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , userId , LeadId} = req.body;
+    const {   title , meetDateFrom ,   meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , userId , LeadId} = req.body;
 
-    const meetDetail = await Meet.create({title , meetDateFrom ,  meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note ,user:userId , LeadId });
+    
+    const meetDetail = await Meet.create({title , meetDateFrom ,  meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note ,user:userId , LeadId  });
+    
+
 
 return res.status(200).json({
   status:true ,
@@ -60,7 +64,7 @@ return res.status(200).json({
 
 export const EditMeet = async( req ,res)=>{
 
-    const {   title , meetDateFrom ,  meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , LeadId} = req.body;
+    const {   title , meetDateFrom ,   meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , LeadId} = req.body;
 
     const {meetId} = req.params;
 
@@ -109,4 +113,16 @@ export const  GetMeetByUser = async(req ,res)=>{
        status:true ,
        allMeet
     })
+}
+
+export const FetchFollow = async(req , res)=>{
+  const {id} = req.params;
+
+      const data = await Task.find({LeadId:id});
+
+return res.status(200).json({
+  status:true , 
+  data
+})
+
 }

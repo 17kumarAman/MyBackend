@@ -165,10 +165,9 @@ export const CreateNewHr = asyncHandler(async (req, res) => {
     const plainTextPassword = password;
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
 
     let employeeCode1 = makeid(7);
-    console.log(employeeCode1);
+    
     const message = `<div>
        <div>Employee ID: KDS${employeeCode1}</div>
        <div>Password: ${plainTextPassword}</div>

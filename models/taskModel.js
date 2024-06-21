@@ -2,25 +2,20 @@ import mongoose, { mongo } from 'mongoose';
 
 const taskModel = new mongoose.Schema({
 
-    Subject:{
+    LeadName:{
         type: String,
     },
-    Priority: {
+    FollowUpType: {
         type: String , 
     },
-    Status: {
-        type: String,
-    },
-    DueDate: {
+    Date: {
         type: Date,
+        default:Date.now()
     },
-    RelatedTo: {
+    Time: {
         type: String,
     },
-    ContactName: {
-        type: String,
-    },
-    Note: {
+    Remark: {
         type: String,
     },
     LeadId:{

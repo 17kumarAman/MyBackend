@@ -39,6 +39,9 @@ const meetModel = new mongoose.Schema({
     LeadId:{
          type: mongoose.Schema.Types.ObjectId , 
         ref:"Lead"
+    } , 
+    MeetingLink:{
+        type:String ,
     }
  
 });
