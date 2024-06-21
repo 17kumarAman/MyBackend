@@ -94,7 +94,7 @@ export const createLead = async (req, res) => {
 export const GetDesiUser = async (req, res) => {
 
     const users = await User.find({
-        designation: { $in: ["Intern Digital Marketing", "Business Development Manager"] }
+        designation: { $in: ["Intern Digital Marketing", "Business Development Manager","Manager"] }
     });
 
     res.status(200).json({
