@@ -1,5 +1,6 @@
 import Task from "../models/taskModel.js";
 import Meet from "../models/MeetingModel.js"
+import { SendEmail } from "../utils/SendEmail.js";
 
 
 export const CreateTask = async( req ,res)=>{
@@ -47,11 +48,31 @@ export const DeleteTask = async( req ,res)=>{
 
 export const CreateMeet = async( req ,res)=>{
 
-    const {   title , meetDateFrom ,   meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , userId , LeadId} = req.body;
+    const {   title , meetDateFrom ,MeetingLink ,   meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , userId , LeadId} = req.body;
 
     
-    const meetDetail = await Meet.create({title , meetDateFrom ,  meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note ,user:userId , LeadId  });
+    const meetDetail = await Meet.create({title , meetDateFrom ,  meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note ,user:userId , LeadId , MeetingLink });
     
+
+    const emailList = Participant.split(',').map(email => email.trim());
+
+    const message = `<div>
+    <div>Meeting Link: ${MeetingLink}</div>
+    </div>
+    `;
+    const html = `
+    <div>
+    <div>Meeting Link: ${MeetingLink}</div>
+      <div>Related To:${RelatedTo}</div>
+      <div>Note :${Note}</div>
+    </div>
+  `;
+
+ // Send email to each participant
+ for (const email of emailList) {
+  await SendEmail(email, "Meeting Detail", message, html); // Assuming message and html are defined
+}
+
 
 
 return res.status(200).json({
@@ -64,11 +85,11 @@ return res.status(200).json({
 
 export const EditMeet = async( req ,res)=>{
 
-    const {   title , meetDateFrom ,   meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , LeadId} = req.body;
+    const {   title , meetDateFrom ,MeetingLink ,   meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , LeadId} = req.body;
 
     const {meetId} = req.params;
 
-    const meetDetail = await Meet.findByIdAndUpdate(meetId , {title , meetDateFrom ,  meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , LeadId } , {new:true});
+    const meetDetail = await Meet.findByIdAndUpdate(meetId , {title , meetDateFrom ,  meetDateTo , Status , meetTimeFrom , meetTimeTo , Host , RelatedTo ,  Participant , Note , LeadId,MeetingLink } , {new:true});
 
 return res.status(200).json({
   status:true ,
