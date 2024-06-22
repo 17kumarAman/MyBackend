@@ -1,11 +1,12 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 , GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById
+import {createLead ,getAllLead,getAllLead3 , GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads
 } from "../controller/leadController.js"
  
 const router = Router();
 
 router.post("/createLead",createLead );
 router.get("/getLeadById/:id" , GetLeadById);
+router.get("/getOpenLeads/:id" , GetOpenLeads);
 
 router.get("/getLeadByUser/:id" , GetLeadByUser);
 router.get("/getDesiUser" , GetDesiUser);

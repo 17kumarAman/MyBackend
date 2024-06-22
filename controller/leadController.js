@@ -5,7 +5,6 @@ import LeadStatus from "../models/Leadstatus/LeadStatus.js"
 import LeadSource from "../models/LeadSource/LeadSource.js"
 import User from "../models/User/User.js";
 import Role from "../models/Role/Role.js";
-import { createDocSetup } from "./systemController.js";
 import LeadNote from "../models/LeadNotes.js"
 
 
@@ -89,6 +88,21 @@ export const createLead = async (req, res) => {
             message: "Internal server error "
         })
     }
+}
+
+export const GetOpenLeads = async(req ,res)=>{
+    const {id} = req.params;
+
+      const openLead = await Lead.find({isOpen:"true"});
+
+       const closeLead =await Lead.find({isOpen:false});
+
+       return res.status(200).json({
+        status:true ,
+        openLead , 
+        closeLead
+       })
+     
 }
 
 export const GetDesiUser = async (req, res) => {
