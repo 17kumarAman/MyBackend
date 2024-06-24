@@ -31,6 +31,14 @@ import {
   updateIndustry,
   getIndustry,
   deleteIndustry,
+  PostLeadStat,
+  updateLeadStat,
+  getLeadStat,
+  deleteLeadStat,
+  PostFollow,
+  updateFollow,
+  getFollow,
+  deleteFollow,
 } from "../controller/systemController.js";
 
 const router = Router();
@@ -83,6 +91,17 @@ router.post("/postIndustry", postIndustry);
 router.put("/updateIndustry/:id", updateIndustry);
 router.get("/getIndustry", getIndustry);
 router.delete("/deleteIndustry/:id", deleteIndustry);
+
+router.post("/postLeadStat", PostLeadStat);
+router.put("/updateLeadStat/:id", updateLeadStat);
+router.get("/getLeadStat", getLeadStat);
+router.delete("/deleteLeadStat/:id", deleteLeadStat);
+
+router.post("/postFollow", PostFollow);
+router.put("/updateFollow/:id", updateFollow);
+router.get("/getFollow", getFollow);
+router.delete("/deleteFollow/:id", deleteFollow);
+
 
 
 

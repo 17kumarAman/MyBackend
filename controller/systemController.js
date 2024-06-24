@@ -11,6 +11,8 @@ import LeadStatus from "../models/Leadstatus/LeadStatus.js";
 import LeadSource from "../models/LeadSource/LeadSource.js";
 
 import User from "../models/User/User.js";
+import LeadStat from "../models/LeadStat/LeadStat.js";
+import FollowUpType from "../models/FollowUpType/FollowUpType.js";
 export const postLeaveType = asyncHandler(async (req, res) => {
   const { name, days } = req.body;
   const existLeave = await LeaveType.findOne({ name });
@@ -481,6 +483,124 @@ export const deleteIndustry = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, data, "Deleted   Successfully"));
 });
+
+
+// ==================lead status========================
+export const PostLeadStat = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const existLeadStat = await LeadStat.findOne({ name });
+  if (existLeadStat) {
+    return res.status(400).json({
+      success: false,
+      message: "LeadSource Name Alreday Exist",
+    });
+  }
+  const newStat = await LeadStat.create({
+    name,
+  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, newStat, " successfully posted", existLeadStat));
+});
+
+export const getLeadStat = asyncHandler(async (req, res) => {
+  const data = await LeadStat.find({});
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Lead Status fetched Successfully"));
+});
+
+export const updateLeadStat = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const { id } = req.params;
+  let updateObj = removeUndefined({name});
+  // console.log(status, name);
+  // console.log(id);
+
+  const updateLeadStatus = await LeadStat.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateLeadStatus, "Updated  Successfully"));
+});
+
+export const deleteLeadStat = asyncHandler(async (req, res) => {
+
+  const { id } = req.params;
+
+  const data = await LeadStat.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted   Successfully"));
+});
+
+
+
+export const PostFollow = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const existFollow = await FollowUpType.findOne({ name });
+  if (existFollow) {
+    return res.status(400).json({
+      success: false,
+      message: "FollowUp Name Alreday Exist",
+    });
+  }
+  const newStat = await FollowUpType.create({
+    name,
+  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, newStat, " successfully posted", existFollow));
+});
+
+export const getFollow = asyncHandler(async (req, res) => {
+  const data = await FollowUpType.find({});
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Follow up fetched Successfully"));
+});
+
+export const updateFollow = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const { id } = req.params;
+  let updateObj = removeUndefined({name});
+  // console.log(status, name);
+  // console.log(id);
+
+  const updateFollowUp = await FollowUpType.findByIdAndUpdate(
+    id,
+    {
+      $set: updateObj,
+    },
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateFollowUp, "Updated  Successfully"));
+});
+
+export const deleteFollow = asyncHandler(async (req, res) => {
+
+  const { id } = req.params;
+
+  const data = await FollowUpType.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
+});
+
+
+
+
 
 
 
