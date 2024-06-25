@@ -15,6 +15,18 @@ const userSchema = new mongoose.Schema({
     type:String,
     default:"00"
   },
+   leadPermission:{ 
+    type: Boolean , 
+    default:false ,
+   } , 
+   hrmsSetUpPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   payrollPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
   dob: {
     type: String,
     required: false,
