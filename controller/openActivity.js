@@ -177,3 +177,15 @@ export const role = async(req,res)=>{
     status:true
   })
 }
+
+export const module = async(req,res) =>{
+  const {id} = req.params;
+  console.log(id);
+  const data1 = await User.find({department});
+
+  return({
+    data:data1,
+    message:"module is fetched successfully",
+    status:true
+  })
+}
