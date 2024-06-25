@@ -665,4 +665,17 @@ export const GetNoteById = async(req ,res)=>{
      })
 }
 
+export const GetDesiUser1 = async (req, res) => {
+
+    const users = await User.find({
+        designation: { $in: ["CEO","Intern Digital Marketing", "Business Development Manager","Manager"] }
+    });
+
+    res.status(200).json({
+        status: true,
+        data: users
+    });
+
+}
+
 

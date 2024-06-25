@@ -1,6 +1,7 @@
 import Task from "../models/taskModel.js";
 import Meet from "../models/MeetingModel.js"
 import { SendEmail } from "../utils/SendEmail.js";
+import User from "../models/User/User.js";
 
 
 export const CreateTask = async( req ,res)=>{
@@ -165,4 +166,14 @@ return res.status(200).json({
   data
 })
 
+}
+
+export const role = async(req,res)=>{
+  const {id} = req.params;
+  const data = await User.find({designation});
+  return({
+    data:data,
+    message:"designation fetched successfully",
+    status:true
+  })
 }
