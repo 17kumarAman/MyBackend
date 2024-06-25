@@ -4,13 +4,18 @@ export const ProvidePermission = async(req ,res)=>{
 
     try{
 
-        const {Designation , userId , Service} = req.body;
+        const {Designation , userId , Service  , SubPermission}  = req.body;
 
         if (userId) {
             const userDetail = await User.findById(userId);
 
             if (userDetail) {
                 userDetail[Service] = true;
+
+                 if(SubPermission){
+                    userDetail[SubPermission] = true;
+                 }
+
                 await userDetail.save();
                 return res.status(200).json({
                     status: true,
@@ -24,10 +29,18 @@ export const ProvidePermission = async(req ,res)=>{
                 });
             }
         } else if (Designation) {
+            
             const users = await User.updateMany(
                 { designation: Designation },
                 { $set: { [Service]: true } }
             );
+
+             if(SubPermission){
+                const users = await User.updateMany(
+                    { designation: Designation },
+                    { $set: { [SubPermission]: true } } 
+                )
+             }
 
              return res.status(200).json({
                 status:true,
