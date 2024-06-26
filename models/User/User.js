@@ -14,15 +14,60 @@ const userSchema = new mongoose.Schema({
   netSalary:{
     type:String,
     default:"00"
-  },
+  }, 
    leadPermission:{ 
     type: Boolean , 
     default:false ,
    } , 
+   leadEditPermission:{  
+    type: Boolean , 
+    default:false ,
+   } , 
+   leadDeletePermission:{ 
+    type: Boolean , 
+    default:false ,
+   } , 
+   leadCreatePermission:{ 
+    type: Boolean , 
+    default:false ,
+   } , 
+  
    hrmsSetUpPermission:{
     type: Boolean , 
     default:false ,
    } , 
+   
+   leadSystemPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   attendencePermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   assetsPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   documentPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   leaveManagePermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   performancePermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   
+   employeeManagePermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+
+   
    payrollPermission:{
     type: Boolean , 
     default:false ,
