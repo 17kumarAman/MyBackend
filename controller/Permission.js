@@ -120,4 +120,30 @@ export const RemovePermission = async (req, res) => {
     }
 };
 
+export const setupPermissionRemovalByAdmin = async ({service}) =>{
+    const {id} = req.params;
+    const requestByUser = await User.find({department:id});
+
+    const totalRemovalRequest = requestByUser[service];
+    console.log(totalRemovalRequest);
+
+   if (totalRemovalRequest.father === false){
+      requestByUser = false;
+      console.log(requestByUser);
+   }
+   else if(totalRemovalRequest.father === true){
+    requestByUser = true;
+    console.log(requestByUser);
+   }
+
+   return(
+    {
+        data:requestByUser,
+        data1:totalRemovalRequest,
+        message:"request user is fetch successfully",
+        status:true
+    }
+   )
+
+}
 
