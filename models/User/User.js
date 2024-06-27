@@ -31,6 +31,14 @@ const userSchema = new mongoose.Schema({
     type: Boolean , 
     default:false ,
    } , 
+   hrAdminSetupPermission:{  
+    type: Boolean , 
+    default:false ,
+   } , 
+   trainingSetupPermission:{ 
+    type: Boolean , 
+    default:false ,
+   } , 
   
    hrmsSetUpPermission:{
     type: Boolean , 
@@ -69,6 +77,22 @@ const userSchema = new mongoose.Schema({
 
    
    payrollPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   activeEmployeePermission:{ 
+    type: Boolean , 
+    default:false ,
+   } , 
+   leaveRequestPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   employeeOnLeavePermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   totalEmployeePermission:{
     type: Boolean , 
     default:false ,
    } , 
