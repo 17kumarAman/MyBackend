@@ -125,7 +125,7 @@ export const setupPermissionRemovalByAdmin = async ({service}) =>{
     const requestByUser = await User.find({department:id});
 
     const totalRemovalRequest = requestByUser[service];
-    console.log(totalRemovalRequest);
+    console.log(totalRemovalRequest)
 
    if (totalRemovalRequest.father === false){
       requestByUser = false;
