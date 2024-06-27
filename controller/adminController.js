@@ -2525,6 +2525,16 @@ export const updateSalary = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updateInvoice, "Updated  Successfully"));
 });
 
+export const syncUser = async (req,res) =>{
+  const {id} = req.params;
+  console.log(id);
+
+  const userListWithSync = await User.find({documentPermission:id});
+  console.log(userListWithSync);
+  userListWithSync.userId = req.params;
+  
+}
+
 
 
 
