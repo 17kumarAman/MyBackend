@@ -96,6 +96,58 @@ const userSchema = new mongoose.Schema({
     type: Boolean , 
     default:false ,
    } , 
+  //   ,leaveReqestEditPermission , leaveReqestActionPermission , employeeManageEditPermission , employeeManageActivatePermission
+
+   hrmsSetupEditPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   hrmsSetupDeletePermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   hrmsSetupCreatePermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   paySlipActionPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   paySlipActionPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   leadSystemSettingEditPermission:{ 
+    type: Boolean , 
+    default:false ,
+   } , 
+   leadSystemSettingDeletePermission:{ 
+    type: Boolean , 
+    default:false ,
+   } , 
+   leadSystemSettingCreatePermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   leaveReqestEditPermission:{ 
+    type: Boolean , 
+    default:false ,
+   } , 
+   leaveReqestActionPermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+   employeeManageEditPermission:{ 
+    type: Boolean , 
+    default:false ,
+   } , 
+   employeeManageActivatePermission:{
+    type: Boolean , 
+    default:false ,
+   } , 
+
+
   dob: {
     type: String,
     required: false,

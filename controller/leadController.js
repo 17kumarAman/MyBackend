@@ -93,13 +93,20 @@ export const createLead = async (req, res) => {
 export const GetOpenLeads = async(req ,res)=>{
     const {id} = req.params;
 
-      const openLead = await Lead.find({isOpen:"true"});
+    const openLeads = await Lead.find({
+        LeadOwner: id,
+        isOpen: "true"
+      }).populate('LeadOwner'); 
 
-       const closeLead =await Lead.find({isOpen:false});
+    const closeLead = await Lead.find({
+        LeadOwner: id,
+        isOpen: "false"
+      }).populate('LeadOwner'); 
+
 
        return res.status(200).json({
         status:true ,
-        openLead , 
+        openLeads , 
         closeLead
        })
      
