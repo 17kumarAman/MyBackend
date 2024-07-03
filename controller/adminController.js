@@ -30,6 +30,7 @@ import Lead from "../models/Lead/Lead.js";
 import Invoice from "../models/Invoice/Invoice.js";
 import Salary from "../models/Salary/Salary.js";
 import EmployeeType from "../models/EmployeeType/employeeType.js"
+import Quatation from "../models/Quatation/Quatation.js";
 
 export const getAdmins = asyncHandler(async (req, res) => {
   const admin = await Admin.find({}).select("-password ");
@@ -90,15 +91,15 @@ const makeid = (length) => {
   return result;
 };
 
-export const DepartmentEmployee = asyncHandler(async(req ,res)=>{
-   const {department} = req.body;
+export const DepartmentEmployee = asyncHandler(async (req, res) => {
+  const { department } = req.body;
 
 
-    const allUser = await User.find({department:department});
-    return res.status(200).json({
-      status:true ,
-      allUser
-    })
+  const allUser = await User.find({ department: department });
+  return res.status(200).json({
+    status: true,
+    allUser
+  })
 })
 
 export const CreateNewHr = asyncHandler(async (req, res) => {
@@ -167,7 +168,7 @@ export const CreateNewHr = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     let employeeCode1 = makeid(7);
-    
+
     const message = `<div>
        <div>Employee ID: KDS${employeeCode1}</div>
        <div>Password: ${plainTextPassword}</div>
@@ -371,7 +372,7 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       EmployeeType: employeeType
     });
 
-     const empType = await EmployeeType.create({type:employeeType , users:adminUser?._id})
+    const empType = await EmployeeType.create({ type: employeeType, users: adminUser?._id })
 
     return res.status(200).json(
       new ApiResponse(
@@ -1011,7 +1012,7 @@ export const updateAnnouncement = asyncHandler(async (req, res) => {
     <div>endDate: ${endDate}</div>
     <div>description: ${description}</div>
     </div>`)
-    
+
   }
 
 
@@ -1292,7 +1293,7 @@ export const postComplain = asyncHandler(async (req, res) => {
     description
   } = req.body;
 
- 
+
   const users1 = await User.findOne({ fullName: complainAgain });
 
   let transporter = createTransport({
@@ -2226,64 +2227,66 @@ export const deleteLeads = asyncHandler(async (req, res) => {
 
 export const updateLeads = asyncHandler(async (req, res) => {
   const { LeadOwner,
-  Company,
-  FirstName,
-  LastName,
-  Title,
-  Email,
-  Phone,
-  Fax,
-  Mobile,
-  Website,
-  LeadSource,
-  NoOfEmployee,
-  Industry,
-  LeadStatus,
-  AnnualRevenue,
-  Rating,
-  EmailOptOut,
-  SkypeID,
-  SecondaryEmail,
-  Twitter,
-   Street ,
-   City ,
-   State ,
-   ZipCode ,
-   Country ,
-   DescriptionInfo} = req.body;
+    Company,
+    FirstName,
+    LastName,
+    Title,
+    Email,
+    Phone,
+    Fax,
+    Mobile,
+    Website,
+    LeadSource,
+    NoOfEmployee,
+    Industry,
+    LeadStatus,
+    AnnualRevenue,
+    Rating,
+    EmailOptOut,
+    SkypeID,
+    SecondaryEmail,
+    Twitter,
+    Street,
+    City,
+    State,
+    ZipCode,
+    Country,
+    DescriptionInfo } = req.body;
 
   const { id } = req.params;
 
   // const userDetail = await User.findOne({ fullName: Employee });
 
-  let updateObj = removeUndefined({ LeadOwner,
-  Company,
-  FirstName,
-  LastName,
-  Title,
-  Email,
-  Phone,
-  Fax,
-  Mobile,
-  Website,
-  LeadSource,
-  NoOfEmployee,
-  Industry,
-  LeadStatus,
-  AnnualRevenue,
-  Rating,
-  EmailOptOut,
-  SkypeID,
-  SecondaryEmail,
-  Twitter,
-   Street ,
-   City ,
-   State ,
-   ZipCode ,
-   Country ,
-   DescriptionInfo});
+  let updateObj = removeUndefined({
+    LeadOwner,
+    Company,
+    FirstName,
+    LastName,
+    Title,
+    Email,
+    Phone,
+    Fax,
+    Mobile,
+    Website,
+    LeadSource,
+    NoOfEmployee,
+    Industry,
+    LeadStatus,
+    AnnualRevenue,
+    Rating,
+    EmailOptOut,
+    SkypeID,
+    SecondaryEmail,
+    Twitter,
+    Street,
+    City,
+    State,
+    ZipCode,
+    Country,
+    DescriptionInfo
+  });
 
-  
+
 
 
   const updateLead = await Lead.findByIdAndUpdate(
@@ -2302,11 +2305,11 @@ export const updateLeads = asyncHandler(async (req, res) => {
 
 export const updateLeadImage = asyncHandler(async (req, res) => {
   try {
-    const {id} = req.params;
- 
-    const {image}  = req.files;
+    const { id } = req.params;
 
-      const details = await uploadToCloudinary(image.tempFilePath);
+    const { image } = req.files;
+
+    const details = await uploadToCloudinary(image.tempFilePath);
 
     const updateLead = await Lead.findByIdAndUpdate(
       id,
@@ -2314,7 +2317,7 @@ export const updateLeadImage = asyncHandler(async (req, res) => {
       { new: true } // To return the updated document after the update operation
     );
 
-             
+
     return res
       .status(200)
       .json(new ApiResponse(200, updateLead, "Updated Lead image Details Successfully"));
@@ -2330,14 +2333,14 @@ export const updateLeadImage = asyncHandler(async (req, res) => {
 export const createInvoice = async (req, res) => {
   try {
 
-    const {User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency , leadId} = req.body;
+    const { User, InvoiceNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency, leadId } = req.body;
 
-     console.log("leadId ",leadId);
+    console.log("leadId ", leadId);
 
-    const createIn = await Invoice.create({User ,InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency,ts: new Date().getTime(),});
+    const createIn = await Invoice.create({ User, InvoiceNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency, ts: new Date().getTime(), });
 
-   
-     const leadDetails = await Lead.findById(leadId);
+
+    const leadDetails = await Lead.findById(leadId);
 
     // Add the invoice ID to the lead's invoiceId array
     leadDetails.invoiceId.push(createIn._id);
@@ -2348,7 +2351,7 @@ export const createInvoice = async (req, res) => {
     console.log('Updated lead details:', leadDetails);
 
 
-     
+
 
 
     return res.status(200).json({
@@ -2400,7 +2403,7 @@ export const deleteInvoice = asyncHandler(async (req, res) => {
 });
 
 export const updateInvoice = asyncHandler(async (req, res) => {
-  const {InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency} = req.body;
+  const { InvoiceNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency } = req.body;
 
   // const { id } = req.params;
   const id = req.params.id;
@@ -2413,14 +2416,14 @@ export const updateInvoice = asyncHandler(async (req, res) => {
   //   InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency
   // });
 
-  
+
   const updateInvoice = await Invoice.findByIdAndUpdate(
     id,
     // {
     //   $set: updateObj,
     // },
     {
-      InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency
+      InvoiceNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency
     },
 
     {
@@ -2432,30 +2435,178 @@ export const updateInvoice = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updateInvoice, "Updated  Successfully"));
 });
 
-export const getEveryLeadInvoice = asyncHandler(async (req,res) =>{
-  
-   const lens1 =  await Lead.findById(req.params.id).populate("invoiceId");
+export const getEveryLeadInvoice = asyncHandler(async (req, res) => {
 
-    
-let lens = lens1?.invoiceId;
+  const lens1 = await Lead.findById(req.params.id).populate("invoiceId");
+
+
+  let lens = lens1?.invoiceId;
 
 
   res.json({
     data: lens,
-    status:true,
-    message:"successfully get everyUser"
+    status: true,
+    message: "successfully get everyUser"
   })
 });
+
+// ======================quatation backend==============
+export const createQuatation = async (req, res) => {
+  try {
+
+    const { User, QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency, leadId } = req.body;
+
+    console.log("leadId ", leadId);
+
+    console.log(User);
+
+    const createQ = await Quatation.create({ User, QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency, ts: new Date().getTime(), });
+
+
+    const leadDetails = await Lead.findById(leadId);
+
+    // add the quotation id to the leadDetails created by the user
+    leadDetails.quatationId.push(createQ._id);
+
+    // Save the updated lead document in the quotation
+    await leadDetails.save();
+
+    console.log('Updated lead details:', leadDetails);
+
+    return res.status(200).json({
+      status: true,
+      message: 'Quatation created successfully',
+      data: createQ,
+    });
+
+
+  } catch (error) {
+    console.log("error ", error);
+
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+}
+export const getQuatation = async (req, res) => {
+  try {
+
+    // Find notifications where the user ID is in the user array
+    const quatation = await Quatation.find({});
+
+    return res.status(200).json({
+      status: 200,
+      message: "tranfer fetched successfully",
+      data: quatation
+    });
+
+
+
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error "
+    })
+  }
+}
+export const deleteQuatation = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = await Quatation.findByIdAndDelete(id);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Deleted Successfully"));
+});
+export const updateQuatation = asyncHandler(async (req, res) => {
+  const { QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency } = req.body;
+
+  // const { id } = req.params;
+  const id = req.params.id;
+
+  console.log("id ", id);
+
+  // const userDetail = await User.findOne({ fullName: Employee });
+
+  // let updateObj = removeUndefined(id,{
+  //   InvoiceNo,GstNo,SacCode, PlacedSupply,BillTo,ShipTo,ClientName,Address,Mobile,Email,ItemDescription,Qty,Price, Amount,BalanceAmount,Note,currency
+  // });
+
+
+  const updateQuatation = await Quatation.findByIdAndUpdate(
+    id,
+    // {
+    //   $set: updateObj,
+    // },
+    {
+      QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency
+    },
+
+    {
+      new: true,
+    }
+  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updateQuatation, "Updated  Successfully"));
+});
+export const getEveryLeadQuatation = asyncHandler(async (req, res) => {
+
+  const lens1 = await Lead.findById(req.params.id).populate("quatationId");
+
+
+  let lens = lens1?.quatationId;
+
+
+  res.json({
+    data: lens,
+    status: true,
+    message: "successfully get everyUser"
+  })
+});
+
+export const EveryUserLeadSomething = async (req,res) =>{
+   try {
+      const {QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency} = req.body; 
+
+      const id = req.params.id;
+
+      console.log(id);    
+
+      const detailsSomething = await Lead.findById({id});
+
+
+      console.log(detailsSomething);
+
+      const createDetails = await Quatation.create({
+        QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency
+      });
+
+      createDetails.PlacedSupply(detailsSomething);
+
+      console.log(detailsSomething);
+
+      return({
+        data:createDetails,
+        message:"Create details Page successfully",
+        status:true
+      })
+
+   } 
+   catch (error) {
+       console.log(error);
+   }
+}
+// ======================quatation backend end=================
 
 // =========================Employee salary api=================
 
 export const SetSallary = async (req, res) => {
   try {
 
-    const {salary,paySlipType} = req.body;
+    const { salary, paySlipType } = req.body;
 
 
-    const createSallary = await Salary.create({salary,paySlipType});
+    const createSallary = await Salary.create({ salary, paySlipType });
 
 
     return res.status(200).json({
@@ -2500,17 +2651,17 @@ export const getSallary = async (req, res,) => {
 }
 
 export const updateSalary = asyncHandler(async (req, res) => {
-  const {salary,paySlipType} = req.body;
+  const { salary, paySlipType } = req.body;
 
   const { id } = req.params;
 
   // const userDetail = await User.findOne({ fullName: Employee });
 
   let updateObj = removeUndefined({
-    salary,paySlipType
+    salary, paySlipType
   });
 
-  
+
   const updateInvoice = await Salary.findByIdAndUpdate(
     id,
     {
@@ -2525,14 +2676,14 @@ export const updateSalary = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updateInvoice, "Updated  Successfully"));
 });
 
-export const syncUser = async (req,res) =>{
-  const {id} = req.params;
+export const syncUser = async (req, res) => {
+  const { id } = req.params;
   console.log(id);
 
-  const userListWithSync = await User.find({documentPermission:id});
+  const userListWithSync = await User.find({ documentPermission: id });
   console.log(userListWithSync);
   userListWithSync.userId = req.params;
-  
+
 }
 
 

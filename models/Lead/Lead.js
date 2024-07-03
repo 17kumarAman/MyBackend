@@ -44,6 +44,12 @@ const mySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Invoice'
       }
+     ],
+     quatationId:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Quatation'
+      }
      ]
   });
 

@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const paySlipSchema = new mongoose.Schema({
-
     user:[{
         type: mongoose.Types.ObjectId,
         ref: "User" 
@@ -16,8 +15,6 @@ const paySlipSchema = new mongoose.Schema({
         type: String,
         default:"Unpaid"
     },
-    
- 
 });
 
 const payslip = mongoose.model('Payslip', paySlipSchema);

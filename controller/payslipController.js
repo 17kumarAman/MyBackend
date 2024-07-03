@@ -20,6 +20,7 @@ export const getPayslip = async (req, res) => {
             "November": 11,
             "December": 12
         };
+        
 
         // Find all users
         const allUsers = await User.find({});
@@ -63,12 +64,16 @@ export const getPayslip = async (req, res) => {
             if (!payslip) {
                 usersWithPayslipStatus.push({
                     user: user,
-                    status: "Unpaid"
+                    status: "Unpaid",
+                    month:month,
+                    year:year
                 });
             } else {
                 usersWithPayslipStatus.push({
                     user: user,
-                    status: payslip.status
+                    status: payslip.status,
+                    month:month,
+                    year:year
                 });
             }
         }

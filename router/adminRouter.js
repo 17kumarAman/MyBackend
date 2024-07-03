@@ -82,7 +82,12 @@ import {
   getEveryLeadInvoice,
   SetSallary,
   getSallary, 
-  DepartmentEmployee
+  DepartmentEmployee,
+  createQuatation,
+  getQuatation,
+  deleteQuatation,
+  updateQuatation,
+  getEveryLeadQuatation
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 const router = Router();
@@ -198,6 +203,12 @@ router.get('/getInvoice', getInvoice);
 router.delete("/deleteInvoice/:id",deleteInvoice);
 router.post("/updateInvoice/:id",updateInvoice);
 router.get("/getEveryUserInvoice/:id" , getEveryLeadInvoice);
+
+router.post("/createQuatation", createQuatation);
+router.get('/getQuatation', getQuatation);
+router.delete("/deleteQuatation/:id",deleteQuatation);
+router.post("/updateQuatation/:id",updateQuatation);
+router.get("/getEveryUserQuatation/:id" , getEveryLeadQuatation);
 
 router.post("/createSallary",SetSallary);
 router.get("/getSallary",getSallary);
