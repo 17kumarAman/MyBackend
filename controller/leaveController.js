@@ -7,13 +7,13 @@ import EmployeeLeave from "../models/EmployeeLeave/employeeLeave.js"
 
 export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   const newLeave = new Leave({
-    user: auth, 
-    leaveType: type, 
-    from, 
-    to, 
-    days, 
-    reason, 
-    status: "", 
+    user: auth,
+    leaveType: type,
+    from,
+    to,
+    days,
+    reason,
+    status: "",
     ts: new Date().getTime()
   });
 
@@ -21,10 +21,10 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   const saveLeave = await newLeave.save();
   // "pooja@kusheldigi.com"
 
-  await mailSender("pooja@kusheldigi.com" , "Regarding Leave" ,  `<div>
+  await mailSender("pooja@kusheldigi.com", "Regarding Leave", `<div>
   <div>from: ${auth?.fullName}</div>
   <div>to: ${to}</div>
-  <div>days: ${(days) - 1 + 2 }</div>
+  <div>days: ${(days) - 1 + 2}</div>
   <div>reason: ${reason}</div>
   </div>`);
 
@@ -32,8 +32,8 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   return { success: true, message: "New leave created" };
 };
 
-export const updateLeave = async ({ auth,employeeName ,  id, leaveType, from, to, days, reason, status }) => {
-  let updateObj=removeUndefined({
+export const updateLeave = async ({ auth, employeeName, id, leaveType, from, to, days, reason, status }) => {
+  let updateObj = removeUndefined({
     leaveType, from, to, days, reason
   });
 
@@ -45,15 +45,15 @@ export const updateLeave = async ({ auth,employeeName ,  id, leaveType, from, to
 
   console.log(updateLeave);
 
-   const employe = await User.findOne({fullName: employeeName});
+  const employe = await User.findOne({ fullName: employeeName });
 
-   await mailSender(employe.email ,"update Leave " , `<div>
+  await mailSender(employe.email, "update Leave ", `<div>
    <div>from: ${auth?.fullName}</div>
    <div>to: ${to}</div>
    <div>days: ${(days) - 1 + 2}</div>
    <div>reason: ${reason}</div>
   </div>`)
-    
+
 
   return { success: true, message: "Leave updated" };
 };
@@ -86,7 +86,7 @@ export const deleteAllLeaves = async () => {
   return { success: true, data };
 };
 
-export const getTotalLeaveCount = async()=>{
+export const getTotalLeaveCount = async () => {
   // const data = await Leave.find({status:"Pending"});
 
   const data = await Leave.find({
@@ -99,13 +99,13 @@ export const getTotalLeaveCount = async()=>{
 
   const totalLeave = data.length;
 
-   return {
-    success:true ,
- totalLeave
-   }
+  return {
+    success: true,
+    totalLeave
+  }
 }
 
-export const rejectLeaveHandler  = async({fullName , id})=>{
+export const rejectLeaveHandler = async ({ fullName, id }) => {
 
   const leaveDetails = await Leave.findById(id);
 
@@ -113,62 +113,62 @@ export const rejectLeaveHandler  = async({fullName , id})=>{
 
   await leaveDetails.save();
 
-  const userDetail = await User.findOne({fullName: fullName});
+  const userDetail = await User.findOne({ fullName: fullName });
 
 
-  
-await mailSender(userDetail?.email ,"Regarding holiday cancel " , `<div>
+
+  await mailSender(userDetail?.email, "Regarding holiday cancel ", `<div>
 <div>Your holidays are cancel by admin</div>
 
 </div>`)
- 
 
-return {
-status: true , 
-message:"Successfuly send the email"
-}
+
+  return {
+    status: true,
+    message: "Successfuly send the email"
+  }
 }
 
-export const acceptLeaveHandler  = async({fullName , days , id , userId , startDate , endDate})=>{
+export const acceptLeaveHandler = async ({ fullName, days, id, userId, startDate, endDate }) => {
 
   const leaveDetails = await Leave.findById(id);
 
-    leaveDetails.status = "Accepted";
+  leaveDetails.status = "Accepted";
 
-    await leaveDetails.save();
+  await leaveDetails.save();
 
-   const userDetail = await User.findOne({fullName: fullName});
+  const userDetail = await User.findOne({ fullName: fullName });
 
-         const subject = `total holiday of ${days} days`;
+  const subject = `total holiday of ${days} days`;
 
-    await mailSender(userDetail?.email ,"Accept Leave " , `<div>
+  await mailSender(userDetail?.email, "Accept Leave ", `<div>
    <div>total holiday of ${days} days Accepted</div>
 
   </div>`)
-    
-
-  const leaveDetailing = await EmployeeLeave.create({startDate , endDate , user: userId});
 
 
+  const leaveDetailing = await EmployeeLeave.create({ startDate, endDate, user: userId });
 
-    return {
-      status: true , 
-      message:"Successfuly send the email"
-    }
+
+
+  return {
+    status: true,
+    message: "Successfuly send the email"
+  }
 
 
 }
 
 // this is employee leave controllers 
 
-export const GetTodayLeave = async(req , res)=>{
-  try{
+export const GetTodayLeave = async (req, res) => {
+  try {
 
-     const today = new Date();
-     const year = today.getFullYear();
-     const month = String(today.getMonth() + 1).padStart(2, '0'); 
-     const day = String(today.getDate()).padStart(2, '0');
-     const todayDate = `${year}-${month}-${day}`;
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayDate = `${year}-${month}-${day}`;
 
     const employeesOnLeave = await EmployeeLeave.find({
       startDate: { $lte: todayDate },
@@ -177,16 +177,16 @@ export const GetTodayLeave = async(req , res)=>{
 
 
     return res.status(200).json({
-      status:true , 
-      message:"Successfuly fetched" , 
-      data : employeesOnLeave
+      status: true,
+      message: "Successfuly fetched",
+      data: employeesOnLeave
     })
 
-  } catch(error){
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false , 
-      message:"INterval server error "
+      status: false,
+      message: "INterval server error "
     })
   }
 }

@@ -31,6 +31,7 @@ import Invoice from "../models/Invoice/Invoice.js";
 import Salary from "../models/Salary/Salary.js";
 import EmployeeType from "../models/EmployeeType/employeeType.js"
 import Quatation from "../models/Quatation/Quatation.js";
+import Leave from "../models/Leave/Leave.js";
 
 export const getAdmins = asyncHandler(async (req, res) => {
   const admin = await Admin.find({}).select("-password ");
@@ -2683,6 +2684,15 @@ export const syncUser = async (req, res) => {
   const userListWithSync = await User.find({ documentPermission: id });
   console.log(userListWithSync);
   userListWithSync.userId = req.params;
+
+  console.log(userListWithSync);
+
+  const ans = await Leave.$where({userListWithSync});
+
+  return({
+    data:ans,
+    message:"document permission is successfully given to the user",
+  })
 
 }
 
