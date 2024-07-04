@@ -303,18 +303,24 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
     } = req.body;
 
     const employeeCode = makeid(7);
+    console.log('e code ',employeeCode);
+
     const message = `<div>
     <div>Employee ID: KDS${employeeCode}</div>
     <div>Password: ${password}</div>
   </div>
   `;
+
     const html = `
     <div>
       <div>Employee ID: KDS${employeeCode}</div>
       <div>Password: ${password}</div>
     </div>
   `;
+
     await SendEmail(email, "Login Details", message, html);
+
+
     const adminUser = await User.create({
       department,
       password,
@@ -342,12 +348,7 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       perPin,
       Martial,
       nationality,
-      role:
-        department === "Hr"
-          ? "HR"
-          : department === "Manager"
-            ? "MANAGER"
-            : "EMPLOYEE",
+      role: department === "Hr" ? "HR" : department === "Manager"   ? "MANAGER"   : "EMPLOYEE",
       Mother,
       qualification,
       specialization,
@@ -369,20 +370,19 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       AccountNumber,
       confirmAccount,
       Branch,
-      createdBy: req.user.role,
+      // createdBy: req?.user?.role,
       EmployeeType: employeeType
     });
 
-    const empType = await EmployeeType.create({ type: employeeType, users: adminUser?._id })
+    const empType = await EmployeeType.create({ type: employeeType, users: adminUser?._id });
+    console.log("em",empType);
 
     return res.status(200).json(
-      new ApiResponse(
-        200,
-        {
-          adminUser,
-        },
-        "Admin account created successfully"
-      )
+      {
+        status:true , 
+        message:"Successfuly created " , 
+        data:adminUser
+      }
     );
   } catch (error) {
     console.log("the error is :", error.message);
@@ -1048,7 +1048,7 @@ export const postTermination = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1122,7 +1122,7 @@ export const updateTermination = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1175,7 +1175,7 @@ export const postWarning = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1250,7 +1250,7 @@ export const updateWarning = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1301,7 +1301,7 @@ export const postComplain = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1376,7 +1376,7 @@ export const updateComplain = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1426,7 +1426,7 @@ export const postResignation = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1496,7 +1496,7 @@ export const updateResignation = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1546,7 +1546,7 @@ export const postPromotion = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1608,7 +1608,7 @@ export const updatePromotion = asyncHandler(async (req, res) => {
     host: "smtp.gmail.com",
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+      pass: "fypnipkjntklyznj",
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation

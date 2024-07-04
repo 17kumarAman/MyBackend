@@ -112,7 +112,7 @@ router.get("/topDash", isAuthenticated, async (req, res) => {
   }
 });
 
-router.post("/createUser1", isAuthenticated, CreateNewUser);
+router.post("/createUser1", CreateNewUser);
 
 router.put("/updateAdmin", isAuthenticated, updateAdmindetails);
 

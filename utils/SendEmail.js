@@ -1,13 +1,14 @@
 import { createTransport } from "nodemailer";
 
 export const SendEmail = async (to, subject, text, html) => {
+  console.log("to ",to , "subject ",subject ,"tedt ",text , "htms" , html);
   const transporter = createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
       user: "webmaster.kushel@gmail.com",
-      pass: "paurymswxlpytekp",
+       pass:"fypnipkjntklyznj"
     },
     from: "info@kusheldigi.com",
     tls: {
@@ -29,7 +30,7 @@ export const SendEmail = async (to, subject, text, html) => {
 // secure: true, // true for 465, false for other ports
 // auth: {
 //   user: "webmaster.kushel@gmail.com",
-//   pass: "paurymswxlpytekp",
+//   pass: "fypnipkjntklyznj",
 // },
 // from: "info@kusheldigi.com",
 // tls: {

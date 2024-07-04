@@ -6,7 +6,7 @@ export const mailSender = async(email , subject , html) => {
             host: "smtp.gmail.com",
             auth: {
                 user: "webmaster.kushel@gmail.com",
-                pass: "paurymswxlpytekp",
+                pass: "fypnipkjntklyznj",
             },
             tls: {
                 rejectUnauthorized: false // Temporarily bypass certificate validation
