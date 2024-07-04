@@ -213,6 +213,7 @@ EmployeeType:{
     type: String,
     default: "USER",
   },
+ 
   status: {
     type: String,
     default: "OFFLINE",

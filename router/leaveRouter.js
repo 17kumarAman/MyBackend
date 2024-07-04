@@ -35,7 +35,7 @@ router.put("/updateLeave/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-router.get("/getUserLeaves", isAuthenticated, async (req, res) => {
+router.get("/getUserLeaves", async (req, res) => {
   try {
     const data = await getUserLeaves({ ...req.query, auth: req.user });
     if (data.success) {

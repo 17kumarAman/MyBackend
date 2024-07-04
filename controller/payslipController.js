@@ -1,11 +1,11 @@
 
 import Payslip from "../models/PaySlip/Payslip.js"
 import User from "../models/User/User.js";
+import Leave from "../models/Leave/Leave.js"
 
 export const getPayslip = async (req, res) => {
     try {
         const { month, year } = req.body;
-
         const monthNames = {
             "January": 1,
             "February": 2,
@@ -21,7 +21,6 @@ export const getPayslip = async (req, res) => {
             "December": 12
         };
         
-
         // Find all users
         const allUsers = await User.find({});
 
@@ -55,25 +54,52 @@ export const getPayslip = async (req, res) => {
         let usersWithPayslipStatus = [];
 
         for (const user of filteredUsers) {
+
             const payslip = await Payslip.findOne({
                 user: user._id,
                 month: month,
                 year: year
             });
 
+            //  // Find total leaves for the specified month and year
+            //  const totalLeaves = await Leave.find({
+            //     user: user._id,
+            //     from: { $regex: `^${year}-${String(monthNames[month]).padStart(2, '0')}` }
+            // }).countDocuments();
+
+              // Find total leaves for the specified month and year
+
+               const leaves = await Leave.find({
+                user: user._id,
+                status: "Accepted",
+                $or: [
+                    { from: { $regex: `^${year}-${String(monthNames[month]).padStart(2, '0')}` } },
+                    { to: { $regex: `^${year}-${String(monthNames[month]).padStart(2, '0')}` } }
+                ]
+            });
+
+
+             let totalLeaves = 0;
+             leaves.forEach(leave => {
+                 const leaveDays = parseInt(leave.days);
+                 totalLeaves += isNaN(leaveDays) ? 1 : leaveDays + 1;
+             });
+
             if (!payslip) {
                 usersWithPayslipStatus.push({
                     user: user,
                     status: "Unpaid",
                     month:month,
-                    year:year
+                    year:year , 
+                    totalLeaves: totalLeaves
                 });
             } else {
                 usersWithPayslipStatus.push({
                     user: user,
                     status: payslip.status,
                     month:month,
-                    year:year
+                    year:year , 
+                    totalLeaves: totalLeaves
                 });
             }
         }
@@ -179,6 +205,57 @@ export const bulkPayslip = async (req, res) => {
             status: true,
             message: `Bulk payslips for ${month}-${year} created successfully`
         });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        });
+    }
+};
+
+export const SetUserTotalLeave = async (req, res) => {
+    try {
+        // Find all users
+        const allUsers = await User.find({});
+
+        console.log("start ");
+
+        // Initialize an object to store total leaves for each user
+        const userTotalLeaves = {};
+
+        // Iterate over each user
+        for (const user of allUsers) {
+            // Find all leaves for the current user
+            const leaves = await Leave.find({
+                user: user._id , 
+                 status: "Accepted"
+            });
+
+            let totalLeaves = 0;
+
+            // Calculate total leaves for the user
+            leaves.forEach(leave => {
+                const leaveDays = parseInt(leave.days);
+                totalLeaves += isNaN(leaveDays) ? 1 : leaveDays + 1;
+            });
+
+            // Update user's totalLeave field
+            user.totalLeaves = totalLeaves;
+
+            // Save updated user
+            await user.save();
+
+            // Store user's total leaves for response or further processing
+            userTotalLeaves[user._id] = totalLeaves;
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: "User total leaves updated successfully",
+            userTotalLeaves: userTotalLeaves
+        });
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
