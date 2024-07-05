@@ -4,7 +4,7 @@ import {ProvidePermission , RemovePermission } from "../controller/Permission.js
 const router = Router();
 
 router.post("/providePermission" , ProvidePermission);
-router.post("/removePermission" , RemovePermission);
+router.post("/ProvideRemovePermission" , RemovePermission);
 
 
 export default router;

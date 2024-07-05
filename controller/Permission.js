@@ -65,20 +65,26 @@ export const ProvidePermission = async(req ,res)=>{
 }
 
 
-export const RemovePermission = async (req, res) => {
-    try {
-        const { Designation, userId, Service } = req.body;
+export const RemovePermission = async(req ,res)=>{
+
+    try{
+
+        const {Designation , userId , Service  , SubPermission}  = req.body;
 
         if (userId) {
-            // Find user by userId
             const userDetail = await User.findById(userId);
+
             if (userDetail) {
-                // Update the specified permission for the user
                 userDetail[Service] = false;
+
+                 if(SubPermission){
+                    userDetail[SubPermission] = false;
+                 }
+
                 await userDetail.save();
                 return res.status(200).json({
                     status: true,
-                    message: "Permission removed",
+                    message: "Permission granted",
                     user: userDetail
                 });
             } else {
@@ -88,37 +94,41 @@ export const RemovePermission = async (req, res) => {
                 });
             }
         } else if (Designation) {
-            // Find users by designation
+            
             const users = await User.updateMany(
                 { designation: Designation },
                 { $set: { [Service]: false } }
             );
 
-            if (users.nModified > 0) {
-                return res.status(200).json({
-                    status: true,
-                    message: "Permissions removed from all users with the specified designation"
-                });
-            } else {
-                return res.status(404).json({
-                    status: false,
-                    message: "No users found with the specified designation"
-                });
-            }
+             if(SubPermission){
+                const users = await User.updateMany(
+                    { designation: Designation },
+                    { $set: { [SubPermission]: false } } 
+                )
+             }
+
+             return res.status(200).json({
+                status:true,
+                message:"Successfuly provided "
+             })
+           
+               
         } else {
             return res.status(403).json({
                 status: false,
                 message: "Please provide valid user ID or designation"
             });
         }
-    } catch (error) {
-        console.error("Error:", error);
+
+    } catch(error){
+        console.log("eror ",error);
         res.status(500).json({
-            status: false,
-            message: "Internal server error"
-        });
+            status:false ,
+            message:"Internal server error"
+        })
     }
-};
+}
+
 
 export const setupPermissionRemovalByAdmin = async ({service}) =>{
     const {id} = req.params;
