@@ -750,6 +750,22 @@ export const uploadDocuments = async (req, res) => {
   }
 };
 
+export const uploadSingleImg = async (req, res) => {
+
+  const { Image } = req.files;
+
+  try {
+   
+        const details = await uploadToCloudinary(Image.tempFilePath);
+
+    res.status(200).json({ status:true , message: 'Documents uploaded successfully', link:details.secure_url });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while uploading documents' });
+  }
+};
+
 export const DeactivateUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 

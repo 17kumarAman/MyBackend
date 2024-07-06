@@ -18,6 +18,7 @@ import {
   getEmployeesByEmployee,
   DeleteUser , 
   uploadDocuments , 
+  uploadSingleImg,
   uploadImgToCloudinary,
   DeactivateUser
 } from "../controller/userController.js";
@@ -67,6 +68,7 @@ router.route("/getEmployeesByEmployee").get(isAuthenticated, getEmployeesByEmplo
 
 // for upload doucments 
 router.route("/uploadDocument/:id").post(  uploadDocuments);
+router.route("/uploadSingleImg").post( uploadSingleImg);
 
 
 
