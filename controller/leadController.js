@@ -6,6 +6,7 @@ import LeadSource from "../models/LeadSource/LeadSource.js"
 import User from "../models/User/User.js";
 import Role from "../models/Role/Role.js";
 import LeadNote from "../models/LeadNotes.js"
+import Quatation from "../models/Quatation/Quatation.js";
 
 
 
@@ -89,6 +90,153 @@ export const createLead = async (req, res) => {
         })
     }
 }
+
+export const PostQuotationForm = async(req , res)=>{
+    try {
+        const {
+          userId,
+          leadId,
+          quotationNum,
+          customerName,
+          customerReq,
+          mobileNum,
+          quotationDate,
+          validUntil,
+          customerId,
+          companyName,
+          companyAddress,
+          companyGSTIN,
+          companyWebsite,
+          items , 
+          content , 
+        } = req.body;
+    
+        const newQuotation = new Quatation({
+          userId,
+          leadId,
+          quotationNum,
+          customerName,
+          customerReq,
+          mobileNum,
+          quotationDate,
+          validUntil,
+          customerId,
+          companyName,
+          companyAddress,
+          companyGSTIN,
+          companyWebsite,
+          items , 
+          content
+        });
+    
+        await newQuotation.save();
+    
+        res.status(201).send({ status:true ,  message: 'Quotation saved successfully' , newQuotation});
+      } catch (error) {
+        res.status(500).send({ message: 'Error saving quotation', error });
+      }
+
+}
+
+
+export const UpdateQuotationForm = async (req, res) => {
+  try {
+    const {
+      userId,
+      leadId,
+      quotationNum,
+      customerName,
+      customerReq,
+      mobileNum,
+      quotationDate,
+      validUntil,
+      customerId,
+      companyName,
+      companyAddress,
+      companyGSTIN,
+      companyWebsite,
+      items,
+      content,
+    } = req.body;
+
+    const { quoId } = req.params;
+
+    // Check if the ID is valid
+    if (!quoId) {
+      return res.status(400).json({ status: false, message: 'Quotation ID parameter is required' });
+    }
+
+    // Update the quotation
+    const updatedQuotation = await Quatation.findByIdAndUpdate(
+      quoId,
+      {
+        userId,
+        leadId,
+        quotationNum,
+        customerName,
+        customerReq,
+        mobileNum,
+        quotationDate,
+        validUntil,
+        customerId,
+        companyName,
+        companyAddress,
+        companyGSTIN,
+        companyWebsite,
+        items,
+        content,
+      },
+      { new: true } 
+    );
+
+    if (!updatedQuotation) {
+      return res.status(404).json({ status: false, message: 'Quotation not found' });
+    }
+
+    res.status(200).json({ status: true, message: 'Quotation updated successfully', data: updatedQuotation });
+  } catch (error) {
+    console.error('Error updating quotation:', error);
+    res.status(500).json({ status: false, message: 'Internal server error', error });
+  }
+};
+
+
+export const DeleteQuotationapi = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Check if the ID is valid
+    if (!id) {
+      return res.status(400).json({ status: false, message: 'ID parameter is required' });
+    }
+
+    // Attempt to delete the quotation
+    const deletedQuotation = await Quatation.findByIdAndDelete(id);
+
+    if (!deletedQuotation) {
+      return res.status(404).json({ status: false, message: 'Quotation not found' });
+    }
+
+    res.status(200).json({ status: true, message: 'Quotation deleted successfully', data: deletedQuotation });
+  } catch (error) {
+    console.error('Error deleting quotation:', error);
+    res.status(500).json({ status: false, message: 'Internal server error', error });
+  }
+};
+
+
+export const GetQuotationApi  = async(req , res)=>{
+    const { leadId } = req.params;
+  
+    try {
+      const quotations = await Quatation.find({ leadId });
+      res.status(200).json(quotations);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching quotations', error });
+    }
+     
+}
+
 
 export const GetOpenLeads = async(req ,res)=>{
     const {id} = req.params;
