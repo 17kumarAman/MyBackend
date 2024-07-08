@@ -4,19 +4,15 @@ import mongoose from "mongoose";
 const itemSchema = new mongoose.Schema({
   description: {
     type: String,
-    required: true
   },
   quantity: {
     type: String,
-    required: true
   },
   price: {
     type: String,
-    required: true
   },
   total: {
     type: String,
-    required: true
   }
 });
 

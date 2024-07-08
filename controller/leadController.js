@@ -133,6 +133,7 @@ export const PostQuotationForm = async(req , res)=>{
     
         res.status(201).send({ status:true ,  message: 'Quotation saved successfully' , newQuotation});
       } catch (error) {
+         console.log("error ",error);
         res.status(500).send({ message: 'Error saving quotation', error });
       }
 
