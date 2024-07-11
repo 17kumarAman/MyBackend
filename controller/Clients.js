@@ -1,4 +1,5 @@
 import Clients from "../models/Tasks/Clients.js";
+import Projects from "../models/Tasks/Projects.js";
 
 export const CreateClient = async(req ,res)=>{
     try{
@@ -90,3 +91,60 @@ export const DisableClient = async (req, res) => {
     }
   };
   
+
+  // FOR CLIENTS 
+  export const CreateProject = async(req ,res)=>{
+     try{
+
+      const {Name , Description , Employee , Status , DueDate , Members} = req.body;
+
+       const projectDetail = await Projects.create({Name , Description ,Employee , Status , DueDate , Members});
+
+        return res.status(200).json({
+          status:true , 
+          message:"Successfuly done" , 
+          projectDetail
+        })
+
+     } catch(error){
+       console.log(error);
+       return res.status(500).json({
+        status:false , 
+        message:"Internal server error "
+       })
+     }
+  }
+
+  export const EditProject = async(req ,res)=>{
+    try{
+        const {Name , Description , Employee , Status , DueDate , Members} = req.body;
+
+        const {projectId} =req.params;
+
+        const ProjectDetail = await Projects.findByIdAndUpdate( projectId, {Name , Description , Employee , Status , DueDate , Members });
+     
+         return res.status(200).json({
+             status:true , 
+             message:"done success" , 
+            data: ProjectDetail
+         })
+
+    } catch(error){
+        console.log(error);
+        return res.status(500).json({
+            status:false , 
+            message:"interla server error "
+        })
+    }
+}
+
+export const getAllProject = async(req ,res)=>{
+
+     const allClient = await Projects.find({});
+
+     return res.status(200).json({
+        status:true ,
+        message:"Done" , data: allClient
+     })
+
+}

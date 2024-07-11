@@ -8,7 +8,7 @@ import {
   updateTask,
 
 } from "../controller/TaskController.js";
-import { CreateClient, EditClient  ,getAllClient , DisableClient } from "../controller/Clients.js";
+import { CreateClient, EditClient  ,getAllClient , DisableClient , CreateProject , EditProject , getAllProject } from "../controller/Clients.js";
 
 const router = Router();
 
@@ -26,6 +26,12 @@ router.post("/createClient" , CreateClient);
 router.post("/editClient/:clientId" , EditClient);
 router.get("/getAllClient" , getAllClient);
 router.post("/disableClient/:clientId" , DisableClient);
+
+// for projeccts 
+
+router.post("/createProject" , CreateProject);
+router.post("/editProject/:projectId" , EditProject);
+router.get("/getAllProject" , getAllProject);
 
 
 
