@@ -121,6 +121,8 @@ export const DisableClient = async (req, res) => {
 
         const {projectId} =req.params;
 
+        console.log('rid ',projectId);
+
         const ProjectDetail = await Projects.findByIdAndUpdate( projectId, {Name , Description , Employee , Status , DueDate , Members });
      
          return res.status(200).json({
@@ -140,11 +142,21 @@ export const DisableClient = async (req, res) => {
 
 export const getAllProject = async(req ,res)=>{
 
-     const allClient = await Projects.find({});
+     const allClient = await Projects.find({}).populate("Members");
 
      return res.status(200).json({
         status:true ,
         message:"Done" , data: allClient
      })
 
+}
+
+export const DeleteProject = async(req ,res)=>{
+  const {projectId} = req.params;
+
+   const ans = await Projects.findByIdAndDelete(projectId);
+    return res.status(200).json({
+      status:true , 
+      
+    })
 }

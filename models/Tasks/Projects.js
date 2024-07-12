@@ -18,10 +18,10 @@ const mySchema = new mongoose.Schema(
     DueDate:{
         type:String,
     },
-    Members:[{
+    Members:{
         type: mongoose.Schema.Types.ObjectId , 
           ref:"User"
-    }] , 
+    } , 
   
   },
   { timestamps: true }
