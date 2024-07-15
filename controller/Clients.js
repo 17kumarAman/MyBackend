@@ -151,12 +151,15 @@ export const getAllProject = async(req ,res)=>{
 
 }
 
-export const DeleteProject = async(req ,res)=>{
+export const DeleteProjects = async(req ,res)=>{
   const {projectId} = req.params;
 
    const ans = await Projects.findByIdAndDelete(projectId);
+
     return res.status(200).json({
       status:true , 
+      message:"Successfuly data " , 
+      data:ans 
       
     })
 }
