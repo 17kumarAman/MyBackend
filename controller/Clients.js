@@ -99,7 +99,6 @@ export const DisableClient = async (req, res) => {
       const {Name , Description , Employee , Status , DueDate , Members} = req.body;
 
        const projectDetail = await Projects.create({Name , Description ,Employee , Status , DueDate , Members});
-
         return res.status(200).json({
           status:true , 
           message:"Successfuly done" , 
@@ -162,4 +161,24 @@ export const DeleteProjects = async(req ,res)=>{
       data:ans 
       
     })
+}
+
+export const getProjectByUser = async(req ,res)=>{
+  try {
+    const { userId } = req.params;
+
+    const projects = await Projects.find({ Members: userId }).populate('Members'); 
+
+    res.status(200).json({
+      status:true , 
+      projects
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status:false , 
+      messag:"intenal server error "
+    })
+
+    }
 }
