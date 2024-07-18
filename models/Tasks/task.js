@@ -18,6 +18,9 @@ const mySchema = new mongoose.Schema(
       type: String,
       default:"Normal" , 
     },
+    Github: {
+      type: String,
+    },
     Members:{
         type: mongoose.Schema.Types.ObjectId , 
           ref:"User"

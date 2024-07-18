@@ -190,9 +190,9 @@ export const getProjectByUser = async(req ,res)=>{
 export const CreateProjectTask = async(req ,res)=>{
   try{
 
-    const { Title, Description, Members, StartDate ,DueDate,Project , Priority  } = req.body;
+    const { Title, Description,Github ,  Members, StartDate ,DueDate,Project , Priority  } = req.body;
 
-    const taskDetail = await ProjectTasks.create({ Title, Description, Members, StartDate ,DueDate,Project , Priority});
+    const taskDetail = await ProjectTasks.create({ Title,Github ,  Description, Members, StartDate ,DueDate,Project , Priority});
 
     return res.status(200).json({
       status:true , 
