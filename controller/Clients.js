@@ -1,5 +1,7 @@
 import Clients from "../models/Tasks/Clients.js";
 import Projects from "../models/Tasks/Projects.js";
+import ProjectTasks from "../models/Tasks/task.js";
+import User from "../models/User/User.js";
 
 export const CreateClient = async(req ,res)=>{
     try{
@@ -182,3 +184,64 @@ export const getProjectByUser = async(req ,res)=>{
 
     }
 }
+
+
+// for task of project 
+export const CreateProjectTask = async(req ,res)=>{
+  try{
+
+    const { Title, Description, Members, StartDate ,DueDate,Project , Priority  } = req.body;
+
+    const taskDetail = await ProjectTasks.create({ Title, Description, Members, StartDate ,DueDate,Project , Priority});
+
+    return res.status(200).json({
+      status:true , 
+      data: taskDetail
+    })
+
+  } catch(error){
+    return res.status(500).json({
+      status:false , 
+      message: error.message , 
+    })
+  }
+}
+
+export const GetAllTask = async(req ,res)=>{
+  try{
+
+  const allTasks = await ProjectTasks.find({}).populate("Members").populate("Project");
+  
+  return res.status(200).json({
+    status:true , 
+    data: allTasks
+  })
+
+  } catch(error){
+    return res.status(500).json({
+      status:false , 
+      message: error.message , 
+    })
+  }
+}
+
+export const GetTaskByUser = async(req ,res)=>{
+  try{
+
+    const { userId } = req.params;
+
+    const allTasks = await ProjectTasks.find({Members:userId}).populate("Members").populate("Project");
+
+    return res.status(200).json({
+      status:true , 
+      data: allTasks
+    })
+
+  } catch(error){
+    return res.status(500).json({
+      status:false , 
+      message: error.message , 
+    })
+  }
+}
+
