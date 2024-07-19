@@ -499,8 +499,6 @@ export const editLead = async (req, res) => {
         // Ensure id is passed as a parameter
         const id = req.params.id;
 
-        console.log("id ", id);
-
         // Update lead details
         const leadDetail = await Lead.findByIdAndUpdate(id, {
             LeadOwner,

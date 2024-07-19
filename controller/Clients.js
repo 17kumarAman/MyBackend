@@ -190,9 +190,10 @@ export const getProjectByUser = async(req ,res)=>{
 export const CreateProjectTask = async(req ,res)=>{
   try{
 
-    const { Title, Description,Github ,  Members, StartDate ,DueDate,Project , Priority  } = req.body;
+    const { Title, Description,Github ,  Members, StartDate ,DueDate , Priority   } = req.body;
+    const {projectId} = req.params;
 
-    const taskDetail = await ProjectTasks.create({ Title,Github ,  Description, Members, StartDate ,DueDate,Project , Priority});
+    const taskDetail = await ProjectTasks.create({ Title,Github ,  Description, Members, StartDate ,DueDate, Priority , Project:projectId});
 
     return res.status(200).json({
       status:true , 
@@ -231,6 +232,67 @@ export const GetTaskByUser = async(req ,res)=>{
     const { userId } = req.params;
 
     const allTasks = await ProjectTasks.find({Members:userId}).populate("Members").populate("Project");
+
+    return res.status(200).json({
+      status:true , 
+      data: allTasks
+    })
+
+  } catch(error){
+    return res.status(500).json({
+      status:false , 
+      message: error.message , 
+    })
+  }
+}
+
+export const getTaskByUserProject = async(req , res)=>{
+  try{
+
+    const { userId , projectId } = req.params;
+
+    const allTasks = await ProjectTasks.find({Members:userId , Project:projectId}).populate("Members").populate("Project");
+
+    return res.status(200).json({
+      status:true , 
+      data: allTasks
+    })
+
+  } catch(error){
+    return res.status(500).json({
+      status:false , 
+      message: error.message , 
+    })
+  }
+}
+
+export const getProjectTask = async(req ,res)=>{
+  try{
+
+    const {  projectId } = req.params;
+
+    const allTasks = await ProjectTasks.find({Project:projectId}).populate("Members").populate("Project");
+
+    return res.status(200).json({
+      status:true , 
+      data: allTasks
+    })
+
+  } catch(error){
+    return res.status(500).json({
+      status:false , 
+      message: error.message , 
+    })
+  }
+}
+
+export const changeTaskStatus = async(req ,res)=>{
+  try{
+
+    const {taskStatus} = req.body;
+    const {  taskId } = req.params;
+
+    const allTasks = await ProjectTasks.findByIdAndUpdate(taskId ,{Status:taskStatus} , {new:true});
 
     return res.status(200).json({
       status:true , 

@@ -29,6 +29,10 @@ const mySchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId , 
           ref:"Projects"
     },  
+    Status:{
+      type: String ,
+      default:"Not Started"
+    }
 
   },
   { timestamps: true }
