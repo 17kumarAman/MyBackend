@@ -5,8 +5,8 @@ export const mailSender = async(email , subject , html) => {
         let transporter = createTransport({
             host: "smtp.gmail.com",
             auth: {
-                user: "webmaster.kushel@gmail.com",
-                pass: "fypnipkjntklyznj",
+                user: "manishrajwarkusheldigisolution@gmail.com",
+                pass: "wdaprqwcbjvigack",
             },
             tls: {
                 rejectUnauthorized: false // Temporarily bypass certificate validation

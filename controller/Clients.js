@@ -2,6 +2,9 @@ import Clients from "../models/Tasks/Clients.js";
 import Projects from "../models/Tasks/Projects.js";
 import ProjectTasks from "../models/Tasks/task.js";
 import User from "../models/User/User.js";
+import { mailSender } from "../utils/SendMail2.js";
+import Notification from "../models/Notification/Notification.js"
+
 
 export const CreateClient = async(req ,res)=>{
     try{
@@ -190,14 +193,33 @@ export const getProjectByUser = async(req ,res)=>{
 export const CreateProjectTask = async(req ,res)=>{
   try{
 
-    const { Title, Description,Github ,  Members, StartDate ,DueDate , Priority   } = req.body;
+    const { Title, Description,Github , Members, StartDate ,DueDate , Priority   } = req.body;
     const {projectId} = req.params;
 
     const taskDetail = await ProjectTasks.create({ Title,Github ,  Description, Members, StartDate ,DueDate, Priority , Project:projectId});
 
+    const projectDetail = await Projects.findById(projectId);
+
+    const memberdetail = await User.findById(Members);
+     
+    await mailSender(memberdetail.email, `Regarding New Task`, `<div>
+      <div>Project: ${projectDetail?.Name}</div>
+      <div>Subject: ${Title}</div>
+      <div>Priority: ${Priority}</div>
+     
+      </div>`);
+
+    
+             let Nottitle = `${projectDetail?.Name} Task`;
+             let notDes = `${Title} `
+         
+        const newNotification = await Notification.create({title:Nottitle ,description:notDes , user:Members })
+
+
     return res.status(200).json({
       status:true , 
-      data: taskDetail
+      data: taskDetail , 
+      newNotification
     })
 
   } catch(error){

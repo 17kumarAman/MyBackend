@@ -1068,9 +1068,6 @@ export const postTermination = asyncHandler(async (req, res) => {
   });
 
 
-  console.log(`mail send to ${users}`);
-
-
   const termination = await Termination.create({
     Employee,
     type,
