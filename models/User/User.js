@@ -149,9 +149,8 @@ const userSchema = new mongoose.Schema({
 
 
   dob: {
-    type: String,
-    required: false,
-    set: (b) => (b === "" ? undefined : b),
+    type: Date,
+
   },
   document: [{
     name: String, 

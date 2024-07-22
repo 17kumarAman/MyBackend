@@ -307,7 +307,8 @@ export const updateProfile = asyncHandler(async (req, res) => {
       AccountNumber,
       confirmAccount,
       Branch,
-      image
+      image , 
+      dob
     } = req.body;
 
 
@@ -365,7 +366,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
       BankIfsc,
       AccountNumber,
       confirmAccount,
-      Branch
+      Branch , dob
     });
     const user = await User.findByIdAndUpdate(req.user._id, obj, {
       new: true,

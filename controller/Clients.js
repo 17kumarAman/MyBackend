@@ -329,3 +329,27 @@ export const changeTaskStatus = async(req ,res)=>{
   }
 }
 
+
+// user birthdate 
+
+export const getTodayBirthday = async (req, res) => {
+  try {
+    const today = new Date();
+    const todayMonth = today.getMonth() + 1; // Months are zero-based, so add 1
+    const todayDate = today.getDate();
+
+    // Get employees whose birthday is today
+    const employeesWithBirthdayToday = await User.find().exec();
+    console.log("empye",employeesWithBirthdayToday);
+
+    // Filter employees whose month and day of dob match today's month and day
+    const filteredEmployees = employeesWithBirthdayToday.filter(employee => {
+      const dob = new Date(employee.dob);
+      return (dob.getMonth() + 1 === todayMonth) && (dob.getDate() === todayDate);
+    });
+
+    res.status(200).json(filteredEmployees);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
