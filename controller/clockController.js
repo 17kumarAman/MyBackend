@@ -38,8 +38,9 @@ export const getClockByUserDate = async (req, res) => {
     const clockEntries = await Clock.findOne({
       user: userId,
       Date: date,
-    }).select('clockIn clockOut breakTime').populate("user");
+    }).select('clockIn clockOut breakTime Note').populate("user");
 
+      
 
     return res.status(200).json({
       status: true,
@@ -50,6 +51,35 @@ export const getClockByUserDate = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       status: 500,
+      message: "Internal server error"
+    });
+  }
+};
+export const SaveClockNote = async (req, res) => {
+  try {
+    const { date , Note } = req.body;
+    const { userId } = req.params;
+
+    const clockEntries = await Clock.findOne({
+      user: userId,
+      Date: date,
+    });
+
+    clockEntries.Note = Note;
+    await clockEntries.save();
+
+      
+
+    return res.status(200).json({
+      status: true,
+      message: "Clock details fetched successfully",
+      data: Note
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
       message: "Internal server error"
     });
   }

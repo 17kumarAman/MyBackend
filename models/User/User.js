@@ -96,7 +96,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean , 
     default:false ,
    } , 
-  //   ,leaveReqestEditPermission , leaveReqestActionPermission , employeeManageEditPermission , employeeManageActivatePermission
 
    hrmsSetupEditPermission:{
     type: Boolean , 

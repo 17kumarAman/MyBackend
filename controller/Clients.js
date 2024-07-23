@@ -340,13 +340,14 @@ export const getTodayBirthday = async (req, res) => {
 
     // Get employees whose birthday is today
     const employeesWithBirthdayToday = await User.find().exec();
-    console.log("empye",employeesWithBirthdayToday);
 
     // Filter employees whose month and day of dob match today's month and day
     const filteredEmployees = employeesWithBirthdayToday.filter(employee => {
       const dob = new Date(employee.dob);
       return (dob.getMonth() + 1 === todayMonth) && (dob.getDate() === todayDate);
     });
+   
+
 
     res.status(200).json(filteredEmployees);
   } catch (error) {

@@ -19,7 +19,11 @@ const clockSchema = new mongoose.Schema({
     },
     breakTime:{
         type:String,
-    }
+    }, 
+    Note:{
+        type:String , 
+        default:""
+    },
 });
 
 const Clock = mongoose.model('Clock', clockSchema);
