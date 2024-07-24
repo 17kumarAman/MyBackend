@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 , GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , GetQuotationApi , DeleteQuotationapi , UpdateQuotationForm
+import {createLead ,getAllLead,getAllLead3 , GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi ,  UpdateQuotationForm , UpdateProposalForm
 } from "../controller/leadController.js"
  
 const router = Router();
@@ -50,8 +50,11 @@ router.delete("/deleteLeadNote/:leadId" , DeleteLeadNote);
 router.get("/getNoteById/:leadId" , GetNoteById);
 router.get("/getQuotationApi/:leadId" , GetQuotationApi);
 router.delete("/deleteQuotationapi/:id" , DeleteQuotationapi);
+router.delete("/deletePropapi/:id" , deletePropapi);
 
 router.post("/postQuotationForm" , PostQuotationForm);
+router.post("/postProposalForm" , PostProposalForm);
 router.post("/updateQuotationForm/:quoId" , UpdateQuotationForm);
+router.post("/UpdateProposalForm/:quoId" , UpdateProposalForm);
 
 export default router;
