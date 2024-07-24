@@ -179,22 +179,15 @@ export const UpdateProposalForm = async (req, res) => {
     try {
       const {
           userId,
-          leadId,
           proposalFor,
           preparedFor,
           createdBy,
           Date,
           content,
+          leadId,
       } = req.body;
   
       const { quoId } = req.params;
-  
-      // Check if the ID is valid
-      if (!quoId) {
-        return res
-          .status(400)
-          .json({ status: false, message: "Quotation ID parameter is required" });
-      }
   
       // Update the quotation
       const updatedQuotation = await Proposal.findByIdAndUpdate(

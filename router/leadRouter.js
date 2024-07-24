@@ -50,9 +50,9 @@ router.delete("/deleteLeadNote/:leadId" , DeleteLeadNote);
 router.get("/getNoteById/:leadId" , GetNoteById);
 router.get("/getQuotationApi/:leadId" , GetQuotationApi);
 router.delete("/deleteQuotationapi/:id" , DeleteQuotationapi);
-router.delete("/deletePropapi/:id" , deletePropapi);
 
 router.post("/postQuotationForm" , PostQuotationForm);
+router.delete("/deletePropapi/:id" , deletePropapi);
 router.post("/postProposalForm" , PostProposalForm);
 router.post("/updateQuotationForm/:quoId" , UpdateQuotationForm);
 router.post("/UpdateProposalForm/:quoId" , UpdateProposalForm);
