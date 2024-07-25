@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
    leadPermission:{ 
     type: Boolean , 
     default:false ,
-   } , 
+   } ,
+   offerLetterPermission:{
+    type:Boolean , 
+    default:false , 
+   }  ,
    leadEditPermission:{  
     type: Boolean , 
     default:false ,

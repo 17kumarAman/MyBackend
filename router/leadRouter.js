@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 , GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi ,  UpdateQuotationForm , UpdateProposalForm
+import {createLead ,getAllLead,getAllLead3 , GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi , GetUserLetter , UpdateQuotationForm , UpdateProposalForm , OfferLetterDocs , changeOfferLetterPer
 } from "../controller/leadController.js"
  
 const router = Router();
@@ -54,7 +54,14 @@ router.delete("/deleteQuotationapi/:id" , DeleteQuotationapi);
 router.post("/postQuotationForm" , PostQuotationForm);
 router.delete("/deletePropapi/:id" , deletePropapi);
 router.post("/postProposalForm" , PostProposalForm);
+
 router.post("/updateQuotationForm/:quoId" , UpdateQuotationForm);
 router.post("/UpdateProposalForm/:quoId" , UpdateProposalForm);
+
+router.post("/postSaveOfERdOCS" , OfferLetterDocs);
+router.post("/getUserLetter" , GetUserLetter);
+router.post("/changeOfferLetterPer" , changeOfferLetterPer);
+
+
 
 export default router;

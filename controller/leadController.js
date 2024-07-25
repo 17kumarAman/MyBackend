@@ -8,6 +8,7 @@ import Role from "../models/Role/Role.js";
 import LeadNote from "../models/LeadNotes.js";
 import Quatation from "../models/Quatation/Quatation.js";
 import Proposal from "../models/Proposal/Proposal.js";
+import OfferLetter from "../models/OfferLetter.js";
 
 export const createLead = async (req, res) => {
   try {
@@ -84,6 +85,75 @@ export const createLead = async (req, res) => {
     });
   }
 };
+
+export const OfferLetterDocs = async(req ,res)=>{
+   try{
+
+     const {userId , content} = req.body;
+
+       const createletter = await OfferLetter.create({user:userId , content});
+
+        return res.status(200).json({
+          status:200 , 
+          data: createletter
+        })
+   } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      status:false , 
+      message:"internal server error "
+    })
+   }
+}
+
+export const changeOfferLetterPer = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found",
+      });
+    }
+
+    user.offerLetterPermission = !user.offerLetterPermission;
+    await user.save();
+
+    return res.status(200).json({
+      status: true,
+      message: "Offer letter permission toggled successfully",
+      offerLetterPermission: user.offerLetterPermission,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const GetUserLetter = async( req ,res)=>{
+  try{
+
+    const {userId} = req.body;
+
+    const createletter = await OfferLetter.find({user:userId});
+
+       return res.status(200).json({
+         status:200 , 
+         data: createletter
+       })
+  } catch(error){
+   console.log(error);
+   return res.status(500).json({
+     status:false , 
+     message:"internal server error "
+   })
+  }
+}
 
 export const PostQuotationForm = async (req, res) => {
   try {
