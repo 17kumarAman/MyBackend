@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     type:Boolean , 
     default:false , 
    }  ,
+   RelievingLetterPermission:{
+    type:Boolean , 
+    default:false , 
+   }  ,
    leadEditPermission:{  
     type: Boolean , 
     default:false ,

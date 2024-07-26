@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 , GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi , GetUserLetter , UpdateQuotationForm , UpdateProposalForm , OfferLetterDocs , changeOfferLetterPer
+import {createLead ,getAllLead,getAllLead3 , SaveRelivingLetter , GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi , GetUserLetter , UpdateQuotationForm , UpdateProposalForm , OfferLetterDocs , changeOfferLetterPer , changeRelivingLetterPer
 } from "../controller/leadController.js"
  
 const router = Router();
@@ -59,8 +59,12 @@ router.post("/updateQuotationForm/:quoId" , UpdateQuotationForm);
 router.post("/UpdateProposalForm/:quoId" , UpdateProposalForm);
 
 router.post("/postSaveOfERdOCS" , OfferLetterDocs);
+router.post("/saveRelivingLetter" , SaveRelivingLetter);
+
 router.post("/getUserLetter" , GetUserLetter);
+
 router.post("/changeOfferLetterPer" , changeOfferLetterPer);
+router.post("/changeRelivingLetterPer" , changeRelivingLetterPer);
 
 
 
