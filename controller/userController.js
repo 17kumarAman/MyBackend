@@ -697,7 +697,8 @@ export const uploadDocuments = async (req, res) => {
     LastOrganization,
     RelievingLetter,
     OfferLetter,
-    ExperienceLetter
+    ExperienceLetter , 
+    ITR
   } = req.files;
 
   try {
@@ -718,6 +719,7 @@ export const uploadDocuments = async (req, res) => {
       { name: 'RelievingLetter', file: RelievingLetter },
       { name: 'OfferLetter', file: OfferLetter },
       { name: 'ExperienceLetter', file: ExperienceLetter }
+      { name: 'ITR', file: ITR }
     ];
 
     let updatedDocuments = user.document || [];
