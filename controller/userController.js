@@ -718,7 +718,7 @@ export const uploadDocuments = async (req, res) => {
       { name: 'LastOrganization', file: LastOrganization },
       { name: 'RelievingLetter', file: RelievingLetter },
       { name: 'OfferLetter', file: OfferLetter },
-      { name: 'ExperienceLetter', file: ExperienceLetter }
+      { name: 'ExperienceLetter', file: ExperienceLetter } ,
       { name: 'ITR', file: ITR }
     ];
 
