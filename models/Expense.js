@@ -5,13 +5,25 @@ const mySchema = new mongoose.Schema(
     title: { 
       type: String,
     },
-    note: {
+    itemCode: { 
       type: String,
     },
-    totalAmount: {
+    quantity: {
       type: String,
     },
-    date:{
+    unit: {
+      type: String,
+    },
+    purchasePrice:{
+        type:String , 
+    }, 
+    salesPrice:{
+        type:String , 
+    }, 
+    purchaseDate:{
+        type:String , 
+    }, 
+    category:{
         type:String , 
     }, 
    

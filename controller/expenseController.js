@@ -1,8 +1,8 @@
 import Expense from "../models/Expense.js"
 
 export const CreateExpense = async( req ,res)=>{
-    const {title , note , totalAmount , date} = req.body;
-     const expenseDetail = await Expense.create({title , note , totalAmount , date});
+    const {     title,itemCode, quantity, unit,  purchasePrice , salesPrice , purchaseDate ,  category} = req.body;
+     const expenseDetail = await Expense.create({title,itemCode, quantity, unit,  purchasePrice , salesPrice , purchaseDate ,  category});
 
      return res.status(200).json({
         status:true ,
