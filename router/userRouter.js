@@ -20,7 +20,8 @@ import {
   uploadDocuments , 
   uploadSingleImg,
   uploadImgToCloudinary,
-  DeactivateUser
+  DeactivateUser , 
+  getThisMonthLeave
 } from "../controller/userController.js";
 import isAuthenticated from "../middleware/auth.js";
 import { upload } from "../middleware/multer.js";
@@ -69,6 +70,7 @@ router.route("/getEmployeesByEmployee").get(isAuthenticated, getEmployeesByEmplo
 // for upload doucments 
 router.route("/uploadDocument/:id").post(  uploadDocuments);
 router.route("/uploadSingleImg").post( uploadSingleImg);
+router.get("/getThisMonthLeave/:userId" , getThisMonthLeave);
 
 
 

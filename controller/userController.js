@@ -8,6 +8,7 @@ import ActivityTracker from "../models/ActivityTracker/ActivityTracker.js";
 import crypto from "crypto";
 import fs from "fs";
 import { removeUndefined } from "../utils/util.js";
+import Leave from "../models/Leave/Leave.js";
 
 const generateRefreshToken = async (userId) => {
   try {
@@ -40,6 +41,43 @@ const generateRefreshToken = async (userId) => {
    })
 
 })
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+export const getThisMonthLeave = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    const formattedStartOfMonth = formatDate(startOfMonth);
+    console.log("Formatted Start of Month:", formattedStartOfMonth); // Outputs: "2024-08-01"
+
+    const leaves = await Leave.find({
+      user: userId,
+      from: { $gt: formattedStartOfMonth },
+      status:'Accepted'
+    });
+    console.log("leave ",leaves.length);
+    
+    return res.status(200).json({
+      status: true,
+      totalDays:leaves.length,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: error.message,
+    });
+  }
+};
 
 export const RegisterUser = asyncHandler(async (req, res) => {
   const {
