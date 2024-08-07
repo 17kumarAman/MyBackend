@@ -57,14 +57,12 @@ export const getThisMonthLeave = async (req, res) => {
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     
     const formattedStartOfMonth = formatDate(startOfMonth);
-    console.log("Formatted Start of Month:", formattedStartOfMonth); // Outputs: "2024-08-01"
 
     const leaves = await Leave.find({
       user: userId,
       from: { $gt: formattedStartOfMonth },
       status:'Accepted'
     });
-    console.log("leave ",leaves.length);
     
     return res.status(200).json({
       status: true,

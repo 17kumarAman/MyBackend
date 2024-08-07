@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postLeave, updateLeave, getUserLeaves,getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler   , GetTodayLeave} from "../controller/leaveController.js";
+import { postLeave, updateLeave,monthlyLeave ,  getUserLeaves,getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler   , GetTodayLeave} from "../controller/leaveController.js";
 import isAuthenticated from "../middleware/auth.js";
 
 
@@ -134,6 +134,7 @@ router.post("/rejectLeave/:id" , async (req, res) => {
   }
 });
 
+router.post("/monthlyLeave" , monthlyLeave);
 // this is employe on leave routes 
 
 router.get("/getTodayLeave" , GetTodayLeave);
