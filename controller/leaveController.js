@@ -39,61 +39,138 @@ function formatDate(date) {
   return `${year}-${month}-${day}`;
 }
 
-export const monthlyLeave = async(req , res)=>{
-  const {month} = req.body;
-  console.log("month",month);
- if(month){
-  const now = new Date();
-    const year = now.getFullYear();
+// export const monthlyLeave = async(req , res)=>{
+//   const {month} = req.body;
+//  if(month){
+//   const now = new Date();
+//     const year = now.getFullYear();
     
-    // If month is provided, ensure it's a valid number between 1 and 12
-    if (month < 1 || month > 12) {
-      return res.status(400).json({
-        status: false,
-        message: "Invalid month value"
-      });
+//     // If month is provided, ensure it's a valid number between 1 and 12
+//     if (month < 1 || month > 12) {
+//       return res.status(400).json({
+//         status: false,
+//         message: "Invalid month value"
+//       });
+//     }
+
+//     // Calculate the start and end dates for the specified month
+//     const startOfMonth = new Date(year, month - 1, 1);
+//     const endOfMonth = new Date(year, month, 0); // Last day of the month
+
+//     // Format dates if needed
+//     const formattedStartOfMonth = formatDate(startOfMonth);
+//     const formattedEndOfMonth = formatDate(endOfMonth);
+
+//     // Fetch leave records within the specified month
+//     const leaves = await Leave.find({
+//       from: { $gte: formattedStartOfMonth },
+//       to: { $lte: formattedEndOfMonth },
+//       status: 'Accepted'
+//     }).populate("user");
+
+//     console.log("leave",leaves);
+
+//     return res.status(200).json({
+//       status: true,
+//       data: leaves
+//     });
+//  }
+//  else {
+//   const now = new Date();
+//   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  
+//   const formattedStartOfMonth = formatDate(startOfMonth);
+
+//   const leaves = await Leave.find({
+//     from: { $gt: formattedStartOfMonth },
+//     status:'Accepted'
+//   }).populate("user");
+  
+//   return res.status(200).json({
+//     status:true ,
+//     data:leaves
+//   })
+//  }
+
+// }
+
+export const monthlyLeave = async (req, res) => {
+  const { month } = req.body;
+
+
+  const now = new Date();
+  const year = now.getFullYear();
+  
+  // Determine the month to be used (provided month or current month)
+  const targetMonth = month ? month - 1 : now.getMonth();
+
+  // Calculate the start and end dates for the specified month
+  const startOfMonth = new Date(year, targetMonth, 1);
+  const endOfMonth = new Date(year, targetMonth + 1, 0); // Last day of the month
+
+  // Format dates if needed
+  const formattedStartOfMonth = formatDate(startOfMonth);
+  const formattedEndOfMonth = formatDate(endOfMonth);
+
+  // Fetch leave records within the specified month
+  const leaves = await Leave.find({
+    from: { $gte: formattedStartOfMonth },
+    to: { $lte: formattedEndOfMonth },
+    status: 'Accepted',
+  }).populate("user");
+
+  // Consolidate leaves by user
+  const consolidatedLeaves = {};
+
+  leaves.forEach((leave) => {
+ 
+    const userId = leave.user._id.toString();
+    const leaveDays = parseInt(leave.days)+1;
+
+    if (!consolidatedLeaves[userId]) {
+      consolidatedLeaves[userId] = {
+        user: leave.user,
+        totalDays: 0,
+        sickLeave:0 ,
+        paidLeave:0,
+        UnpaidLeave:0,
+        casualLeave:0 ,
+        other:0 ,
+        paidLeave:0
+      
+      };
     }
 
-    // Calculate the start and end dates for the specified month
-    const startOfMonth = new Date(year, month - 1, 1);
-    const endOfMonth = new Date(year, month, 0); // Last day of the month
+    consolidatedLeaves[userId].totalDays += leaveDays;
 
-    // Format dates if needed
-    const formattedStartOfMonth = formatDate(startOfMonth);
-    const formattedEndOfMonth = formatDate(endOfMonth);
+ 
+    if (leave?.leaveType === 'Sick Leave' && leaveDays != NaN) {
+      consolidatedLeaves[userId].sickLeave += leaveDays;
+    }
+   else if (leave?.leaveType === 'Unpaid Leave' && leaveDays != NaN) {
+      consolidatedLeaves[userId].UnpaidLeave += leaveDays;
+    }
+   else if (leave?.leaveType === 'Casual Leave' && leaveDays != NaN) {
+      consolidatedLeaves[userId].casualLeave += leaveDays;
+    }
+   else if (leave?.leaveType === 'Paid Leave' && leaveDays != NaN) {
+      consolidatedLeaves[userId].paidLeave += leaveDays;
+    }
+    else {
+        consolidatedLeaves[userId].other += leaveDays;
+      }
+    
 
-    // Fetch leave records within the specified month
-    const leaves = await Leave.find({
-      from: { $gte: formattedStartOfMonth },
-      to: { $lte: formattedEndOfMonth },
-      status: 'Accepted'
-    }).populate("user");
+  });
 
-    console.log('leave',leaves);
+  // Convert consolidated leaves object to an array
+  const result = Object.values(consolidatedLeaves);
 
-    return res.status(200).json({
-      status: true,
-      data: leaves
-    });
- }
- else {
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  
-  const formattedStartOfMonth = formatDate(startOfMonth);
-
-  const leaves = await Leave.find({
-    from: { $gt: formattedStartOfMonth },
-    status:'Accepted'
-  }).populate("user");
-  
   return res.status(200).json({
-    status:true ,
-    data:leaves
-  })
- }
-
-}
+    status: true,
+    data: result,
+  });
+};
 
 export const updateLeave = async ({ auth, employeeName, id, leaveType, from, to, days, reason, status }) => {
   let updateObj = removeUndefined({
