@@ -16,8 +16,10 @@ export const postActivity = asyncHandler(async (req, res) => {
     if(clockOut === 0 || clockOut==='0')
     {
       let newActivity=new ActivityTracker({
-        user: req.user, date: new Date().getTime(), date1, clockIn, clockOut, late, overtime, total, message
+        user: req.user?._id, date: new Date().getTime(), date1, clockIn, clockOut, late, overtime, total, message
       });
+
+      console.log('new ',newActivity);
       await newActivity.save();
       return res.json({
         success: true,
@@ -25,10 +27,12 @@ export const postActivity = asyncHandler(async (req, res) => {
         data: [],
       });
     }
+
     else
     {
             
-      let id= await ActivityTracker.findOne({"user._id": req.user._id, date1 });
+      let id= await ActivityTracker.findOne({user: req.user._id, date1 });
+      console.log("i ",id);
       await ActivityTracker.findByIdAndDelete(id._id);
 
       return res.json({
