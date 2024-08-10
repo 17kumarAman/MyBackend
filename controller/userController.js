@@ -641,13 +641,23 @@ export const getActiveUsers = asyncHandler(async (req, res) => {
   const activeUsers = await ActivityTracker.find({
     clockOut: '0',
     clockIn: { $gte: twelveHoursAgo.getTime() } 
-  });
-
-  console.log("active users  ",activeUsers);
+  }).populate("user");
 
   return res.status(200).json(new ApiResponse(200, activeUsers, "Active users fetched successfully"));
 });
 
+export const changeBreakIn = async(req ,res)=>{
+    const {isBreakIn , userId} = req.body;
+    console.log("is",isBreakIn , userId);
+      const userDetail = await User.findById(userId);
+       userDetail.isBreakIn = isBreakIn;
+        await userDetail.save();
+
+        return res.status(200).json({
+          status:true ,
+          
+        })
+}
 
 export const getActiveUsersCount = asyncHandler(async (req, res) => {
   // Get the current timestamp in milliseconds

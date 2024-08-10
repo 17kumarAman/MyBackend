@@ -223,6 +223,11 @@ EmployeeType:{
     type: String,
     default: "USER",
   },
+
+  isBreakIn:{
+    type:Boolean, 
+    default: false , 
+  } , 
  
   status: {
     type: String,

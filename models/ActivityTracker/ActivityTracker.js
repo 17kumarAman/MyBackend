@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const mySchema = new mongoose.Schema({
   user: {
-    type: Object,
-    default: {}
+     type:mongoose.Types.ObjectId,
+    ref:"User"
   },
-  date: String, // in timestamp
-  date1: String, // in date format
+  date: String, 
+  date1: String, 
   clockIn: String,
   clockOut: String,
   late: String,

@@ -12,6 +12,7 @@ import {
   changePassword,
   deleteUsers,
   getActiveUsers,
+  changeBreakIn,
   getActiveUsersCount,
   login,
   getUsers,
@@ -71,6 +72,7 @@ router.route("/getEmployeesByEmployee").get(isAuthenticated, getEmployeesByEmplo
 router.route("/uploadDocument/:id").post(  uploadDocuments);
 router.route("/uploadSingleImg").post( uploadSingleImg);
 router.get("/getThisMonthLeave/:userId" , getThisMonthLeave);
+router.post("/changeBreakin" , changeBreakIn);
 
 
 
