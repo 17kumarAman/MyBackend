@@ -24,7 +24,7 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   await mailSender("pooja@kusheldigi.com", "Regarding Leave", `<div>
   <div>from: ${auth?.fullName}</div>
   <div>to: ${to}</div>
-  <div>days: ${parseInt(days) + 1}</div>
+  <div>days: ${days + 1}</div>
   <div>reason: ${reason}</div>
   </div>`);
 
