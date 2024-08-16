@@ -1,14 +1,13 @@
 import { createTransport } from "nodemailer";
 
 export const SendEmail = async (to, subject, text, html) => {
-  console.log("to ",to , "subject ",subject ,"tedt ",text , "htms" , html);
   const transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     port: 465,
-    secure: true, // true for 465, false for other ports
+    secure: true, 
     auth: {
-      user: "webmaster.kushel@gmail.com",
-       pass:"fypnipkjntklyznj"
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     from: "info@kusheldigi.com",
     tls: {
@@ -24,33 +23,7 @@ export const SendEmail = async (to, subject, text, html) => {
   });
 };
 
-//  let transporter = createTransport({
-// host: "smtp.gmail.com",
-// port: 465,
-// secure: true, // true for 465, false for other ports
-// auth: {
-//   user: "webmaster.kushel@gmail.com",
-//   pass: "fypnipkjntklyznj",
-// },
-// from: "info@kusheldigi.com",
-// tls: {
-//   rejectUnauthorized: false,
-// },
-// });
-
-// let info1 = await transporter.sendMail({
-//   from: '"Kushel Digi Solutions" <info@kusheldigi.com>',
-//   to: email,
-//   subject: "Login Details",
-//   text: `
-//       <div>
-//           <div>Employee ID: KDS${employeeCode}</div>
-//           <div>Password: ${password}</div>
-//       </div>
-//   `,
-//   html: `
-//   <div>
-//     <div>Employee ID: KDS${employeeCode}</div>
-//     <div>Password: ${password}</div>
-//   </div>`,
-// });
+ // auth: {
+    //   user: "webmaster.kushel@gmail.com",
+    //    pass:"fypnipkjntklyznj"
+    // },

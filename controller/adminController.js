@@ -1044,11 +1044,24 @@ export const postTermination = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ fullName: Employee });
 
+  // const transporter = createTransport({
+  //   host: "smtpout.secureserver.net",
+  //   port: 465,
+  //   secure: true, 
+    // auth: {
+    //   user: "info@kusheldigi.com",
+    //   pass: "info@kushel12345"
+    // },
+  //   from: "info@kusheldigi.com",
+  //   tls: {
+  //     rejectUnauthorized: false,
+  //   },
+  // });
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1116,10 +1129,10 @@ export const updateTermination = asyncHandler(async (req, res) => {
   });
 
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1169,10 +1182,10 @@ export const postWarning = asyncHandler(async (req, res) => {
   const users1 = await User.findOne({ fullName: warningTo });
 
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1244,10 +1257,10 @@ export const updateWarning = asyncHandler(async (req, res) => {
   });
 
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1295,10 +1308,10 @@ export const postComplain = asyncHandler(async (req, res) => {
   const users1 = await User.findOne({ fullName: complainAgain });
 
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1370,10 +1383,10 @@ export const updateComplain = asyncHandler(async (req, res) => {
   });
 
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1420,16 +1433,15 @@ export const postResignation = asyncHandler(async (req, res) => {
   const users1 = await User.findOne({ fullName: Employee });
 
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
     }
   });
-
   let info = await transporter.sendMail({
     from: 'Kushel Digi Solutions" <info@kusheldigi.com>',
     to: `${users1.email}`,
@@ -1490,10 +1502,10 @@ export const updateResignation = asyncHandler(async (req, res) => {
   });
 
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1540,10 +1552,10 @@ export const postPromotion = asyncHandler(async (req, res) => {
   // const user2 = await User.updateOne({''})
 
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1602,10 +1614,10 @@ export const updatePromotion = asyncHandler(async (req, res) => {
   });
 
   let transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: "smtpout.secureserver.net",
     auth: {
-      user: "webmaster.kushel@gmail.com",
-      pass: "fypnipkjntklyznj",
+      user: "info@kusheldigi.com",
+      pass: "info@kushel12345"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
