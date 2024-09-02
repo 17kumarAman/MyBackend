@@ -4,14 +4,13 @@ import Clock from "../models/Clock/clock.js"
 export const createClock = async (req, res) => {
   try {
 
-    const { clockInDetail, clockOutDetail, date, breakTime } = req.body;
+    const { clockInDetail, clockOutDetail, date, breakTime , todayTask } = req.body;
 
     const { userId } = req.params;
-    console.log('suerid ', userId);
 
     let overTime = "00";
 
-    const clockDetails = await Clock.create({ Date: date, clockIn: clockInDetail, clockOut: clockOutDetail, user: userId, breakTime: breakTime, overTime: overTime });
+    const clockDetails = await Clock.create({ Date: date, clockIn: clockInDetail, clockOut: clockOutDetail, user: userId, breakTime: breakTime, overTime: overTime , todayTask });
 
 
     return res.status(200).json({
@@ -38,7 +37,7 @@ export const getClockByUserDate = async (req, res) => {
     const clockEntries = await Clock.findOne({
       user: userId,
       Date: date,
-    }).select('clockIn clockOut breakTime Note').populate("user");
+    }).select('clockIn clockOut breakTime Note todayTask').populate("user");
 
       
 

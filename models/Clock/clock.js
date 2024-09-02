@@ -24,6 +24,10 @@ const clockSchema = new mongoose.Schema({
         type:String , 
         default:""
     },
+    todayTask:{
+        type:String  , 
+        default:""
+    }
 });
 
 const Clock = mongoose.model('Clock', clockSchema);
