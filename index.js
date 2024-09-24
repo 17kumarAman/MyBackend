@@ -19,9 +19,7 @@ import clock from "./router/clockRouter.js"
 import award from "./router/awardRouter.js"
 import lead from "./router/leadRouter.js"
 
-// import trainer from "./router/TrainerRouter.js"
-// import trainer from "./router/trainerRouter.js";
-// import announcementRouter from "./router/announcementRouter.js";
+
 import attendanceRouter from "./router/attendanceRouter.js";
 import authRouter from "./router/authRouter.js";
 import systemRouter from "./router/systemRouter.js";
