@@ -31,6 +31,29 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   return { success: true, message: "New leave created" };
 };
 
+export const postAllowance = async ({ user , allowance }) => {
+
+  const userDetail = await User.findById(user);
+
+  userDetail.userAllowance = allowance;
+  await userDetail.save();
+
+
+  return { success: true, message: "New allowance created" };
+};
+
+export const LeaveTypeApi = async ({ id }) => {
+
+  const userLeave = await Leave.find({user:id});
+
+  console.log("userlevvae ",userLeave);
+
+   const paidLeave = userLeave.filter((lev)=> lev?.leaveType === "Paid Leave");
+   const casualLeave = userLeave.filter((lev)=> lev?.leaveType === "Casual Leave");
+ 
+  return { success: true, message: "New allowance created" , data:{paidLeave: paidLeave?.length , casualLeave : casualLeave?.length} };
+};
+
 function formatDate(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed

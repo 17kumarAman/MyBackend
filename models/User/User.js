@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
     type:String,
     default:"00"
   }, 
+  userAllowance:{
+    type:String , 
+    default:"15"
+  } , 
    leadPermission:{ 
     type: Boolean , 
     default:false ,

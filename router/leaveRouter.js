@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postLeave, updateLeave,monthlyLeave ,  getUserLeaves,getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler   , GetTodayLeave} from "../controller/leaveController.js";
+import { postLeave, updateLeave,monthlyLeave ,LeaveTypeApi ,  postAllowance ,  getUserLeaves,getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler   , GetTodayLeave} from "../controller/leaveController.js";
 import isAuthenticated from "../middleware/auth.js";
 
 
@@ -8,6 +8,31 @@ const router = Router();
 router.post("/postLeave", isAuthenticated, async (req, res) => {
   try {
     const data = await postLeave({ ...req.body, auth: req.user });
+    if (data.success) {
+      res.json(data);
+    } else {
+      res.status(400).json(data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/leaveAllowance", async (req, res) => {
+  try {
+    const data = await postAllowance({ ...req.body });
+    if (data.success) {
+      res.json(data);
+    } else {
+      res.status(400).json(data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/leaveTypeApi", async (req, res) => {
+  try {
+    const data = await LeaveTypeApi({ ...req.body });
     if (data.success) {
       res.json(data);
     } else {
