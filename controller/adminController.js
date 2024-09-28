@@ -375,7 +375,6 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
     });
 
     const empType = await EmployeeType.create({ type: employeeType, users: adminUser?._id });
-    console.log("em",empType);
 
     return res.status(200).json(
       {
@@ -2345,8 +2344,6 @@ export const createInvoice = async (req, res) => {
 
     const { User, InvoiceNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency, leadId } = req.body;
 
-    console.log("leadId ", leadId);
-
     const createIn = await Invoice.create({ User, InvoiceNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency, ts: new Date().getTime(), });
 
 
@@ -2357,8 +2354,6 @@ export const createInvoice = async (req, res) => {
 
     // Save the updated lead document
     await leadDetails.save();
-
-    console.log('Updated lead details:', leadDetails);
 
 
 
@@ -2418,8 +2413,6 @@ export const updateInvoice = asyncHandler(async (req, res) => {
   // const { id } = req.params;
   const id = req.params.id;
 
-  console.log("id ", id);
-
   // const userDetail = await User.findOne({ fullName: Employee });
 
   // let updateObj = removeUndefined(id,{
@@ -2466,9 +2459,7 @@ export const createQuatation = async (req, res) => {
 
     const { User, QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency, leadId } = req.body;
 
-    console.log("leadId ", leadId);
 
-    console.log(User);
 
     const createQ = await Quatation.create({ User, QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency, ts: new Date().getTime(), });
 
@@ -2481,7 +2472,6 @@ export const createQuatation = async (req, res) => {
     // Save the updated lead document in the quotation
     await leadDetails.save();
 
-    console.log('Updated lead details:', leadDetails);
 
     return res.status(200).json({
       status: true,
@@ -2533,7 +2523,6 @@ export const updateQuatation = asyncHandler(async (req, res) => {
   // const { id } = req.params;
   const id = req.params.id;
 
-  console.log("id ", id);
 
   // const userDetail = await User.findOne({ fullName: Employee });
 
@@ -2580,20 +2569,16 @@ export const EveryUserLeadSomething = async (req,res) =>{
 
       const id = req.params.id;
 
-      console.log(id);    
 
       const detailsSomething = await Lead.findById({id});
 
 
-      console.log(detailsSomething);
 
       const createDetails = await Quatation.create({
         QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency
       });
 
       createDetails.PlacedSupply(detailsSomething);
-
-      console.log(detailsSomething);
 
       return({
         data:createDetails,
@@ -2688,13 +2673,10 @@ export const updateSalary = asyncHandler(async (req, res) => {
 
 export const syncUser = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
 
   const userListWithSync = await User.find({ documentPermission: id });
-  console.log(userListWithSync);
   userListWithSync.userId = req.params;
 
-  console.log(userListWithSync);
 
   const ans = await Leave.$where({userListWithSync});
 

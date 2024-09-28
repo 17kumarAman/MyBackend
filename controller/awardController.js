@@ -9,7 +9,6 @@ export const createAward = async (req, res) => {
     try {
 
         const { employee, awardType, date, gift, description, rating } = req.body;
-        console.log("emp; ", date);
 
         const userDetail = await User.findOne({ fullName: employee });
 

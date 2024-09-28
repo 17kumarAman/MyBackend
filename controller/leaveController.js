@@ -38,20 +38,19 @@ export const postAllowance = async ({ user , allowance }) => {
   userDetail.userAllowance = allowance;
   await userDetail.save();
 
-
-  return { success: true, message: "New allowance created" };
+  return { success: true, message: "New allowance created" ,userDetail };
 };
 
 export const LeaveTypeApi = async ({ id }) => {
 
   const userLeave = await Leave.find({user:id});
 
-  console.log("userlevvae ",userLeave);
+  console.log("userleave ",userLeave);
 
-   const paidLeave = userLeave.filter((lev)=> lev?.leaveType === "Paid Leave");
-   const casualLeave = userLeave.filter((lev)=> lev?.leaveType === "Casual Leave");
+   const paidLeave = userLeave.filter((lev)=> lev?.leaveType === "Paid Leave" || lev?.leaveType === '' );
+   const casualLeave = userLeave.filter((lev)=> lev?.leaveType === "Casual Leave" || lev?.leaveType === 'Sick Leave');
  
-  return { success: true, message: "New allowance created" , data:{paidLeave: paidLeave?.length , casualLeave : casualLeave?.length} };
+  return { success: true, message: "New allowance created" , data:{paidLeave: paidLeave?.length , casualLeave : casualLeave?.length , totalLeaves:userLeave.length} };
 };
 
 function formatDate(date) {

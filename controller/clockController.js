@@ -131,7 +131,6 @@ function compareDates1(date3, date4) {
   const date3Parts = date3?.split('/');
   const date4Parts = date4?.split('/');
 
-  console.log(date3Parts, date4Parts);
 
   if (!date3Parts || date3Parts.length < 3 || !date4Parts || !date4Parts.length) {
     console.log("Invalid Dates");
@@ -139,14 +138,12 @@ function compareDates1(date3, date4) {
   }
 
   else if(!date3Parts || date3Parts.length < 5 || date4Parts || date4Parts.length){
-    console.log("date length is not greater than 5");
     return 
   }
 
   else{
     const date4 = (date3Parts * date4Parts) / date3;
     const data5 =  date4.split('/',``).splice(0,4).toTimeString();
-    console.log(data5);
     return data5;
   }
 }
@@ -206,7 +203,6 @@ export const getAttendanceDetails = async (req, res) => {
 
       const clockData = await Clock.find({ Date: date }).populate("user");
 
-      console.log("clokda ", clockData);
 
       return res.status(200).json({
         status: true,
@@ -219,7 +215,6 @@ export const getAttendanceDetails = async (req, res) => {
 
       const clockData = await Clock.find({ Date: date }).populate("user");
 
-      console.log("aa ", clockData);
 
       const ans = clockData.filter((item) => {
         return item?.user?.department === department

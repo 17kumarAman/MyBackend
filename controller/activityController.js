@@ -112,7 +112,6 @@ export const getActivitiesByUser = asyncHandler(async (req, res) => {
 
   if (date && date !== "undefined" && date !== "") {
     and.push({ date });
-    console.log(and);
     const data = await ActivityTracker.find({ $and: and })
       .skip(Number(perPage) * Number(page))
       .limit(Number(perPage));
@@ -164,7 +163,6 @@ export const getActivitiesByUser = asyncHandler(async (req, res) => {
     return res.json({ success: true, data });
   }
 
-  console.log(and);
 
   const data = await ActivityTracker.find({ $and: and })
     .skip(Number(perPage) * Number(page))
@@ -318,7 +316,6 @@ export const getAllActivities = asyncHandler(async (req, res) => {
     and.push({});
   }
 
-  console.log(and);
 
   const data = await ActivityTracker.find({$and: and});
   return res.status(200).json(new ApiResponse(200, data, "successfully fetched all activities"));

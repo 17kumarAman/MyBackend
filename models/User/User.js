@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     type:String , 
     default:"15"
   } , 
+  userAllowCrtPermission:{
+    type: Boolean , 
+    default:false , 
+  } , 
    leadPermission:{ 
     type: Boolean , 
     default:false ,

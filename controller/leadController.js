@@ -691,7 +691,6 @@ export const getAllLead = async ({ id, query, page, perPage, userId }) => {
     and.push({ _id: id });
   }
   if (query && query !== "" && query !== "undefined") {
-    console.log(query);
     and.push({ name: { $regex: query, $options: "i" } });
   }
   if (and.length === 0) {
@@ -887,7 +886,6 @@ export const leadEditByUser = asyncHandler(async () => {
     name: req.body.name,
     email: req.body.email,
   });
-  console.log(leadBy);
 });
 
 export const editLeadStatus = asyncHandler(async (req, res) => {
@@ -960,7 +958,6 @@ export const editLeadNote = asyncHandler(async (req, res) => {
 // ====================for doc things======================
 
 export const createDocFile = asyncHandler(async (req, res) => {
-  console.log(req.body);
 
   const { file } = req.body;
 

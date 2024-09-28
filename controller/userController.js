@@ -675,7 +675,6 @@ export const getActiveUsersCount = asyncHandler(async (req, res) => {
       $or: [{ clockOut: '0' }, { clockOut: { $exists: false } }]
     });
 
-    console.log("Active Users:", activeUsers);
 
     // Return the count of active users as a JSON response
     return res.status(200).json(new ApiResponse(200, activeUsers.length, "Active Users count fetched successfully"));

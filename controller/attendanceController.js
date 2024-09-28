@@ -202,7 +202,6 @@ export const getAttendanceByUser = asyncHandler(async (req, res) => {
       year !== ""
     ) {
       let days1 = daysInMonth(month, year);
-      console.log(days1);
       let last = perPage * (page + 1);
 
       let isLast = false;
