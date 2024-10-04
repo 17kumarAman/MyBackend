@@ -4,6 +4,7 @@ import ProjectTasks from "../models/Tasks/task.js";
 import User from "../models/User/User.js";
 import { mailSender } from "../utils/SendMail2.js";
 import Notification from "../models/Notification/Notification.js"
+import Task from "../models/Task/Task.js";
 
 
 export const CreateClient = async (req, res) => {
@@ -168,6 +169,17 @@ export const DeleteProjects = async (req, res) => {
   })
 }
 
+export const delteTaskId = async(req ,res)=>{
+  const {id} = req.params;
+  const taskdetail = await ProjectTasks.findByIdAndDelete(id);
+
+  return res.status(200).json({
+    status:true , 
+    message:'Done' , 
+    data: taskdetail
+  })
+}
+
 export const getProjectByUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -230,11 +242,59 @@ export const CreateProjectTask = async (req, res) => {
   }
 }
 
+// export const editProjectTask = async (req, res) => {
+//   try {
+
+//     const { Title, Description, Github, Members, StartDate, DueDate, Priority } = req.body;
+//     const { projectId } = req.params;
+
+//     const taskDetail = await ProjectTasks.findById(projectId);
+//     taskDetail.Title = Title;
+//     taskDetail.Description = Description;
+//     taskDetail.Github = Github;
+//     taskDetail.StartDate = StartDate;
+//     taskDetail.DueDate = DueDate;
+
+//     await taskDetail.save();
+
+//     const projectDetail = await Projects.findById(projectId);
+
+//     const memberdetail = await User.findById(Members);
+
+//     await mailSender(memberdetail.email, `Regarding Update Task`, `<div>
+//       <div>Project: ${projectDetail?.Name}</div>
+//       <div>Subject: ${Title}</div>
+//       <div>Priority: ${Priority}</div>
+     
+//       </div>`);
+
+
+//     let Nottitle = `${projectDetail?.Name} Task`;
+//     let notDes = `${Title} `
+
+//     const newNotification = await Notification.create({ title: Nottitle, description: notDes, user: Members })
+
+
+//     return res.status(200).json({
+//       status: true,
+//       data: taskDetail,
+//       newNotification
+//     })
+
+//   } catch (error) {
+//     return res.status(500).json({
+//       status: false,
+//       message: error.message,
+//     })
+//   }
+// }
+
 export const EditProjectTask = async (req, res) => {
   const { Title, Description, Github, Members, StartDate, DueDate, Priority } = req.body;
   const { projectId } = req.params;
-
+  
   const { taskId } = req.params;
+  console.log("projectid" , taskId);
 
   const taskDetail = await ProjectTasks.findByIdAndUpdate(taskId, { Title, Description, Github, Members, StartDate, DueDate, Priority, Project: projectId });
 

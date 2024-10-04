@@ -8,7 +8,7 @@ import {
   updateTask,
 
 } from "../controller/TaskController.js";
-import { CreateClient, EditClient  ,  getProjectTask ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject , DeleteProjects , getProjectByUser , CreateProjectTask , GetAllTask , GetTaskByUser , getTodayBirthday } from "../controller/Clients.js";
+import { CreateClient, EditClient  ,  getProjectTask ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject  , delteTaskId, DeleteProjects , getProjectByUser , CreateProjectTask ,EditProjectTask ,  GetAllTask , GetTaskByUser , getTodayBirthday } from "../controller/Clients.js";
 
 const router = Router();
 
@@ -19,6 +19,8 @@ router.put("/updateTask/:id", isAuthenticated, updateTask);
 router.get("/getTasks", isAuthenticated, getTasks);
 
 router.delete("/deleteTask/:id", isAuthenticated, deleteTask);
+
+router.delete("/deleteProjectTaskapi/:id" , delteTaskId);
 
 
 // for cliient 
@@ -38,6 +40,7 @@ router.get("/getProjectByUser/:userId" , getProjectByUser);
 
 // for project task 
 router.post("/createProjectTask/:projectId" , CreateProjectTask);
+router.post("/editProjectTask/:projectId/:taskId" , EditProjectTask);
 router.post("/changeTaskStatus/:taskId" , changeTaskStatus);
 router.get("/getAllTask" , GetAllTask);
 router.get("/getTaskByUser/:userId" ,GetTaskByUser);
