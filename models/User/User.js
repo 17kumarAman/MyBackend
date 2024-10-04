@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     type:String , 
     default:"15"
   } , 
+  showTasksDetailPermission:{
+    type: Boolean , 
+    default: false , 
+  } , 
   userAllowCrtPermission:{
     type: Boolean , 
     default:false , 
