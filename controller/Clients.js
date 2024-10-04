@@ -5,6 +5,7 @@ import User from "../models/User/User.js";
 import { mailSender } from "../utils/SendMail2.js";
 import Notification from "../models/Notification/Notification.js"
 import Task from "../models/Task/Task.js";
+import projectwork from "../models/ProjectWork.js";
 
 
 export const CreateClient = async (req, res) => {
@@ -387,6 +388,28 @@ export const getProjectTask = async (req, res) => {
     const { projectId } = req.params;
 
     const allTasks = await ProjectTasks.find({ Project: projectId }).populate("Members").populate("Project");
+    const taskDetail = await projectwork.find({projectId});
+
+    return res.status(200).json({
+      status: true,
+      data: allTasks , 
+      data2: taskDetail
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: error.message,
+    })
+  }
+}
+
+export const getMyProjectTask = async (req, res) => {
+  try {
+
+    const { projectId , memberId } = req.params;
+
+    const allTasks = await ProjectTasks.find({Project: projectId,Members: memberId}).populate("Members").populate("Project");
 
     return res.status(200).json({
       status: true,

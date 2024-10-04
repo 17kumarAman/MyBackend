@@ -8,7 +8,9 @@ import {
   updateTask,
 
 } from "../controller/TaskController.js";
-import { CreateClient, EditClient  ,  getProjectTask ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject  , delteTaskId, DeleteProjects , getProjectByUser , CreateProjectTask ,EditProjectTask ,  GetAllTask , GetTaskByUser , getTodayBirthday } from "../controller/Clients.js";
+import { CreateClient, EditClient  ,  getProjectTask , getMyProjectTask ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject  , delteTaskId, DeleteProjects , getProjectByUser , CreateProjectTask ,EditProjectTask ,  GetAllTask , GetTaskByUser , getTodayBirthday  } from "../controller/Clients.js";
+
+import {ProjectTimerCreate} from "../controller/ProjectTimer.js"
 
 const router = Router();
 
@@ -46,6 +48,10 @@ router.get("/getAllTask" , GetAllTask);
 router.get("/getTaskByUser/:userId" ,GetTaskByUser);
 router.get("/getTaskByUserProject/:userId/:projectId" ,getTaskByUserProject);
 router.get("/getProjectTask/:projectId" ,getProjectTask);
+router.get("/getMyProjectTask/:projectId/:memberId" ,getMyProjectTask);
+
+// task timer apis 
+router.post("/postProjectTimer" , ProjectTimerCreate);
 
 
 // user get birthday 
