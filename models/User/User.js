@@ -23,6 +23,26 @@ const userSchema = new mongoose.Schema({
     type: Boolean , 
     default: false , 
   } , 
+  addTaskPermission:{
+    type: Boolean , 
+    default: false , 
+  } , 
+  projectCreatePermission:{
+    type: Boolean , 
+    default: false , 
+  } , 
+  deleteTaskPermission:{
+    type: Boolean , 
+    default: false , 
+  } , 
+  editTaskPermission:{
+    type: Boolean , 
+    default: false , 
+  } , 
+  showAllProjectPermission:{
+    type: Boolean , 
+    default: false , 
+  } , 
   userAllowCrtPermission:{
     type: Boolean , 
     default:false , 
