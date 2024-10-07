@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean , 
     default: false , 
   } , 
+  halfDayPermission:{
+    type: Boolean , 
+    default: false , 
+  } , 
   projectCreatePermission:{
     type: Boolean , 
     default: false , 

@@ -1,4 +1,5 @@
 import Leave from "../models/Leave/Leave.js";
+import HalfDay from "../models/Leave/HalfDay.js";
 import User from "../models/User/User.js";
 import { removeUndefined } from "../utils/util.js";
 import { mailSender } from "../utils/SendMail2.js";
@@ -27,6 +28,30 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   <div>reason: ${reason}</div>
   </div>`);
 
+
+  return { success: true, message: "New leave created" };
+};
+
+export const postHalfDay = async ({ auth,  from, to, days, reason }) => {
+  const newLeave = new HalfDay({
+    user: auth,
+    from,
+    to,
+    days,
+    reason,
+    status: "",
+    ts: new Date().getTime()
+  });
+
+
+  const saveLeave = await newLeave.save();
+  
+  await mailSender("hr@kusheldigi.com", "Regarding Half Day", `<div>
+  <div>from: ${auth?.fullName}</div>
+  <div>to: ${to}</div>
+  <div>days: ${days + 1}</div>
+  <div>reason: ${reason}</div>
+  </div>`);
 
   return { success: true, message: "New leave created" };
 };
@@ -224,6 +249,11 @@ export const getUserLeaves = async ({ auth }) => {
   return { success: true, data };
 };
 
+export const getUserHalfDay = async ({ auth }) => {
+  const data = await HalfDay.find({}).populate('user'); // Populate the 'user' field
+  return { success: true, data };
+};
+
 export const getUserLeaveById = async ({ auth, id }) => {
   if (!auth) {
     return { success: false, message: "Not Authorised" };
@@ -258,11 +288,20 @@ export const getTotalLeaveCount = async () => {
     ]
   });
 
+  const data2 = await HalfDay.find({
+    $or: [
+      { status: "Pending" },
+      { status: "" },
+      { status: { $exists: false } }
+    ]
+  });
+
   const totalLeave = data.length;
+  const halfDay = data2.length;
 
   return {
     success: true,
-    totalLeave
+    totalLeave , halfDay
   }
 }
 
@@ -280,6 +319,28 @@ export const rejectLeaveHandler = async ({ fullName, id }) => {
 
   await mailSender(userDetail?.email, "Regarding holiday cancel ", `<div>
 <div>Your holidays are cancel by admin</div>
+
+</div>`)
+
+
+  return {
+    status: true,
+    message: "Successfuly send the email"
+  }
+}
+
+export const rejectHalfDayHandler = async ({ fullName, id }) => {
+
+  const leaveDetails = await HalfDay.findById(id);
+
+  leaveDetails.status = "Rejected";
+
+  await leaveDetails.save();
+
+  const userDetail = await User.findOne({ fullName: fullName });
+
+  await mailSender(userDetail?.email, "Regarding Half Day Cancel ", `<div>
+<div>Your Half Days are cancel by admin</div>
 
 </div>`)
 
@@ -309,6 +370,33 @@ export const acceptLeaveHandler = async ({ fullName, days, id, userId, startDate
 
 
   const leaveDetailing = await EmployeeLeave.create({ startDate, endDate, user: userId });
+
+  return {
+    status: true,
+    message: "Successfuly send the email"
+  }
+
+
+}
+export const acceptHalfDayHandler = async ({ fullName, days, id, userId, startDate, endDate }) => {
+
+  const leaveDetails = await HalfDay.findById(id);
+
+  leaveDetails.status = "Accepted";
+
+  await leaveDetails.save();
+
+  const userDetail = await User.findOne({ fullName: fullName });
+
+  const subject = `total Half Day of ${days} days`;
+
+  await mailSender(userDetail?.email, "Accept Half Day ", `<div>
+   <div>total Half Days of ${parseInt(days)+1} days Accepted</div>
+
+  </div>`)
+
+
+  // const leaveDetailing = await EmployeeLeave.create({ startDate, endDate, user: userId });
 
   return {
     status: true,

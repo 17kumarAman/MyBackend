@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postLeave, updateLeave,monthlyLeave ,LeaveTypeApi ,  postAllowance ,  getUserLeaves,getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler   , GetTodayLeave} from "../controller/leaveController.js";
+import { postLeave, postHalfDay , updateLeave,monthlyLeave ,LeaveTypeApi ,  postAllowance ,  getUserLeaves,getUserHalfDay ,rejectHalfDayHandler ,  getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler , acceptHalfDayHandler  , GetTodayLeave} from "../controller/leaveController.js";
 import isAuthenticated from "../middleware/auth.js";
 
 
@@ -8,6 +8,18 @@ const router = Router();
 router.post("/postLeave", isAuthenticated, async (req, res) => {
   try {
     const data = await postLeave({ ...req.body, auth: req.user });
+    if (data.success) {
+      res.json(data);
+    } else {
+      res.status(400).json(data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/halfday", isAuthenticated, async (req, res) => {
+  try {
+    const data = await postHalfDay({ ...req.body, auth: req.user });
     if (data.success) {
       res.json(data);
     } else {
@@ -63,6 +75,19 @@ router.put("/updateLeave/:id", isAuthenticated, async (req, res) => {
 router.get("/getUserLeaves", async (req, res) => {
   try {
     const data = await getUserLeaves({ ...req.query, auth: req.user });
+    if (data.success) {
+      res.json(data);
+    } else {
+      res.status(400).json(data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/getUserHalfDay", async (req, res) => {
+  try {
+    const data = await getUserHalfDay({ ...req.query, auth: req.user });
     if (data.success) {
       res.json(data);
     } else {
@@ -146,9 +171,33 @@ router.post("/acceptLeave/:id" , async (req, res) => {
     console.log(error);
   }
 });
+router.post("/acceptHalfDay/:id" , async (req, res) => {
+  try {
+    const data = await acceptHalfDayHandler({ ...req.body , ...req.params });
+    if (data.status) {
+      res.json(data);
+    } else {
+      res.status(400).json(data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
 router.post("/rejectLeave/:id" , async (req, res) => {
   try {
     const data = await rejectLeaveHandler({ ...req.body  , ...req.params});
+    if (data.status) {
+      res.json(data);
+    } else {
+      res.status(400).json(data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/rejectHalfDay/:id" , async (req, res) => {
+  try {
+    const data = await rejectHalfDayHandler({ ...req.body  , ...req.params});
     if (data.status) {
       res.json(data);
     } else {
