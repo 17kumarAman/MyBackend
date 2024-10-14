@@ -32,6 +32,7 @@ import Salary from "../models/Salary/Salary.js";
 import EmployeeType from "../models/EmployeeType/employeeType.js"
 import Quatation from "../models/Quatation/Quatation.js";
 import Leave from "../models/Leave/Leave.js";
+import Notification from "../models/Notification/Notification.js"
 
 export const getAdmins = asyncHandler(async (req, res) => {
   const admin = await Admin.find({}).select("-password ");
@@ -908,6 +909,10 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
 
     for (const user of users) {
 
+      // do here
+
+      const notify = await Notification.create({title , description , user: user?._id});
+
       await mailSender(user.email, "Create Annnouncement ", `<div>
       <div>title: ${title}</div>
       <div>Branch: ${Branch}</div>
@@ -919,11 +924,14 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
       </div>`)
 
     }
+
+
   }
 
   else {
 
     const user = await User.findOne({ fullName: Employee });
+    const notify = await Notification.create({title , description , user: user?._id});
 
     await mailSender(user?.email, "Create Annnouncement ", `<div>
     <div>title: ${title}</div>
