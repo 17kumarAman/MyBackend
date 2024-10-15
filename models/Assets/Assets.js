@@ -24,6 +24,10 @@ const mySchema = new mongoose.Schema({
     },
     description:{
         type:String
+    } , 
+    status:{
+        type:String , 
+        default:"Pending"
     }
 });
 

@@ -724,6 +724,19 @@ export const updateApprisal = asyncHandler(async (req, res) => {
 
 // =====================assets controller start================
 
+export const Acceptassetsapi = asyncHandler(async (req, res) => {
+
+  const { assetId} = req.body;
+
+const assetdetail = await Assets.findById(assetId);
+ 
+ assetdetail.status = "Accepted";
+ await assetdetail.save();
+ 
+
+  return res.status(200).json(new ApiResponse(200, assetdetail, " successfully posted"));
+});
+
 export const postAssets = asyncHandler(async (req, res) => {
 
   const { Employee,
@@ -737,18 +750,7 @@ export const postAssets = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ fullName: Employee })
 
-  await mailSender(users.email, "Regarding Create Assets", `<div>
-  <div>Employee: ${Employee}</div>
-  <div>designation: ${designation}</div>
-  <div>Department: ${department}</div>
-  <div>product: ${product}</div>
-  <div>To Date: ${purchaseDate}</div>
-  <div>Additional Product: ${additonal}</div>
-  <div>description: ${description}</div>
-  </div>`);
-
-  console.log(`mail send to ${users}`);
-
+ 
 
   const apprisal = await Assets.create({
     Employee,
@@ -759,6 +761,22 @@ export const postAssets = asyncHandler(async (req, res) => {
     additonal,
     description
   });
+
+  await mailSender(users.email, "Regarding Create Assets", `<div>
+    <div>Employee: ${Employee}</div>
+    <div>designation: ${designation}</div>
+    <div>Department: ${department}</div>
+    <div>product: ${product}</div>
+    <div>To Date: ${purchaseDate}</div>
+    <div>Additional Product: ${additonal}</div>
+    <div>description: ${description}</div>
+       <div>To accept, click the link below:</div>
+    <a href="https://hrms.kusheldigi.com/accept/${apprisal?._id}">Accept Assets</a>
+    </div>`);
+  
+
+
+
   return res
     .status(200)
     .json(new ApiResponse(200, apprisal, " successfully posted"));
@@ -1051,19 +1069,7 @@ export const postTermination = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ fullName: Employee });
 
-  // const transporter = createTransport({
-  //   host: "smtpout.secureserver.net",
-  //   port: 465,
-  //   secure: true, 
-    // auth: {
-    //   user: "info@kusheldigi.com",
-    //   pass: "info@kushel12345"
-    // },
-  //   from: "info@kusheldigi.com",
-  //   tls: {
-  //     rejectUnauthorized: false,
-  //   },
-  // });
+  
   let transporter = createTransport({
     host: "smtpout.secureserver.net",
     auth: {

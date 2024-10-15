@@ -41,11 +41,12 @@ export const updateHoliday = asyncHandler(async (req, res) => {
 });
 
 export const getHolidays = asyncHandler(async (req, res) => {
+
   const admin = req.user.role === "ADMIN" ? req.user._id : req.user.adminId;
+  
   const data = await Holiday.find({ admin });
-  return res
-    .status(200)
-    .json(new ApiResponse(200, data, "successfully fetched all the holidays"));
+
+  return res.status(200).json(new ApiResponse(200, data, "successfully fetched all the holidays"));
 });
 
 export const deleteHoliday = asyncHandler(async (req, res) => {

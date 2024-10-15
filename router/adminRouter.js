@@ -87,7 +87,7 @@ import {
   getQuatation,
   deleteQuatation,
   updateQuatation,
-  getEveryLeadQuatation
+  getEveryLeadQuatation , Acceptassetsapi
 } from "../controller/adminController.js";
 import isAuthenticated from "../middleware/auth.js";
 const router = Router();
@@ -130,6 +130,7 @@ router.delete("/deleteApp/:id", deleteApprisal);
 router.put("/updateApp/:id", updateApprisal);
 
 router.post('/postAsset',postAssets);
+router.post('/acceptassetsapi',Acceptassetsapi);
 router.get('/getAsset',getAssets);
 router.delete("/deleteAsset/:id", deleteAssets);
 router.put("/updateAsset/:id", updateAssets);
