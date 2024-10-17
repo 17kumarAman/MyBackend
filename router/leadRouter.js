@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 , SaveRelivingLetter ,saveExperienceLetter ,  GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi , GetUserLetter , UpdateQuotationForm , UpdateProposalForm , OfferLetterDocs , changeOfferLetterPer , changeRelivingLetterPer , changeExperienceLetterPer , 
+import {createLead ,getAllLead,getAllLead3 , SaveRelivingLetter  , saveLORLetter, saveOfferLetterInter ,saveExperienceLetter ,  GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi , GetUserLetter , UpdateQuotationForm , UpdateProposalForm , OfferLetterDocs , changeOfferLetterPer , changeRelivingLetterPer , changeExperienceLetterPer , 
 } from "../controller/leadController.js"
 import { CreateExpense, deleteExpense , getExpense } from "../controller/expenseController.js";
  
@@ -62,6 +62,8 @@ router.post("/UpdateProposalForm/:quoId" , UpdateProposalForm);
 router.post("/postSaveOfERdOCS" , OfferLetterDocs);
 router.post("/saveRelivingLetter" , SaveRelivingLetter);
 router.post("/saveExperienceLetter" , saveExperienceLetter);
+router.post("/saveOfferLetterInter" , saveOfferLetterInter);
+router.post("/saveLORLetter" , saveLORLetter);
 
 router.post("/getUserLetter" , GetUserLetter);
 
