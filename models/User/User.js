@@ -23,10 +23,19 @@ const userSchema = new mongoose.Schema({
     type: Boolean , 
     default: false , 
   } , 
+  createExpensePermission:{
+    type: Boolean , 
+    default: false , 
+  } , 
+  showExpensePermission:{
+    type: Boolean , 
+    default: false , 
+  } , 
   addTaskPermission:{
     type: Boolean , 
     default: false , 
   } , 
+
   halfDayPermission:{
     type: Boolean , 
     default: false , 
