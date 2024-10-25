@@ -630,6 +630,8 @@ export const GetDesiUser = async (req, res) => {
         "Intern Digital Marketing",
         "Business Development Manager",
         "Manager",
+        "Field Marketing Executive",
+        "Business Development Executive"
       ],
     },
   });
