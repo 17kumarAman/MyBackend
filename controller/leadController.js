@@ -10,6 +10,7 @@ import Quatation from "../models/Quatation/Quatation.js";
 import Proposal from "../models/Proposal/Proposal.js";
 import OfferLetter from "../models/OfferLetter.js";
 import LORLetter from "../models/LORLetter.js";
+import Letter1 from "../models/Letter1.js";
 import RelivingLetter from "../models/Reliving.js";
 import ExperienceLetter from "../models/Experience.js";
 import InternLetter from "../models/InternLetter.js";
@@ -156,6 +157,26 @@ export const saveOfferLetterInter = async(req ,res)=>{
      const {userId , content} = req.body;
 
        const createletter = await InternLetter.create({user:userId , content});
+
+        return res.status(200).json({
+          status:200 , 
+          data: createletter
+        })
+   } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      status:false , 
+      message:"internal server error "
+    })
+   }
+}
+
+export const saveLetter1Api = async(req ,res)=>{
+   try{
+
+     const {userId , content} = req.body;
+
+       const createletter = await Letter1.create({user:userId , content});
 
         return res.status(200).json({
           status:200 , 
