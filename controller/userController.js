@@ -348,15 +348,6 @@ export const updateProfile = asyncHandler(async (req, res) => {
     } = req.body;
 
 
-    // const profileImageLocalPath = req.file?.path;
-
-    // if (!profileImageLocalPath) {
-    //   throw new ApiError(401, "avatar file is Missing");
-    // }
-    // const profileImage = await uploadToCloudinary(profileImageLocalPath);
-    // if (!profileImage.url) {
-    //   throw new ApiError(400, "error uploading on cloudinary");
-    // }
 
     const obj = removeUndefined({
       fullName,
@@ -402,7 +393,10 @@ export const updateProfile = asyncHandler(async (req, res) => {
       BankIfsc,
       AccountNumber,
       confirmAccount,
-      Branch , dob
+      Branch , dob , 
+     updateProfile: false,  
+      
+      
     });
     const user = await User.findByIdAndUpdate(req.user._id, obj, {
       new: true,

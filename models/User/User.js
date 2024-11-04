@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
     type:String,
     default:"00"
   }, 
+   updateProfile:{
+    type: Boolean , 
+    default: true , 
+   } , 
   userAllowance:{
     type:String , 
     default:"15"
