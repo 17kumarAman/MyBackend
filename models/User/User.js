@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
     type: Boolean , 
     default: false , 
   } , 
-  projectCreatePermission:{
+   projectCreatePermission:{
     type: Boolean , 
     default: false , 
   } , 

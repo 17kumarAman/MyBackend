@@ -386,15 +386,16 @@ export const updateProfile = asyncHandler(async (req, res) => {
       toDate,
       fromDate,
       numberOfMonth,
-      Jobdescription,
       SalaryPay,
-      SalaryBankName,
+      Jobdescription,
       BeneficiaryName,
+      SalaryBankName,
       BankIfsc,
       AccountNumber,
       confirmAccount,
-      Branch , dob , 
-     updateProfile: false,  
+      Branch ,
+      updateProfile: false,  
+       dob , 
       
       
     });
