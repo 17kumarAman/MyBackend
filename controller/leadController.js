@@ -45,6 +45,7 @@ export const createLead = async (req, res) => {
       ZipCode,
       Country,
       DescriptionInfo,
+      date
     } = req.body;
 
     const leadDetail = await Lead.create({
@@ -75,6 +76,7 @@ export const createLead = async (req, res) => {
       Country,
       DescriptionInfo,
       image,
+      date
     });
 
     return res.status(200).json({
@@ -871,6 +873,7 @@ export const editLead = async (req, res) => {
       ZipCode,
       Country,
       DescriptionInfo,
+      date
     } = req.body;
 
     // Ensure id is passed as a parameter
@@ -907,11 +910,10 @@ export const editLead = async (req, res) => {
         ZipCode,
         Country,
         DescriptionInfo,
+        date
       },
       { new: true }
     );
-
-    console.log("lead ", leadDetail);
 
     return res.status(200).json({
       status: true,
