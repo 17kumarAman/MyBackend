@@ -31,6 +31,9 @@ const mySchema = new mongoose.Schema({
      Country:String ,
      DescriptionInfo:String ,
      image:String , 
+     date:{
+      type: String, 
+     } , 
      isOpen:{
       type: String , 
       default: "true" , 

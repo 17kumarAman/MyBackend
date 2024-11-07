@@ -1,133 +1,150 @@
 import User from "../models/User/User.js"
+import Roles from "../models/Role.js";
 
-export const ProvidePermission = async(req ,res)=>{
+const allPermission = [
+    'leadDeletePermission',
+    'leadEditPermission',
+    'leadCreatePermission',
+    'leadPermission',
+    'projectDeletePermission',
+    'showProjectPermission',
+    'showAllProjectPermission',
+    'projectEditPermission',
+    'projectCreatePermission',
+    'leadSystemPermission',
+    'leadSystemSettingEditPermission',
+    'leadSystemSettingDeletePermission',
+    'leadSystemSettingCreatePermission',
+    'showTasksDetailPermission',
+    'addTaskPermission',
+    'deleteTaskPermission',
+    'editTaskPermission',
+    'hrmsSetUpPermission',
+    'hrmsSetupEditPermission',
+    'hrmsSetupCreatePermission',
+    'hrmsSetupDeletePermission',
+    'hrAdminSetupPermission',
+    'trainingSetupPermission',
+    'assetsPermission',
+    'userAllowanceCreatePermission',
+    'showExpensePermission',
+    'createExpensePermission',
+    'payrollPermission',
+    'activeEmployeePermission',
+    'leaveRequestPermission',
+    'employeeOnLeavePermission',
+    'totalEmployeePermission',
+    'paySlipActionPermission',
+    'halfDayPermission',
+    'attendencePermission',
+    'documentPermission',
+    'leaveManagePermission',
+    'leaveReqestEditPermission',
+    'leaveReqestActionPermission',
+    'performancePermission',
+    'employeeManagePermission',
+    'employeeManageEditPermission',
+    'employeeManageActivatePermission'
+];
 
-    try{
+export const ProvidePermission = async (req, res) => {
+    try {
+        const { name, Service } = req.body;
+        const roleDetail = new Roles({ name });
 
-        const {Designation , userId , Service  , SubPermission}  = req.body;
+        allPermission.forEach(permission => {
+            roleDetail[permission] = false;
+        });
 
-        if (userId) {
-            const userDetail = await User.findById(userId);
-
-            if (userDetail) {
-                userDetail[Service] = true;
-
-                 if(SubPermission){
-                    userDetail[SubPermission] = true;
-                 }
-
-                await userDetail.save();
-                return res.status(200).json({
-                    status: true,
-                    message: "Permission granted",
-                    user: userDetail
-                });
-            } else {
-                return res.status(404).json({
-                    status: false,
-                    message: "User not found"
-                });
-            }
-        } else if (Designation) {
-            
-            const users = await User.updateMany(
-                { designation: Designation },
-                { $set: { [Service]: true } }
-            );
-
-             if(SubPermission){
-                const users = await User.updateMany(
-                    { designation: Designation },
-                    { $set: { [SubPermission]: true } } 
-                )
-             }
-
-             return res.status(200).json({
-                status:true,
-                message:"Successfuly provided "
-             })
-           
-               
-        } else {
-            return res.status(403).json({
-                status: false,
-                message: "Please provide valid user ID or designation"
+        if (Service && Service.length > 0) {
+            Service.forEach(permission => {
+                if (allPermission.includes(permission)) {
+                    roleDetail[permission] = true;
+                }
             });
         }
 
-    } catch(error){
-        console.log("eror ",error);
+        await roleDetail.save();
+
+        return res.status(200).json({
+            status: true,
+            message: "Permissions updated successfully",
+            role: roleDetail
+        });
+    } catch (error) {
+        console.log("Error:", error);
         res.status(500).json({
-            status:false ,
-            message:"Internal server error"
-        })
+            status: false,
+            message: "Internal server error"
+        });
     }
+};
+
+export const fetchallRole = async(req ,res)=>{
+    const allRoles = await Roles.find();
+
+    return res.status(200).json({
+        status:true , 
+        data: allRoles
+    })
 }
 
+export const DeleteRoleApi = async(req ,res)=>{
+  
+     const {roleId} = req.body;
 
-export const RemovePermission = async(req ,res)=>{
+     const roleDetail = await Roles.findByIdAndDelete(roleId);
 
-    try{
+    return res.status(200).json({
+        status:true , 
+        data:roleDetail
+    })
+}
 
-        const {Designation , userId , Service  , SubPermission}  = req.body;
+export const updatePermission = async (req, res) => {
+    try {
+        const { roleId, Service , name} = req.body;
 
-        if (userId) {
-            const userDetail = await User.findById(userId);
-
-            if (userDetail) {
-                userDetail[Service] = false;
-
-                 if(SubPermission){
-                    userDetail[SubPermission] = false;
-                 }
-
-                await userDetail.save();
-                return res.status(200).json({
-                    status: true,
-                    message: "Permission granted",
-                    user: userDetail
-                });
-            } else {
-                return res.status(404).json({
-                    status: false,
-                    message: "User not found"
-                });
-            }
-        } else if (Designation) {
-            
-            const users = await User.updateMany(
-                { designation: Designation },
-                { $set: { [Service]: false } }
-            );
-
-             if(SubPermission){
-                const users = await User.updateMany(
-                    { designation: Designation },
-                    { $set: { [SubPermission]: false } } 
-                )
-             }
-
-             return res.status(200).json({
-                status:true,
-                message:"Successfuly provided "
-             })
-           
-               
-        } else {
-            return res.status(403).json({
+        console.log("id " , roleId , Service , name);
+        const roleDetail = await Roles.findById(roleId);
+        if (!roleDetail) {
+            return res.status(404).json({
                 status: false,
-                message: "Please provide valid user ID or designation"
+                message: "Role not found"
             });
         }
 
-    } catch(error){
-        console.log("eror ",error);
+        roleDetail.name = name;
+
+        allPermission.forEach(permission => {
+            roleDetail[permission] = false;
+        });
+
+        if (Service && Service.length > 0) {
+            Service.forEach(permission => {
+                if (allPermission.includes(permission)) {
+                    roleDetail[permission] = true;
+                }
+            });
+        }
+
+        await roleDetail.save();
+
+        console.log("roldeta" , roleDetail)
+
+        return res.status(200).json({
+            status: true,
+            message: "Permissions updated successfully",
+            role: roleDetail
+        });
+    } catch (error) {
+        console.log("Error:", error);
         res.status(500).json({
-            status:false ,
-            message:"Internal server error"
-        })
+            status: false,
+            message: "Internal server error"
+        });
     }
-}
+};
 
 
 export const setupPermissionRemovalByAdmin = async ({service}) =>{
