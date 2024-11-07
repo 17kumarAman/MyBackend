@@ -171,16 +171,50 @@ export const CreateNewHr = asyncHandler(async (req, res) => {
 
     let employeeCode1 = makeid(7);
 
+    // <div>Employee ID: KDS${employeeCode1}</div>
+    // <div>Password: ${plainTextPassword}</div>
     const message = `<div>
-       <div>Employee ID: KDS${employeeCode1}</div>
-       <div>Password: ${plainTextPassword}</div>
+          Welcome aboard! We are excited to have you as a part of our team and introduce you to our HRMS system. Here, you’ll find a centralized platform for managing essential HR-related tasks and accessing important information.
+<br/>
+Your account has been successfully created and below are your login details:
+<br/>
+- employeeCode: KDS${employeeCode1} 
+- Temporary ${plainTextPassword}:
+<br/>
+Please use the link below to log in for the first time. For security purposes, we recommend changing your password after your initial login.
+<br/>
+Login Here; ${`https://hrms.kusheldigi.com/login`}
+
+<br/>
+If you have any questions or need assistance, please don’t hesitate to reach out to our support team.
+
+Welcome once again!
+<br/>
+Best Regards, 
+Kushel Digi Solutions
      </div>
      `;
     const html = `
-       <div>
-         <div>Employee ID: KDS${employeeCode1}</div>
-         <div>Password: ${plainTextPassword}</div>
-       </div>
+        <div>
+          Welcome aboard! We are excited to have you as a part of our team and introduce you to our HRMS system. Here, you’ll find a centralized platform for managing essential HR-related tasks and accessing important information.
+<br/>
+Your account has been successfully created and below are your login details:
+<br/>
+- employeeCode: KDS${employeeCode1} 
+- Temporary ${plainTextPassword}:
+<br/>
+Please use the link below to log in for the first time. For security purposes, we recommend changing your password after your initial login.
+<br/>
+Login Here; ${`https://hrms.kusheldigi.com/login`}
+
+<br/>
+If you have any questions or need assistance, please don’t hesitate to reach out to our support team.
+
+Welcome once again!
+<br/>
+Best Regards, 
+Kushel Digi Solutions
+     </div>
      `;
 
     await SendEmail(email, "Login Details", message, html);
@@ -304,19 +338,52 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
     } = req.body;
 
     const employeeCode = makeid(7);
-    console.log('e code ',employeeCode);
+    console.log('e code ', employeeCode);
 
-    const message = `<div>
-    <div>Employee ID: KDS${employeeCode}</div>
-    <div>Password: ${password}</div>
-  </div>
+    const message = `
+    <div>
+          Welcome aboard! We are excited to have you as a part of our team and introduce you to our HRMS system. Here, you’ll find a centralized platform for managing essential HR-related tasks and accessing important information.
+<br/>
+Your account has been successfully created and below are your login details:
+<br/>
+- employeeCode: KDS${employeeCode} 
+- Temporary ${password}:
+<br/>
+Please use the link below to log in for the first time. For security purposes, we recommend changing your password after your initial login.
+<br/>
+Login Here; ${`https://hrms.kusheldigi.com/login`}
+
+<br/>
+If you have any questions or need assistance, please don’t hesitate to reach out to our support team.
+
+Welcome once again!
+<br/>
+Best Regards, 
+Kushel Digi Solutions
+     </div>
   `;
 
     const html = `
-    <div>
-      <div>Employee ID: KDS${employeeCode}</div>
-      <div>Password: ${password}</div>
-    </div>
+      <div>
+          Welcome aboard! We are excited to have you as a part of our team and introduce you to our HRMS system. Here, you’ll find a centralized platform for managing essential HR-related tasks and accessing important information.
+<br/>
+Your account has been successfully created and below are your login details:
+<br/>
+- employeeCode: KDS${employeeCode} 
+- Temporary ${password}:
+<br/>
+Please use the link below to log in for the first time. For security purposes, we recommend changing your password after your initial login.
+<br/>
+Login Here; ${`https://hrms.kusheldigi.com/login`}
+
+<br/>
+If you have any questions or need assistance, please don’t hesitate to reach out to our support team.
+
+Welcome once again!
+<br/>
+Best Regards, 
+Kushel Digi Solutions
+     </div>
   `;
 
     await SendEmail(email, "Login Details", message, html);
@@ -349,7 +416,7 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       perPin,
       Martial,
       nationality,
-      role: department === "Hr" ? "HR" : department === "Manager"   ? "MANAGER"   : "EMPLOYEE",
+      role: department === "Hr" ? "HR" : department === "Manager" ? "MANAGER" : "EMPLOYEE",
       Mother,
       qualification,
       specialization,
@@ -379,9 +446,9 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
 
     return res.status(200).json(
       {
-        status:true , 
-        message:"Successfuly created " , 
-        data:adminUser
+        status: true,
+        message: "Successfuly created ",
+        data: adminUser
       }
     );
   } catch (error) {
@@ -726,13 +793,13 @@ export const updateApprisal = asyncHandler(async (req, res) => {
 
 export const Acceptassetsapi = asyncHandler(async (req, res) => {
 
-  const { assetId} = req.body;
+  const { assetId } = req.body;
 
-const assetdetail = await Assets.findById(assetId);
- 
- assetdetail.status = "Accepted";
- await assetdetail.save();
- 
+  const assetdetail = await Assets.findById(assetId);
+
+  assetdetail.status = "Accepted";
+  await assetdetail.save();
+
 
   return res.status(200).json(new ApiResponse(200, assetdetail, " successfully posted"));
 });
@@ -750,7 +817,7 @@ export const postAssets = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ fullName: Employee })
 
- 
+
 
   const apprisal = await Assets.create({
     Employee,
@@ -773,7 +840,7 @@ export const postAssets = asyncHandler(async (req, res) => {
        <div>To accept, click the link below:</div>
     <a href="https://hrms.kusheldigi.com/accept/${apprisal?._id}">Accept Assets</a>
     </div>`);
-  
+
 
 
 
@@ -929,7 +996,7 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
 
       // do here
 
-      const notify = await Notification.create({title , description , user: user?._id});
+      const notify = await Notification.create({ title, description, user: user?._id });
 
       await mailSender(user.email, "Create Annnouncement ", `<div>
       <div>title: ${title}</div>
@@ -949,7 +1016,7 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
   else {
 
     const user = await User.findOne({ fullName: Employee });
-    const notify = await Notification.create({title , description , user: user?._id});
+    const notify = await Notification.create({ title, description, user: user?._id });
 
     await mailSender(user?.email, "Create Annnouncement ", `<div>
     <div>title: ${title}</div>
@@ -1069,7 +1136,7 @@ export const postTermination = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ fullName: Employee });
 
-  
+
   let transporter = createTransport({
     host: "smtpout.secureserver.net",
     auth: {
@@ -2577,33 +2644,33 @@ export const getEveryLeadQuatation = asyncHandler(async (req, res) => {
   })
 });
 
-export const EveryUserLeadSomething = async (req,res) =>{
-   try {
-      const {QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency} = req.body; 
+export const EveryUserLeadSomething = async (req, res) => {
+  try {
+    const { QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency } = req.body;
 
-      const id = req.params.id;
-
-
-      const detailsSomething = await Lead.findById({id});
+    const id = req.params.id;
 
 
+    const detailsSomething = await Lead.findById({ id });
 
-      const createDetails = await Quatation.create({
-        QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency
-      });
 
-      createDetails.PlacedSupply(detailsSomething);
 
-      return({
-        data:createDetails,
-        message:"Create details Page successfully",
-        status:true
-      })
+    const createDetails = await Quatation.create({
+      QuatationNo, GstNo, SacCode, PlacedSupply, BillTo, ShipTo, ClientName, Address, Mobile, Email, ItemDescription, Qty, Price, Amount, BalanceAmount, Note, currency
+    });
 
-   } 
-   catch (error) {
-       console.log(error);
-   }
+    createDetails.PlacedSupply(detailsSomething);
+
+    return ({
+      data: createDetails,
+      message: "Create details Page successfully",
+      status: true
+    })
+
+  }
+  catch (error) {
+    console.log(error);
+  }
 }
 // ======================quatation backend end=================
 
@@ -2692,11 +2759,11 @@ export const syncUser = async (req, res) => {
   userListWithSync.userId = req.params;
 
 
-  const ans = await Leave.$where({userListWithSync});
+  const ans = await Leave.$where({ userListWithSync });
 
-  return({
-    data:ans,
-    message:"document permission is successfully given to the user",
+  return ({
+    data: ans,
+    message: "document permission is successfully given to the user",
   })
 
 }
