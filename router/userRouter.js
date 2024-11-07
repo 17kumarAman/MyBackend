@@ -22,10 +22,10 @@ import {
   uploadSingleImg,
   uploadImgToCloudinary,
   DeactivateUser , 
-  getThisMonthLeave
+  getThisMonthLeave , 
+  getUserOwndetail
 } from "../controller/userController.js";
 import isAuthenticated from "../middleware/auth.js";
-import { upload } from "../middleware/multer.js";
 const router = Router();
 
 router.route("/register").post(RegisterUser);
@@ -73,6 +73,7 @@ router.route("/uploadDocument/:id").post(  uploadDocuments);
 router.route("/uploadSingleImg").post( uploadSingleImg);
 router.get("/getThisMonthLeave/:userId" , getThisMonthLeave);
 router.post("/changeBreakin" , changeBreakIn);
+router.post("/getUserOwndetail/:userId" , getUserOwndetail);
 
 
 

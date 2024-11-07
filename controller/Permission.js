@@ -5,6 +5,7 @@ const allPermission = [
     'leadDeletePermission',
     'leadEditPermission',
     'leadCreatePermission',
+    'permissionPagePermission',
     'leadPermission',
     'projectDeletePermission',
     'showProjectPermission',

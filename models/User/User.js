@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
   } , 
  
   dob: {
-    type: Date,
+    type: String,
 
   },
   document: [{
@@ -84,11 +84,17 @@ EmployeeType:{
   },
   remainingLeaves: String,
   totalLeaves: String,
+
   role: {
     type: String,
     default: "USER",
   },
 
+  PermissionRole:{
+     type:mongoose.Types.ObjectId,
+    ref:"PermissionRole",  
+  },
+  
   isBreakIn:{
     type:Boolean, 
     default: false , 

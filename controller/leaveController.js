@@ -58,7 +58,7 @@ export const postHalfDay = async ({ auth,  from, to, days, reason }) => {
 
 export const postAllowance = async ({ user , allowance }) => {
 
-  const userDetail = await User.findById(user);
+  const userDetail = await User.findById(user).populate("PermissionRole");
 
   userDetail.userAllowance = allowance;
   await userDetail.save();

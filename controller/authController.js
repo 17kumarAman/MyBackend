@@ -28,12 +28,14 @@ export const login = asyncHandler(async (req, res) => {
   const { email, password, employeeCode } = req.body;
 
   const user = email
-    ? await User.findOne({ email })
-    : await User.findOne({ employeeCode: employeeCode.slice(3) });
+    ? await User.findOne({ email }).populate("PermissionRole")
+    : await User.findOne({ employeeCode: employeeCode.slice(3) }).populate("PermissionRole");
     
   if (!user) {
     throw new ApiError(404, "User not found");
   }
+
+  console.log("user" , user);
 
 
   const isDeactivated = user.isDeactivated === "Yes";

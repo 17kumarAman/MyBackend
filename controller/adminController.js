@@ -334,11 +334,11 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       AccountNumber,
       confirmAccount,
       Branch,
-      employeeType
+      employeeType , 
+      PermissionRole
     } = req.body;
 
     const employeeCode = makeid(7);
-    console.log('e code ', employeeCode);
 
     const message = `
     <div>
@@ -439,7 +439,8 @@ Kushel Digi Solutions
       confirmAccount,
       Branch,
       // createdBy: req?.user?.role,
-      EmployeeType: employeeType
+      EmployeeType: employeeType ,
+      PermissionRole: PermissionRole === "Select Role" ? "" : PermissionRole
     });
 
     const empType = await EmployeeType.create({ type: employeeType, users: adminUser?._id });

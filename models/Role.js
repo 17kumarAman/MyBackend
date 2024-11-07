@@ -91,6 +91,10 @@ const mySchema = new mongoose.Schema({
         type: Boolean , 
         default:false ,
        } , 
+       permissionPagePermission:{ 
+        type: Boolean , 
+        default:false ,
+       } , 
        hrAdminSetupPermission:{  
         type: Boolean , 
         default:false ,
@@ -207,6 +211,6 @@ const mySchema = new mongoose.Schema({
 
   },{timestamps:true});
 
-  const roles = mongoose.model("Roles", mySchema);
+  const roles = mongoose.model("PermissionRole", mySchema);
 
   export default roles;
