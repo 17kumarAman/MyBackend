@@ -69,7 +69,6 @@ app.use(
 )
 
 
-
 app.use("/user", userRouter);
 app.use("/hr", hrRouter);
 app.use("/activity", activityRouter);
