@@ -438,10 +438,10 @@ Kushel Digi Solutions
       AccountNumber,
       confirmAccount,
       Branch,
-      // createdBy: req?.user?.role,
       EmployeeType: employeeType ,
-      PermissionRole: PermissionRole === "Select Role" ? "" : PermissionRole
+      PermissionRole: (PermissionRole === "Select Role" || PermissionRole === "") ? null : PermissionRole
     });
+
 
     const empType = await EmployeeType.create({ type: employeeType, users: adminUser?._id });
 
@@ -453,7 +453,7 @@ Kushel Digi Solutions
       }
     );
   } catch (error) {
-    console.log("the error is :", error.message);
+    console.log("the error is :", error);
     throw new ApiError(500, "Internal Server Error");
   }
 });
