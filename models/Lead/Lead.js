@@ -42,7 +42,14 @@ const mySchema = new mongoose.Schema({
       type: Date , 
       default:Date.now()
      },
-     invoiceId:[
+     status:{
+      type:String,
+      default:"Open"
+     },
+     closeDate:{
+      type:String,
+     },
+          invoiceId:[
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Invoice'
