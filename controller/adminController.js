@@ -2344,7 +2344,7 @@ export const getAllCloseLead = async (req, res) => {
 
   try {
 
-   const  ans = await Lead.find({status:"Close"});
+   const  ans = await Lead.find({status:"Close"}).sort({Date:-1});
    return res.status(200).json({
     status:ans , 
     
@@ -2360,7 +2360,7 @@ export const getAllCloseLead2 = async (req, res) => {
 
   try {
 
-   const  ans = await Lead.find({status:"Close" , LeadOwner:id});
+   const  ans = await Lead.find({status:"Close" , LeadOwner:id}).sort({Date:-1});
    return res.status(200).json({
     status:ans , 
    })
@@ -2414,11 +2414,6 @@ export const getTodayLead2 = async (req, res) => {
     return res.status(500).json({ message: 'Server error', error });
   }
 };
-
-
-
-
-
 
 export const updateLeads = asyncHandler(async (req, res) => {
   const { LeadOwner,
