@@ -2354,17 +2354,33 @@ export const getAllCloseLead = async (req, res) => {
   }
 };
 
+export const getAllCloseLead2 = async (req, res) => {
+  
+  const {id} =req.body;
+
+  try {
+
+   const  ans = await Lead.find({status:"Close" , LeadOwner:id});
+   return res.status(200).json({
+    status:ans , 
+   })
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error', error });
+  }
+};
+
 export const getTodayLead = async (req, res) => {
   try {
+    // Get the current date in UTC for the start of the day
     const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0); 
+    startOfToday.setUTCHours(0, 0, 0, 0);
 
+    // Get the end of the current day in UTC
     const endOfToday = new Date();
-    endOfToday.setHours(23, 59, 59, 999); 
+    endOfToday.setUTCHours(23, 59, 59, 999);
 
     const ans = await Lead.find({
-      status: "Close",
-      createdAt: { $gte: startOfToday, $lte: endOfToday }
+      createAt: { $gte: startOfToday, $lte: endOfToday }
     });
 
     return res.status(200).json({
@@ -2375,6 +2391,30 @@ export const getTodayLead = async (req, res) => {
     return res.status(500).json({ message: 'Server error', error });
   }
 };
+
+export const getTodayLead2 = async (req, res) => {
+  try {
+    const {id} = req.body;
+    const startOfToday = new Date();
+    startOfToday.setUTCHours(0, 0, 0, 0);
+
+    const endOfToday = new Date();
+    endOfToday.setUTCHours(23, 59, 59, 999);
+
+    const ans = await Lead.find({
+      createAt: { $gte: startOfToday, $lte: endOfToday } , 
+      LeadOwner: id
+    });
+
+    return res.status(200).json({
+      status: "success",
+      leads: ans,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error', error });
+  }
+};
+
 
 
 
@@ -2832,10 +2872,3 @@ export const syncUser = async (req, res) => {
   })
 
 }
-
-
-
-
-
-
-
