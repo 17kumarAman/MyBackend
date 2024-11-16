@@ -818,8 +818,6 @@ export const postAssets = asyncHandler(async (req, res) => {
 
   const users = await User.findOne({ fullName: Employee })
 
-
-
   const apprisal = await Assets.create({
     Employee,
     designation,
@@ -842,8 +840,17 @@ export const postAssets = asyncHandler(async (req, res) => {
     <a href="https://hrms.kusheldigi.com/accept/${apprisal?._id}">Accept Assets</a>
     </div>`);
 
+    const title = `New Assets`;
 
-
+    const user = users?._id; 
+    
+    const anss = await Notification.create({
+        title,
+        description,
+        user: [user], 
+    });
+    
+    
 
   return res
     .status(200)
