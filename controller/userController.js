@@ -9,6 +9,7 @@ import crypto from "crypto";
 import fs from "fs";
 import { removeUndefined } from "../utils/util.js";
 import Leave from "../models/Leave/Leave.js";
+import bcrypt from "bcryptjs";
 
 const generateRefreshToken = async (userId) => {
   try {
@@ -358,6 +359,8 @@ export const updateProfile = asyncHandler(async (req, res) => {
     } = req.body;
 
 
+    const genpass = await bcrypt.hash(password, 10);
+
 
     const obj = removeUndefined({
       fullName,
@@ -365,7 +368,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
       email,
       // profileImage: profileImage?.url,
       email1,
-      password,
+      password:genpass,
       gmail,
       department,
       designation,
