@@ -354,21 +354,23 @@ export const updateProfile = asyncHandler(async (req, res) => {
       AccountNumber,
       confirmAccount,
       Branch,
-      image , 
-      dob
+      dob , 
+      updatePassword
     } = req.body;
 
 
-    const genpass = await bcrypt.hash(password, 10);
+    // const genpass = await bcrypt.hash(password, 10);
+    let updatepasshash=""
 
+    if(updatePassword){
+       updatepasshash = await bcrypt.hash(updatePassword , 10);
+    }
 
     const obj = removeUndefined({
       fullName,
       mobile,
       email,
-      // profileImage: profileImage?.url,
       email1,
-      password:genpass,
       gmail,
       department,
       designation,
@@ -409,6 +411,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
       Branch ,
       updateProfile: false,  
        dob , 
+       password:updatepasshash
       
       
     });
