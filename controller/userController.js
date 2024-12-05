@@ -415,9 +415,15 @@ export const updateProfile = asyncHandler(async (req, res) => {
       
       
     });
+
+    console.log("obbj",obj);
+
+
     const user = await User.findByIdAndUpdate(req.user._id, obj, {
       new: true,
     }).select("-password").populate("PermissionRole");
+
+    console.log("userss",user);
     return res
       .status(200)
       .json(new ApiResponse(200, user, "Updated User Details Successfully"));
