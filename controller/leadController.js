@@ -330,50 +330,21 @@ export const GetUserLetter = async( req ,res)=>{
 export const PostQuotationForm = async (req, res) => {
   try {
     const {
-      userId,
-      leadId,
-      quotationNum,
-      customerName,
-      customerReq,
-      mobileNum,
-      quotationDate,
-      validUntil,
-      customerId,
-      companyName,
-      companyAddress,
-      companyGSTIN,
-      companyWebsite,
-      items,
-      content,
+      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId , leadId
     } = req.body;
 
     const newQuotation = new Quatation({
-      userId,
-      leadId,
-      quotationNum,
-      customerName,
-      customerReq,
-      mobileNum,
-      quotationDate,
-      validUntil,
-      customerId,
-      companyName,
-      companyAddress,
-      companyGSTIN,
-      companyWebsite,
-      items,
-      content,
+      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId , leadId
     });
 
     await newQuotation.save();
 
-    res
-      .status(201)
-      .send({
+    res.status(201).send({
         status: true,
         message: "Quotation saved successfully",
         newQuotation,
       });
+
   } catch (error) {
     console.log("error ", error);
     res.status(500).send({ message: "Error saving quotation", error });
@@ -470,24 +441,29 @@ export const UpdateProposalForm = async (req, res) => {
 export const UpdateQuotationForm = async (req, res) => {
   try {
     const {
-      userId,
-      leadId,
-      quotationNum,
-      customerName,
-      customerReq,
-      mobileNum,
-      quotationDate,
-      validUntil,
-      customerId,
-      companyName,
-      companyAddress,
-      companyGSTIN,
-      companyWebsite,
-      items,
-      content,
+      // userId,
+      // leadId,
+      // quotationNum,
+      // customerName,
+      // customerReq,
+      // mobileNum,
+      // quotationDate,
+      // validUntil,
+      // customerId,
+      // companyName,
+      // companyAddress,
+      // companyGSTIN,
+      // companyWebsite,
+      // items,
+      // content,
+      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId 
     } = req.body;
 
     const { quoId } = req.params;
+
+    console.log("v" , quoId);
+    console.log("userId" , userId);
+
 
     // Check if the ID is valid
     if (!quoId) {
@@ -500,21 +476,7 @@ export const UpdateQuotationForm = async (req, res) => {
     const updatedQuotation = await Quatation.findByIdAndUpdate(
       quoId,
       {
-        userId,
-        leadId,
-        quotationNum,
-        customerName,
-        customerReq,
-        mobileNum,
-        quotationDate,
-        validUntil,
-        customerId,
-        companyName,
-        companyAddress,
-        companyGSTIN,
-        companyWebsite,
-        items,
-        content,
+        customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId 
       },
       { new: true }
     );

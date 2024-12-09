@@ -1,11 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 
-const itemSchema = new mongoose.Schema({
+const costheadSchema = new mongoose.Schema({
   description: {
-    type: String,
-  },
-  quantity: {
     type: String,
   },
   price: {
@@ -16,6 +13,21 @@ const itemSchema = new mongoose.Schema({
   }
 });
 
+const timelineSchema =  new mongoose.Schema({
+  description:{
+    type: String,
+  }
+})
+
+const technologySchema =  new mongoose.Schema({
+  description:{
+    type: String,
+  },
+  stack:{
+    type:String,
+  }
+})
+
 const mySchema = new mongoose.Schema({
     UserId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,43 +37,48 @@ const mySchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Lead'
     },
-    content:{
+    introduction:{
       type:String, 
     },
-    quotationNum:{
-      type:String ,
+    additional:{
+      type:String, 
     },
+    // quotationNum:{
+    //   type:String ,
+    // },
     customerName:{
       type:String , 
     },
     customerReq: {
       type:String , 
     },
-    mobileNum: {
-      type:String, 
-    },
+    // mobileNum: {
+    //   type:String, 
+    // },
     quotationDate: {
       type:String, 
     },
-    validUntil:{
-      type:String , 
-    },
-    customerId:{
-      type:String, 
-    },
-    companyName: {
-      type:String , 
-    },
-    companyAddress: {
-      type:String , 
-    },
-    companyGSTIN:{
-      type:String , 
-    },
-    companyWebsite:{
-      type:String , 
-    },
-        items: [itemSchema] 
+    // validUntil:{
+    //   type:String , 
+    // },
+    // customerId:{
+    //   type:String, 
+    // },
+    // companyName: {
+    //   type:String , 
+    // },
+    // companyAddress: {
+    //   type:String , 
+    // },
+    // companyGSTIN:{
+    //   type:String , 
+    // },
+    // companyWebsite:{
+    //   type:String , 
+    // },
+    costhead: [costheadSchema]  ,
+    timeline: [timelineSchema] , 
+    technology : [technologySchema]
 
   //   QuatationNo:String,
   //   GstNo:String,
