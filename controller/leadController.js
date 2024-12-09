@@ -9,6 +9,7 @@ import LeadNote from "../models/LeadNotes.js";
 import Quatation from "../models/Quatation/Quatation.js";
 import Proposal from "../models/Proposal/Proposal.js";
 import OfferLetter from "../models/OfferLetter.js";
+import FreelencerOffer from "../models/FreelencerOffer.js";
 import LORLetter from "../models/LORLetter.js";
 import Letter1 from "../models/Letter1.js";
 import RelivingLetter from "../models/Reliving.js";
@@ -99,6 +100,25 @@ export const OfferLetterDocs = async(req ,res)=>{
      const {userId , content} = req.body;
 
        const createletter = await OfferLetter.create({user:userId , content});
+
+        return res.status(200).json({
+          status:200 , 
+          data: createletter
+        })
+   } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      status:false , 
+      message:"internal server error "
+    })
+   }
+}
+export const FreelencerOfferApi = async(req ,res)=>{
+   try{
+
+     const {userId , content7} = req.body;
+
+       const createletter = await FreelencerOffer.create({user:userId , content:content7});
 
         return res.status(200).json({
           status:200 , 
