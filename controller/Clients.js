@@ -460,7 +460,7 @@ export const getTodayBirthday = async (req, res) => {
     // Filter employees whose month and day of dob match today's month and day
     const filteredEmployees = employeesWithBirthdayToday.filter(employee => {
       const dob = new Date(employee.dob);
-      return (dob.getMonth() + 1 === todayMonth) && (dob.getDate() === todayDate);
+      return (dob.getMonth() + 1 === todayMonth) && (dob.getDate() === todayDate) && employee.isDeactivated === "No";
     });
 
 
