@@ -1183,3 +1183,19 @@ export const GetDesiUser1 = async (req, res) => {
     data: users,
   });
 };
+
+
+
+export const InstaAddLead = async (req ,res)=>{
+
+  const {FirstName  , LastName, Phone , Email} = req.body;
+
+
+   const LeadDetail = await Lead.create({FirstName , Phone , Email , LastName});
+   
+   return res.status(200).json({
+    status:true ,
+    message:"Successfuly Created",
+     })
+
+}
