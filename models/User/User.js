@@ -58,9 +58,7 @@ EmployeeType:{
   },
   joiningDate: {
     type: String,
-    default: new Date().toLocaleDateString(),
-    required: false,
-    set: (f) => (f === "" ? undefined : f),
+   
   },
   salary: {
     type: String,
