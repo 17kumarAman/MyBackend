@@ -350,11 +350,11 @@ export const GetUserLetter = async( req ,res)=>{
 export const PostQuotationForm = async (req, res) => {
   try {
     const {
-      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId , leadId
+      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId , leadId ,isSave
     } = req.body;
 
     const newQuotation = new Quatation({
-      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId , leadId
+      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId , leadId , isSave
     });
 
     await newQuotation.save();
@@ -1198,4 +1198,26 @@ export const InstaAddLead = async (req ,res)=>{
     message:"Successfuly Created",
      })
 
+}
+
+export const GetSaveTempalte  = async(req ,res)=>{
+   try{
+
+    const {leadId} = req.params;
+
+    console.log("leadid" , leadId);
+
+    const resp = await Quatation.find({isSave:true , leadId:leadId});
+
+    return res.status(200).json({
+      status:true , 
+      data: resp
+    })
+
+   } catch(error){
+    return res.status(500).json({
+      status: false , 
+      message:"Internal server error "
+    })
+   }
 }

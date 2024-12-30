@@ -43,64 +43,23 @@ const mySchema = new mongoose.Schema({
     additional:{
       type:String, 
     },
-    // quotationNum:{
-    //   type:String ,
-    // },
     customerName:{
       type:String , 
     },
     customerReq: {
       type:String , 
     },
-    // mobileNum: {
-    //   type:String, 
-    // },
+   
     quotationDate: {
       type:String, 
     },
-    // validUntil:{
-    //   type:String , 
-    // },
-    // customerId:{
-    //   type:String, 
-    // },
-    // companyName: {
-    //   type:String , 
-    // },
-    // companyAddress: {
-    //   type:String , 
-    // },
-    // companyGSTIN:{
-    //   type:String , 
-    // },
-    // companyWebsite:{
-    //   type:String , 
-    // },
     costhead: [costheadSchema]  ,
     timeline: [timelineSchema] , 
-    technology : [technologySchema]
-
-  //   QuatationNo:String,
-  //   GstNo:String,
-  //   SacCode:String,
-  //   PlacedSupply:String,
-  //   BillTo:String,
-  //   ShipTo:String,
-  //   ClientName:String,
-  //   Address:String,
-  //   Mobile:Number,
-  //   Email:String,
-  //   ItemDescription:String,
-  //   Qty:String,
-  //   Price:String,
-  //   Amount:String,
-  //   BalanceAmount:String,
-  //   Note:String,
-  //   currency:String,
-  //   ts: {
-  //     type: String,
-  //     default: new Date().getTime()
-  // },
+    technology : [technologySchema],
+    isSave:{
+      type: Boolean, 
+      default:false
+    }
   },{timestamps:true});
 
   const Quatation = mongoose.model("Quatation", mySchema);

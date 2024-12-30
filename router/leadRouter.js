@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 , SaveRelivingLetter  , saveLORLetter, saveLetter1Api , saveOfferLetterInter ,saveExperienceLetter ,  GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi , GetUserLetter , UpdateQuotationForm , UpdateProposalForm , OfferLetterDocs , changeOfferLetterPer , changeRelivingLetterPer ,InstaAddLead  , changeExperienceLetterPer , FreelencerOfferApi,
+import {createLead ,getAllLead,getAllLead3 , SaveRelivingLetter  , saveLORLetter, saveLetter1Api , saveOfferLetterInter ,saveExperienceLetter ,  GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi , GetUserLetter , UpdateQuotationForm , UpdateProposalForm , OfferLetterDocs , changeOfferLetterPer , changeRelivingLetterPer ,InstaAddLead  , changeExperienceLetterPer , FreelencerOfferApi,GetSaveTempalte
 } from "../controller/leadController.js"
 import { deleteExpense , getExpense , CreateExpense } from "../controller/expenseController.js";
  
@@ -12,6 +12,7 @@ router.post("/createExpense" , CreateExpense);
 router.get("/getLeadByUser/:id" , GetLeadByUser);
 router.get("/getDesiUser" , GetDesiUser);
 router.get("/getDesiUser1",GetDesiUser1);
+router.get("/getSaveTempalte/:leadId",GetSaveTempalte);
 
 router.post('/getAllLead', async (req, res) => {
     const {id} = req.body;
