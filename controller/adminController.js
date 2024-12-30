@@ -335,10 +335,11 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       confirmAccount,
       Branch,
       employeeType , 
-      PermissionRole
+      PermissionRole , 
+      employeeCode
     } = req.body;
 
-    const employeeCode = makeid(7);
+    // const employeeCode = makeid(7);
 
     const message = `
     <div>
