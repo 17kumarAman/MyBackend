@@ -2057,7 +2057,13 @@ export const createHoliday = asyncHandler(async (req, res) => {
 
     const { holidayName, startDate, endDate } = req.body;
 
-    const users = await User.find({});
+    const users = await User.find({
+      isDeactivated:{
+        $in:[
+          "No"
+        ]
+      }
+    })
 
     //  Extract email addresses from the retrieved user 
     const emailList = users.map(user => user.email);
