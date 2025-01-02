@@ -999,7 +999,7 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
   // retreiving all the user of same department and designation 
   if (Employee === "All Employee") {
 
-    const users = await User.find({ department: Department });
+    const users = await User.find({ department: Department , isDeactivated:"No"  });
 
     for (const user of users) {
 
