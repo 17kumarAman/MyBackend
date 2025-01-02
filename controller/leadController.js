@@ -1205,8 +1205,6 @@ export const GetSaveTempalte  = async(req ,res)=>{
 
     const {leadId} = req.params;
 
-    console.log("leadid" , leadId);
-
     const resp = await Quatation.find({isSave:true , leadId:leadId});
 
     return res.status(200).json({

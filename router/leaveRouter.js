@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postLeave, postHalfDay , updateLeave,monthlyLeave ,LeaveTypeApi ,  postAllowance ,  getUserLeaves,getUserHalfDay ,rejectHalfDayHandler ,  getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler , acceptHalfDayHandler  , GetTodayLeave} from "../controller/leaveController.js";
+import { postLeave, postHalfDay , updateLeave,monthlyLeave ,LeaveTypeApi ,  postAllowance ,  getUserLeaves,getUserHalfDay ,rejectHalfDayHandler ,  getTotalLeaveCount, getUserLeaveById, deleteLeave, deleteAllLeaves , rejectLeaveHandler ,  acceptLeaveHandler , acceptHalfDayHandler  , GetTodayLeave , FetchUserLeave} from "../controller/leaveController.js";
 import isAuthenticated from "../middleware/auth.js";
 
 
@@ -212,5 +212,7 @@ router.post("/monthlyLeave" , monthlyLeave);
 // this is employe on leave routes 
 
 router.get("/getTodayLeave" , GetTodayLeave);
+
+router.get("/fetchUserLeaves" , FetchUserLeave);
 
 export default router;

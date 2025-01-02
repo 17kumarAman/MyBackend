@@ -19,6 +19,7 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   });
 
 
+
   const saveLeave = await newLeave.save();
   
   await mailSender("hr@kusheldigi.com", "Regarding Leave", `<div>
@@ -31,6 +32,26 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
 
   return { success: true, message: "New leave created" };
 };
+
+export const FetchUserLeave = async(req ,res)=>{
+try{
+
+  const {userId} = req.params;
+  
+   const allLeaves = await Leave.find({user: userId}).sort({date:-1});
+
+   return res.status(200).json({
+    status:true , 
+    data: allLeaves
+   })
+
+} catch(error){
+  return res.status(500).json({
+    status:false , 
+    message:"Internal server error"
+  })
+}
+}
 
 export const postHalfDay = async ({ auth,  from, to, days, reason }) => {
   const newLeave = new HalfDay({
