@@ -213,6 +213,6 @@ router.post("/monthlyLeave" , monthlyLeave);
 
 router.get("/getTodayLeave" , GetTodayLeave);
 
-router.get("/fetchUserLeaves" , FetchUserLeave);
+router.get("/fetchUserLeaves/:userId" , FetchUserLeave);
 
 export default router;
