@@ -114,6 +114,7 @@ export const RegisterUser = asyncHandler(async (req, res) => {
     Martial,
     nationality,
     Mother,
+    leaveNumber
   } = req.body;
 
   if (
@@ -142,6 +143,7 @@ export const RegisterUser = asyncHandler(async (req, res) => {
       Martial,
       nationality,
       Mother,
+      leaveNumber
     ].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "All Fields are required");
@@ -192,6 +194,7 @@ export const RegisterUser = asyncHandler(async (req, res) => {
     Martial,
     nationality,
     Mother,
+    leaveNumber,
     profileImage: avatar?.url,
   });
 
@@ -355,7 +358,8 @@ export const updateProfile = asyncHandler(async (req, res) => {
       Branch,
       dob , 
       updatePassword,
-      profileImage
+      profileImage,
+      leaveNumber,
     } = req.body;
 
 
@@ -369,6 +373,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
     const obj = removeUndefined({
       fullName,
       mobile,
+      leaveNumber,
       email,
       profileImage , 
       email1,
@@ -468,6 +473,7 @@ export const UpdateUser = asyncHandler(async (req, res) => {
       email,
       email1,
       mobile,
+      leaveNumber,
       gender,
       dob,
       pan,
@@ -530,6 +536,7 @@ export const UpdateUser = asyncHandler(async (req, res) => {
       email,
       email1,
       mobile,
+      leaveNumber,
       gender,
       dob,
       pan,

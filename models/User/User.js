@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import { type } from "os";
 
 
 const userSchema = new mongoose.Schema({
@@ -290,7 +291,11 @@ EmployeeType:{
     required: false,
     set: (rr) => (rr === "" ? undefined : rr),
   },
-
+//=========================Leave information ===============
+leaveNumber: {
+  type: String,
+  required: false, 
+},
   // ======================Bank Information====================
   SalaryPay: {
     type: String,

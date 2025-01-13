@@ -23,7 +23,8 @@ import {
   uploadImgToCloudinary,
   DeactivateUser , 
   getThisMonthLeave , 
-  getUserOwndetail
+  getUserOwndetail,
+ 
 } from "../controller/userController.js";
 import isAuthenticated from "../middleware/auth.js";
 const router = Router();
