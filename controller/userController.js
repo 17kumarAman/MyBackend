@@ -395,6 +395,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
       Martial,
       nationality,
       Mother,
+      leaveNumber,
       qualification,
       specialization,
       qualificationType,

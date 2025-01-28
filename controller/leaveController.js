@@ -21,7 +21,7 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
 
 
   const saveLeave = await newLeave.save();
-  
+
   await mailSender("hr@kusheldigi.com", "Regarding Leave", `<div>
   <div>from: ${auth?.fullName}</div>
   <div>to: ${to}</div>
@@ -33,27 +33,37 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   return { success: true, message: "New leave created" };
 };
 
-export const FetchUserLeave = async(req ,res)=>{
-try{
+export const FetchUserLeave = async (req, res) => {
+  try {
 
-  const {userId} = req.params;
+    const { userId } = req.params;
+
+    // const allLeaves = await Leave.find({ user: userId }).sort({ date: -1 });
+      // Fetch full-day leaves and half-day leaves concurrently
+      const [fullDayLeaves, halfDayLeaves] = await Promise.all([
+        Leave.find({ user: userId }).sort({ date: -1 }),
+        HalfDay.find({ user: userId }).sort({ date: -1 })
+      ]);
   
-   const allLeaves = await Leave.find({user: userId}).sort({date:-1});
 
-   return res.status(200).json({
-    status:true , 
-    data: allLeaves
-   })
+    return res.status(200).json({
+      status: true,
+      // data: allLeaves
+      data: {
+        fullDayLeaves,
+        halfDayLeaves
+      }
+    })
 
-} catch(error){
-  return res.status(500).json({
-    status:false , 
-    message:"Internal server error"
-  })
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error"
+    })
+  }
 }
-}
 
-export const postHalfDay = async ({ auth,  from, to, days, reason }) => {
+export const postHalfDay = async ({ auth, from, to, days, reason }) => {
   const newLeave = new HalfDay({
     user: auth,
     from,
@@ -66,7 +76,7 @@ export const postHalfDay = async ({ auth,  from, to, days, reason }) => {
 
 
   const saveLeave = await newLeave.save();
-  
+
   await mailSender("hr@kusheldigi.com", "Regarding Half Day", `<div>
   <div>from: ${auth?.fullName}</div>
   <div>to: ${to}</div>
@@ -77,24 +87,58 @@ export const postHalfDay = async ({ auth,  from, to, days, reason }) => {
   return { success: true, message: "New leave created" };
 };
 
-export const postAllowance = async ({ user , allowance }) => {
+export const postAllowance = async ({ user, allowance }) => {
 
   const userDetail = await User.findById(user).populate("PermissionRole");
 
   userDetail.userAllowance = allowance;
   await userDetail.save();
 
-  return { success: true, message: "New allowance created" ,userDetail };
+  return { success: true, message: "New allowance created", userDetail };
 };
 
+// export const LeaveTypeApi = async ({ id }) => {
+
+//   const userLeave = await Leave.find({user:id});
+
+//    const paidLeave = userLeave.filter((lev)=> lev?.leaveType === "Paid Leave" || lev?.leaveType === '' );
+//    const casualLeave = userLeave.filter((lev)=> lev?.leaveType === "Casual Leave" || lev?.leaveType === 'Sick Leave');
+
+//   return { success: true, message: "New allowance created" , data:{paidLeave: paidLeave?.length , casualLeave : casualLeave?.length , totalLeaves:userLeave.length} };
+// };
+
+
 export const LeaveTypeApi = async ({ id }) => {
+  try {
 
-  const userLeave = await Leave.find({user:id});
+    const userLeaves = await Leave.find({ user: id });
+    const userHalfDays = await HalfDay.find({ user: id });
 
-   const paidLeave = userLeave.filter((lev)=> lev?.leaveType === "Paid Leave" || lev?.leaveType === '' );
-   const casualLeave = userLeave.filter((lev)=> lev?.leaveType === "Casual Leave" || lev?.leaveType === 'Sick Leave');
- 
-  return { success: true, message: "New allowance created" , data:{paidLeave: paidLeave?.length , casualLeave : casualLeave?.length , totalLeaves:userLeave.length} };
+
+    const paidLeave = userLeaves.filter((leave) => leave?.leaveType === "Paid Leave" || leave?.leaveType === "").length;
+    const casualLeave = userLeaves.filter((leave) => leave?.leaveType === "Casual Leave" || leave?.leaveType === "Sick Leave").length;
+
+
+    const halfDayCount = userHalfDays.length;
+
+
+    return {
+      success: true,
+      message: "Leave data fetched successfully",
+      data: {
+        paidLeave,
+        casualLeave,
+        totalLeaves: userLeaves.length,
+        halfDays: halfDayCount,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Internal server error",
+    };
+  }
 };
 
 function formatDate(date) {
@@ -109,7 +153,7 @@ function formatDate(date) {
 //  if(month){
 //   const now = new Date();
 //     const year = now.getFullYear();
-    
+
 //     // If month is provided, ensure it's a valid number between 1 and 12
 //     if (month < 1 || month > 12) {
 //       return res.status(400).json({
@@ -143,14 +187,14 @@ function formatDate(date) {
 //  else {
 //   const now = new Date();
 //   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  
+
 //   const formattedStartOfMonth = formatDate(startOfMonth);
 
 //   const leaves = await Leave.find({
 //     from: { $gt: formattedStartOfMonth },
 //     status:'Accepted'
 //   }).populate("user");
-  
+
 //   return res.status(200).json({
 //     status:true ,
 //     data:leaves
@@ -165,7 +209,7 @@ export const monthlyLeave = async (req, res) => {
 
   const now = new Date();
   const year = now.getFullYear();
-  
+
   // Determine the month to be used (provided month or current month)
   const targetMonth = month ? month - 1 : now.getMonth();
 
@@ -188,43 +232,43 @@ export const monthlyLeave = async (req, res) => {
   const consolidatedLeaves = {};
 
   leaves.forEach((leave) => {
- 
+
     const userId = leave.user._id.toString();
-    const leaveDays = parseInt(leave.days)+1;
+    const leaveDays = parseInt(leave.days) + 1;
 
     if (!consolidatedLeaves[userId]) {
       consolidatedLeaves[userId] = {
         user: leave.user,
         totalDays: 0,
-        sickLeave:0 ,
-        paidLeave:0,
-        UnpaidLeave:0,
-        casualLeave:0 ,
-        other:0 ,
-        paidLeave:0
-      
+        sickLeave: 0,
+        paidLeave: 0,
+        UnpaidLeave: 0,
+        casualLeave: 0,
+        other: 0,
+        paidLeave: 0
+
       };
     }
 
     consolidatedLeaves[userId].totalDays += leaveDays;
 
- 
+
     if (leave?.leaveType === 'Sick Leave' && leaveDays != NaN) {
       consolidatedLeaves[userId].sickLeave += leaveDays;
     }
-   else if (leave?.leaveType === 'Unpaid Leave' && leaveDays != NaN) {
+    else if (leave?.leaveType === 'Unpaid Leave' && leaveDays != NaN) {
       consolidatedLeaves[userId].UnpaidLeave += leaveDays;
     }
-   else if (leave?.leaveType === 'Casual Leave' && leaveDays != NaN) {
+    else if (leave?.leaveType === 'Casual Leave' && leaveDays != NaN) {
       consolidatedLeaves[userId].casualLeave += leaveDays;
     }
-   else if (leave?.leaveType === 'Paid Leave' && leaveDays != NaN) {
+    else if (leave?.leaveType === 'Paid Leave' && leaveDays != NaN) {
       consolidatedLeaves[userId].paidLeave += leaveDays;
     }
     else {
-        consolidatedLeaves[userId].other += leaveDays;
-      }
-    
+      consolidatedLeaves[userId].other += leaveDays;
+    }
+
 
   });
 
@@ -255,7 +299,7 @@ export const updateLeave = async ({ auth, employeeName, id, leaveType, from, to,
   await mailSender(employe.email, "update Leave ", `<div>
    <div>from: ${auth?.fullName}</div>
    <div>to: ${to}</div>
-   <div>days: ${(days) +1}</div>
+   <div>days: ${(days) + 1}</div>
    <div>reason: ${reason}</div>
   </div>`)
 
@@ -320,7 +364,7 @@ export const getTotalLeaveCount = async () => {
 
   return {
     success: true,
-    totalLeave , halfDay
+    totalLeave, halfDay
   }
 }
 
@@ -383,7 +427,7 @@ export const acceptLeaveHandler = async ({ fullName, days, id, userId, startDate
   const subject = `total holiday of ${days} days`;
 
   await mailSender(userDetail?.email, "Accept Leave ", `<div>
-   <div>total holiday of ${parseInt(days)+1} days Accepted</div>
+   <div>total holiday of ${parseInt(days) + 1} days Accepted</div>
 
   </div>`)
 
@@ -410,7 +454,7 @@ export const acceptHalfDayHandler = async ({ fullName, days, id, userId, startDa
   const subject = `total Half Day of ${days} days`;
 
   await mailSender(userDetail?.email, "Accept Half Day ", `<div>
-   <div>total Half Days of ${parseInt(days)+1} days Accepted</div>
+   <div>total Half Days of ${parseInt(days) + 1} days Accepted</div>
 
   </div>`)
 

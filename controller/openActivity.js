@@ -18,15 +18,6 @@ export const CreateTask = async( req ,res)=>{
 
 }
 
-export const FetchAllTask = async(req ,res)=>{
-  const allTask = await Task.find({}).sort({date:-1});
-  return res.status(200).json({
-    status:true ,
-    message:"All task fetch",
-    data:allTask
-  })
-}
-
 export const EditTask = async( req ,res)=>{
 
     const {  LeadName, FollowUpType, Date, Time, Remark,  LeadId  } = req.body;
@@ -193,5 +184,14 @@ export const module = async(req,res) =>{
     data:data1,
     message:"module is fetched successfully",
     status:true
+  })
+}
+export const FetchAllTask = async(req ,res)=>{
+  const allTask = await Task.find({}).sort({date:-1});
+  console.log("ss",allTask);
+  return res.status(200).json({
+    status:true ,
+    message:"All task fetch",
+    data:allTask
   })
 }

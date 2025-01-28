@@ -8,7 +8,11 @@ const mySchema = new mongoose.Schema({
 
   from: String,
   to: String,
-  days: String,
+  // days: String,
+  days: {
+    type: Number,
+    default: 0.5
+  },
   reason: String,
   appliedOn:{
     type: Date ,

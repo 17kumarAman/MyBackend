@@ -404,6 +404,15 @@ export const getProjectTask = async (req, res) => {
   }
 }
 
+export const FetchAllTask = async(req ,res)=>{
+  const alltask = await ProjectTasks.find({}).sort({date:-1}).populate("Members", "fullName") 
+  .populate("Project", "projectName");
+   return res.status(200).json({
+    status: true,
+    data: alltask
+   })
+}
+
 export const getMyProjectTask = async (req, res) => {
   try {
 

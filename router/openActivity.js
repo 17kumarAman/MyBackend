@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {CreateTask ,FetchAllTask ,  EditTask , DeleteTask, CreateMeet , EditMeet  , DeleteMeet , GetTaskByUser , GetMeetByUser , FetchFollow} from "../controller/openActivity.js"
+import {CreateTask , EditTask , DeleteTask, CreateMeet , EditMeet  , DeleteMeet , GetTaskByUser , GetMeetByUser , FetchFollow,FetchAllTask} from "../controller/openActivity.js"
 
 const router = Router();
 
@@ -9,13 +9,13 @@ router.delete("/deleteTask/:taskId" , DeleteTask);
 router.get("/getTaskByUser/:userId" , GetTaskByUser);
 
 router.get("/fetchFollow/:id" , FetchFollow);
-router.get("/fetchTasksAll" , FetchAllTask);
+
 
 router.post("/createMeet" , CreateMeet);
 router.post("/editMeet/:meetId" , EditMeet);
 router.delete("/deleteMeet/:meetId" , DeleteMeet);
 router.get("/getMeetByUser/:userId" , GetMeetByUser);
-
+router.get("/fetchTasksAll" , FetchAllTask);
 
 
 export default router;

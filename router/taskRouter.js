@@ -8,7 +8,7 @@ import {
   updateTask,
 
 } from "../controller/TaskController.js";
-import { CreateClient, EditClient  ,  getProjectTask , getMyProjectTask ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject  , delteTaskId, DeleteProjects , getProjectByUser , CreateProjectTask ,EditProjectTask ,  GetAllTask , GetTaskByUser , getTodayBirthday  } from "../controller/Clients.js";
+import { CreateClient, EditClient  ,  getProjectTask , getMyProjectTask ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject  , delteTaskId, DeleteProjects , getProjectByUser , CreateProjectTask ,EditProjectTask ,  GetAllTask , GetTaskByUser , getTodayBirthday  ,FetchAllTask} from "../controller/Clients.js";
 
 import {ProjectTimerCreate} from "../controller/ProjectTimer.js"
 
@@ -19,6 +19,7 @@ router.post("/postTask", isAuthenticated, postTask);
 router.put("/updateTask/:id", isAuthenticated, updateTask);
 
 router.get("/getTasks", isAuthenticated, getTasks);
+router.get("/FetchAllTask", FetchAllTask);
 
 router.delete("/deleteTask/:id", isAuthenticated, deleteTask);
 

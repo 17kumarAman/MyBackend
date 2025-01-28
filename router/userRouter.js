@@ -29,7 +29,7 @@ import {
 import isAuthenticated from "../middleware/auth.js";
 const router = Router();
 
-router.route("/register").post(RegisterUser);
+router.route("RegisterUser").post(RegisterUser);
 
 router.route("/uploadToCloudinary").post(uploadImgToCloudinary);
 
