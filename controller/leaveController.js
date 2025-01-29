@@ -110,17 +110,35 @@ export const postAllowance = async ({ user, allowance }) => {
 
 export const LeaveTypeApi = async ({ id }) => {
   try {
+    const currentYear = new Date().getFullYear();
+    const yearStartDate = new Date(`${currentYear}-01-01`);
+    const yearEndDate = new Date(`${currentYear}-12-31`);
 
+    // Fetch all leaves for the user
     const userLeaves = await Leave.find({ user: id });
     const userHalfDays = await HalfDay.find({ user: id });
 
+    // Filter leaves based on the 'from' date for the current year
+    const filteredLeaves = userLeaves.filter((leave) => {
+      const leaveStartDate = new Date(leave.from);
+      return leaveStartDate >= yearStartDate && leaveStartDate <= yearEndDate;
+    });
 
-    const paidLeave = userLeaves.filter((leave) => leave?.leaveType === "Paid Leave" || leave?.leaveType === "").length;
-    const casualLeave = userLeaves.filter((leave) => leave?.leaveType === "Casual Leave" || leave?.leaveType === "Sick Leave").length;
+    const filteredHalfDays = userHalfDays.filter((leave) => {
+      const leaveStartDate = new Date(leave.from);
+      return leaveStartDate >= yearStartDate && leaveStartDate <= yearEndDate;
+    });
 
+    // Count leave types
+    const paidLeave = filteredLeaves.filter(
+      (leave) => leave?.leaveType === "Paid Leave" || leave?.leaveType === ""
+    ).length;
 
-    const halfDayCount = userHalfDays.length;
+    const casualLeave = filteredLeaves.filter(
+      (leave) => leave?.leaveType === "Casual Leave" || leave?.leaveType === "Sick Leave"
+    ).length;
 
+    const halfDayCount = filteredHalfDays.length;
 
     return {
       success: true,
@@ -128,12 +146,12 @@ export const LeaveTypeApi = async ({ id }) => {
       data: {
         paidLeave,
         casualLeave,
-        totalLeaves: userLeaves.length,
+        totalLeaves: filteredLeaves.length,
         halfDays: halfDayCount,
       },
     };
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching leave data:", error);
     return {
       success: false,
       message: "Internal server error",
@@ -141,12 +159,6 @@ export const LeaveTypeApi = async ({ id }) => {
   }
 };
 
-function formatDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
 
 // export const monthlyLeave = async(req , res)=>{
 //   const {month} = req.body;
