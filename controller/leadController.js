@@ -14,6 +14,7 @@ import LORLetter from "../models/LORLetter.js";
 import Letter1 from "../models/Letter1.js";
 import RelivingLetter from "../models/Reliving.js";
 import ExperienceLetter from "../models/Experience.js";
+import PartTimeOffer from "../models/PartTimeOffer.js";
 import InternLetter from "../models/InternLetter.js";
 
 export const createLead = async (req, res) => {
@@ -98,8 +99,27 @@ export const OfferLetterDocs = async(req ,res)=>{
    try{
 
      const {userId , content} = req.body;
-
+ console.log("userid ",userId , "contetn",content);
        const createletter = await OfferLetter.create({user:userId , content});
+
+        return res.status(200).json({
+          status:200 , 
+          data: createletter
+        })
+   } catch(error){
+    console.log(error);
+    return res.status(500).json({
+      status:false , 
+      message:"internal server error "
+    })
+   }
+}
+export const partTimeOfferApi = async(req ,res)=>{
+   try{
+
+     const {userId , content8} = req.body;
+
+       const createletter = await PartTimeOffer.create({user:userId , content:content8});
 
         return res.status(200).json({
           status:200 , 
@@ -237,16 +257,13 @@ export const changeOfferLetterPer = async (req, res) => {
   try {
     const { userId } = req.body;
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({
-        status: false,
-        message: "User not found",
-      });
-    }
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $bit: { offerLetterPermission: { xor: 1 } } }, 
+      { new: true } 
+  );
 
-    user.offerLetterPermission = !user.offerLetterPermission;
-    await user.save();
+    console.log("user",user);
 
     return res.status(200).json({
       status: true,
@@ -334,8 +351,7 @@ export const GetUserLetter = async( req ,res)=>{
        return res.status(200).json({
          status:200 , 
          data:{
-          relivingLetter ,
-          createletter , expeletter , internLetter
+          relivingLetter , createletter , expeletter , internLetter
          }
        })
   } catch(error){
