@@ -16,6 +16,7 @@ import RelivingLetter from "../models/Reliving.js";
 import ExperienceLetter from "../models/Experience.js";
 import PartTimeOffer from "../models/PartTimeOffer.js";
 import InternLetter from "../models/InternLetter.js";
+import InternOffer from "../models/InternLetter.js"
 
 export const createLead = async (req, res) => {
   try {
@@ -343,10 +344,10 @@ export const GetUserLetter = async( req ,res)=>{
 
     const {userId} = req.body;
 
-    const createletter = await OfferLetter.find({user:userId});
-     const relivingLetter = await RelivingLetter.find({user:userId});
-     const expeletter = await ExperienceLetter.find({user:userId});
-     const internLetter = await InternLetter.find({user:userId});
+    const createletter = await OfferLetter.find({user:userId}).sort({date: -1});
+     const relivingLetter = await RelivingLetter.find({user:userId}).sort({date: -1});
+     const expeletter = await ExperienceLetter.find({user:userId}).sort({date: -1});
+     const internLetter = await InternLetter.find({user:userId}).sort({date: -1});
 
        return res.status(200).json({
          status:200 , 
