@@ -743,7 +743,7 @@ export const fetchEmployee = asyncHandler(async (req, res) => {
 })
 
 export const fetchAllEmployee = asyncHandler(async (req, res) => {
-  const emp = await User.find({});
+  const emp = await User.find({isDeactivated:"No"});
 
   return res.status(200).json({
     status: true,

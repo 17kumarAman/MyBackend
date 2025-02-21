@@ -1,11 +1,12 @@
 import { Router } from "express";
-import {createLead ,getAllLead,getAllLead3 , SaveRelivingLetter  , saveLORLetter, saveLetter1Api , saveOfferLetterInter ,saveExperienceLetter ,  GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi , GetUserLetter , UpdateQuotationForm , UpdateProposalForm , OfferLetterDocs , changeOfferLetterPer , changeRelivingLetterPer ,InstaAddLead  , changeExperienceLetterPer , FreelencerOfferApi,GetSaveTempalte , partTimeOfferApi
+import {createLead ,getAllLead,getAllLead3 ,ShareLead ,  SaveRelivingLetter  , saveLORLetter, saveLetter1Api , saveOfferLetterInter ,saveExperienceLetter ,  GetLeadByUser , GetDesiUser, editLeadStatus,getAllLead2, postImage,deleteLeads , editLead, editLeadNote , GetAllLeadByAdmin , GetLeadById, CreateLeadStatus ,getLeadStatus , getLeadSource ,CreateLeadSource  , UpdateLeadStatus ,UpdateLeadSource , CreateLeadNote , UpdateLeadNote , DeleteLeadNote , GetNoteById , GetOpenLeads, GetDesiUser1 , PostQuotationForm , PostProposalForm,  GetQuotationApi , DeleteQuotationapi ,deletePropapi , GetUserLetter , UpdateQuotationForm , UpdateProposalForm , OfferLetterDocs , changeOfferLetterPer , changeRelivingLetterPer ,InstaAddLead  , changeExperienceLetterPer , FreelencerOfferApi,GetSaveTempalte , partTimeOfferApi
 } from "../controller/leadController.js"
 import { deleteExpense , getExpense , CreateExpense } from "../controller/expenseController.js";
  
 const router = Router();
 
 router.post("/createLead",createLead );
+// router.post("")
 router.post("/partTimeOfferApi",partTimeOfferApi );
 router.get("/getLeadById/:id" , GetLeadById);
 router.get("/getOpenLeads/:id" , GetOpenLeads);
@@ -83,6 +84,8 @@ router.post("/getExpense" , getExpense);
 
 
 router.post("/instaAddLead" , InstaAddLead);
+router.post("/sharelead" , ShareLead);
+
 
 
 

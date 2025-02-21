@@ -2,6 +2,8 @@ import Task from "../models/taskModel.js";
 import Meet from "../models/MeetingModel.js"
 import { SendEmail } from "../utils/SendEmail.js";
 import User from "../models/User/User.js";
+import Notification from "../models/Notification/Notification.js"
+
 
 
 export const CreateTask = async( req ,res)=>{
@@ -9,6 +11,11 @@ export const CreateTask = async( req ,res)=>{
      const {  LeadName, FollowUpType, Date, Time, Remark,  LeadId , userId} = req.body;
 
       const taskDetail = await Task.create({LeadName, FollowUpType, Date, Time, Remark, LeadId , user:userId });
+
+      const newNotification = await Notification.create({ title: "New Remark", description: `Remark from ${LeadName}`, user: userId });
+
+ console.log("newNotification" , newNotification);
+
 
  return res.status(200).json({
     status:true ,

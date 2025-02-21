@@ -17,6 +17,8 @@ import ExperienceLetter from "../models/Experience.js";
 import PartTimeOffer from "../models/PartTimeOffer.js";
 import InternLetter from "../models/InternLetter.js";
 import InternOffer from "../models/InternLetter.js"
+import { mailSender } from "../utils/SendMail2.js";
+
 
 export const createLead = async (req, res) => {
   try {
@@ -334,6 +336,41 @@ export const changeRelivingLetterPer = async (req, res) => {
       status: false,
       message: "Internal server error",
     });
+  }
+};
+
+
+
+export const ShareLead = async (req, res) => {
+  try {
+    const { shareList, leadId } = req.body;
+
+    if (!shareList || !leadId) {
+      return res.status(400).json({ success: false, message: "Missing required fields." });
+    }
+
+    const updatedLead = await Lead.findByIdAndUpdate(
+      leadId,
+      { $set: { LeadOwner: shareList } }, 
+      { new: true } 
+    );
+
+    if (!updatedLead) {
+      return res.status(404).json({ success: false, message: "Lead not found." });
+    }
+
+    for (let i = 0; i < shareList.length; i++) {
+      let userdetail = await User.findById(shareList[i]);
+      await mailSender(userdetail.email, `Regarding Lead Share`, `<div>
+        <div>A Lead has been shared with you</div>
+      </div>`);
+    }
+    
+    res.status(200).json({ success: true, message: "Lead shared successfully.", data: updatedLead });
+    
+  } catch (error) {
+    console.error("Error sharing lead:", error);
+    res.status(500).json({ success: false, message: "Server error.", error: error.message });
   }
 };
 
