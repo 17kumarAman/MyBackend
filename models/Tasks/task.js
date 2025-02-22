@@ -2,24 +2,18 @@ import mongoose from "mongoose";
 
 const mySchema = new mongoose.Schema(
   {
-    Title: {
+    taskName: {
       type: String,
     },
-    Description: {
+    startDate: {
       type: String,
     },
-    StartDate: {
+    dueDate: {
       type: String,
     },
-    DueDate: {
-      type: String,
-    },
-    Priority: {
+    priority: {
       type: String,
       default:"Normal" , 
-    },
-    Github: {
-      type: String,
     },
     Members:{
         type: mongoose.Schema.Types.ObjectId , 
@@ -32,8 +26,11 @@ const mySchema = new mongoose.Schema(
     Status:{
       type: String ,
       default:"Not Started"
+    },
+    description:{
+      type:String, 
     }
-
+  
   },
   { timestamps: true }
 );

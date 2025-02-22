@@ -2,27 +2,36 @@ import mongoose from "mongoose";
 
 const mySchema = new mongoose.Schema(
   {
-    Name: {
+    projectName: {
       type: String,
     },
+    projectOwner:{
+         type: mongoose.Schema.Types.ObjectId , 
+          ref:"User"
+    },
+    Status:{
+      type:String , 
+      default:"Ongoing" , 
+  }, 
+    estimateHour:{
+      type: String, 
+
+    },
+    Members:[{
+      type: mongoose.Schema.Types.ObjectId , 
+        ref:"User"
+  }] , 
+  startDate:{
+    type: String,
+  },
+  deadline:{
+    type:String,
+},
+
     Description: {
       type: String,
     },
-    Employee: {
-      type: String,
-    },
-    Status:{
-        type:String , 
-        default:"Ongoing" , 
-    }, 
-    DueDate:{
-        type:String,
-    },
-    Members:[{
-        type: mongoose.Schema.Types.ObjectId , 
-          ref:"User"
-    }] , 
-  
+   
   },
   { timestamps: true }
 );
