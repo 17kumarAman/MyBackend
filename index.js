@@ -18,7 +18,7 @@ import notification from "./router/notification.js"
 import clock from "./router/clockRouter.js"
 import award from "./router/awardRouter.js"
 import lead from "./router/leadRouter.js"
-
+import ProjectRoute from "./router/ProjectRoutes.js"
 
 import attendanceRouter from "./router/attendanceRouter.js";
 import authRouter from "./router/authRouter.js";
@@ -93,6 +93,8 @@ app.use("/system", systemRouter);
 app.use("/payslip" , payslip);
 
 app.use("/permission" , PermissionRouter);
+
+app.use("/latest_project" , ProjectRoute)
 
 const task = cron.schedule('55 23 * * *', async () => {
 

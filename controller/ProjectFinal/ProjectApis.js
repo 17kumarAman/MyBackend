@@ -1,9 +1,9 @@
-import Project from "../../models/Tasks/Projects"
-import ProjectTask from "../../models/Tasks/task"
-import TaskTimer from "../../models/Tasks/TimerDetail";
+import Project from "../../models/Tasks/Projects.js"
+import ProjectTask from "../../models/Tasks/task.js"
+import TaskTimer from "../../models/Tasks/TimerDetail.js";
 import moment from "moment";
-import { uploadToCloudinary } from "../../utils/cloudinary";
-import ProjectFiles from "../../models/Tasks/ProjectFile";
+import { uploadToCloudinary } from "../../utils/cloudinary.js";
+import ProjectFiles from "../../models/Tasks/ProjectFile.js";
 
 
 
@@ -11,16 +11,18 @@ import ProjectFiles from "../../models/Tasks/ProjectFile";
 export const CreateProject = async(req ,res)=>{
      try{
 
-        const {projectName , projectOwner , Status , estimateHour ,Members ,startDate ,deadline , Description} = req.body;
+        const {projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description} = req.body;
 
-          if(!projectName || !projectOwner  || !Status || !estimateHour || !Members || startDate  || deadline || !Description){
+        console.log("projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description" , projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description)
+
+          if(!projectName || !projectOwner  || !Status  || !Members || !startDate  || !deadline || !Description){
             return res.status(403).json({
                 status:false ,
                 message:"Require all data"
             })
           }
 
-        const resp = await Project.create({projectName , projectOwner , Status , estimateHour ,Members ,startDate ,deadline , Description});
+        const resp = await Project.create({projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description});
 
         return res.status(200).json({
             status:true , 
@@ -39,16 +41,16 @@ export const CreateProject = async(req ,res)=>{
 export const EditProject = async(req ,res)=>{
      try{
 
-        const {projectName , projectOwner , Status , estimateHour ,Members ,startDate ,deadline , Description , projectId} = req.body;
+        const {projectName  , Status  ,Members ,startDate ,deadline , Description , projectId} = req.body;
 
-          if(!projectName || !projectOwner  || !Status || !estimateHour || !Members || startDate  || deadline || !Description){
+          if(!projectName   || !Status  || !Members || !startDate  || !deadline || !Description){
             return res.status(403).json({
                 status:false ,
                 message:"Require all data"
             })
           }
 
-        const resp = await Project.findByIdAndUpdate(projectId, {projectName , projectOwner , Status , estimateHour ,Members ,startDate ,deadline , Description},{new:true});
+        const resp = await Project.findByIdAndUpdate(projectId, {projectName  , Status  ,Members ,startDate ,deadline , Description},{new:true});
 
         return res.status(200).json({
             status:true , 
@@ -66,16 +68,16 @@ export const EditProject = async(req ,res)=>{
 
 export const deleteProject = async (req, res) => {
     try {
-      const { projectId } = req.body;
+      const { id } = req.params;
   
-      if (!projectId) {
+      if (!id) {
         return res.status(400).json({
           status: false,
           message: "Project ID is required",
         });
       }
   
-      const project = await Project.findById(projectId);
+      const project = await Project.findById(id);
   
       if (!project) {
         return res.status(404).json({
@@ -84,7 +86,7 @@ export const deleteProject = async (req, res) => {
         });
       }
   
-      await Project.findByIdAndDelete(projectId);
+      await Project.findByIdAndDelete(id);
   
       return res.status(200).json({
         status: true,
@@ -201,7 +203,7 @@ export const editTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
     try {
-      const { taskId } = req.body;
+      const { taskId } = req.params;
   
       if (!taskId) {
         return res.status(400).json({
@@ -237,7 +239,7 @@ export const deleteTask = async (req, res) => {
 
 export const getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.find();
+    const projects = await Project.find().populate("Members");
 
     return res.status(200).json({
       status: true,
@@ -297,7 +299,7 @@ export const getTasksByProjectId = async (req, res) => {
       });
     }
 
-    const tasks = await ProjectTask.find({ Project: projectId });
+    const tasks = await ProjectTask.find({ Project: projectId }).populate("Members");
 
     return res.status(200).json({
       status: true,
@@ -542,14 +544,16 @@ export const uploadProjectFile = async (req, res) => {
     try {
       const { projectId, uploadedBy } = req.body;
   
-      if (!projectId || !req.file || !uploadedBy) {
+      if (!projectId || !req.files || !uploadedBy) {
         return res.status(400).json({
           status: false,
           message: "Project ID, file, and uploader ID are required",
         });
       }
   
-      const fileLocalPath = req.file.path;
+        console.log("req",req.files?.file);
+      const fileLocalPath = req.files?.file?.tempFilePath;
+      console.log("flie",fileLocalPath);
       if (!fileLocalPath) {
         return res.status(400).json({ status: false, message: "File path not found" });
       }
@@ -561,7 +565,7 @@ export const uploadProjectFile = async (req, res) => {
   
       const newFile = new ProjectFiles({
         projectId,
-        fileName: req.file.originalname,
+        fileName: req.files.file.name,
         filePath: uploadedFile.secure_url, 
         uploadedBy,
       });
@@ -591,7 +595,7 @@ export const uploadProjectFile = async (req, res) => {
         return res.status(400).json({ status: false, message: "Project ID is required" });
       }
   
-      const files = await ProjectFiles.find({ projectId }).populate("uploadedBy", "name email");
+      const files = await ProjectFiles.find({ projectId }).populate("uploadedBy");
   
       return res.status(200).json({
         status: true,
