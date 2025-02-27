@@ -4,7 +4,8 @@ import TaskTimer from "../../models/Tasks/TimerDetail.js";
 import moment from "moment";
 import { uploadToCloudinary } from "../../utils/cloudinary.js";
 import ProjectFiles from "../../models/Tasks/ProjectFile.js";
-
+import { mailSender } from "../../utils/SendMail2.js";
+import User from "../../models/User/User.js"
 
 
 
@@ -13,7 +14,6 @@ export const CreateProject = async(req ,res)=>{
 
         const {projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description} = req.body;
 
-        console.log("projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description" , projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description)
 
           if(!projectName || !projectOwner  || !Status  || !Members || !startDate  || !deadline || !Description){
             return res.status(403).json({
@@ -21,6 +21,17 @@ export const CreateProject = async(req ,res)=>{
                 message:"Require all data"
             })
           }
+
+           Members.forEach(async(user) => {
+             const userdetail = await User.findById(user);
+            await mailSender(userdetail.email, `New Project`, `<div>
+              <div>projectName: ${projectName}</div>
+              <div>startDate: ${startDate}</div>
+              <div>deadline: ${deadline}</div>
+           
+              </div>`);
+  
+           });
 
         const resp = await Project.create({projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description});
 
@@ -105,7 +116,7 @@ export const deleteProject = async (req, res) => {
 
 export const createTask = async (req, res) => {
   try {
-    const { taskName, startDate, dueDate, priority, Members, Project, Status ,description } = req.body;
+    const { taskName, startDate, dueDate, priority, Members, Project, Status ,description , taskfile } = req.body;
 
     if (!taskName || !startDate || !dueDate || !Members || !Project , !description) {
       return res.status(400).json({
@@ -122,20 +133,29 @@ export const createTask = async (req, res) => {
       });
     }
 
-    const tasks = await Promise.all(
-      Members.map(async (member) => {
-        return await ProjectTask.create({
+    const tasks =  await ProjectTask.create({
           taskName,
           startDate,
           dueDate,
+          taskfile,
           description,
           priority: priority || "Normal",
-          Members: member, 
+          Members, 
           Project,
           Status: Status || "Not Started",
         });
-      })
-    );
+
+        Members.forEach(async(user) => {
+          const userdetail = await User.findById(user);
+         await mailSender(userdetail.email, `New task`, `<div>
+           <div>taskName: ${taskName}</div>
+           <div>startDate: ${startDate}</div>
+           <div>dueDate: ${dueDate}</div>
+        
+           </div>`);
+
+        });
+    
 
     return res.status(201).json({
       status: true,
@@ -154,7 +174,7 @@ export const createTask = async (req, res) => {
 
 export const editTask = async (req, res) => {
   try {
-    const { taskId, taskName, startDate, dueDate, priority, Members, Project, Status ,description} = req.body;
+    const { taskId, taskName, startDate, dueDate, priority, Members, Project, Status ,description ,taskfile} = req.body;
 
     if (!taskId) {
       return res.status(400).json({
@@ -172,6 +192,7 @@ export const editTask = async (req, res) => {
         priority,
         Members,
         Project,
+        taskfile,
         Status,
         description
       },
@@ -270,7 +291,7 @@ export const getProjectsByUserId = async (req, res) => {
   
       const projects = await Project.find({
         $or: [{ projectOwner: userId }, { Members: userId }],
-      });
+      }).populate("Members");
   
       return res.status(200).json({
         status: true,
@@ -327,7 +348,7 @@ export const getUserTasksByProject = async (req, res) => {
         });
       }
   
-      const tasks = await ProjectTask.find({ Project: projectId, Members: userId });
+      const tasks = await ProjectTask.find({ Project: projectId, Members: userId }).populate("Members");
   
       return res.status(200).json({
         status: true,

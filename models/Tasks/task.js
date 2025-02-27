@@ -15,10 +15,10 @@ const mySchema = new mongoose.Schema(
       type: String,
       default:"Normal" , 
     },
-    Members:{
+    Members:[{
         type: mongoose.Schema.Types.ObjectId , 
           ref:"User"
-    }, 
+    }], 
      Project:{
         type: mongoose.Schema.Types.ObjectId , 
           ref:"Projects"
@@ -29,6 +29,10 @@ const mySchema = new mongoose.Schema(
     },
     description:{
       type:String, 
+    },
+    taskfile:{
+      type: String, 
+
     }
   
   },

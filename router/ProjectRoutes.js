@@ -15,7 +15,10 @@ router.post("/createTask" , createTask);
 router.delete("/deleteTask/:taskId",deleteTask);
 router.post("/editTask" , editTask);
 router.post("/uploadProjectFile" , uploadProjectFile);
-router.post("/getProjectFiles/:projectId" , getProjectFiles)
+router.post("/getProjectFiles/:projectId" , getProjectFiles);
+router.get("/getProjectsByUserId/:userId" , getProjectsByUserId); 
+router.get("/getUserTasksByProject/:userId/:projectId" , getUserTasksByProject); 
+router.post("/changeTaskStatus" , changeTaskStatus);
 
 
 
