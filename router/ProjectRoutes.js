@@ -19,6 +19,8 @@ router.post("/getProjectFiles/:projectId" , getProjectFiles);
 router.get("/getProjectsByUserId/:userId" , getProjectsByUserId); 
 router.get("/getUserTasksByProject/:userId/:projectId" , getUserTasksByProject); 
 router.post("/changeTaskStatus" , changeTaskStatus);
+router.post("/createTaskTimer" , createTaskTimer);
+router.get("/getProjectTaskTimelines/:projectId" , getProjectTaskTimelines);
 
 
 

@@ -8,14 +8,24 @@ const mySchema = new mongoose.Schema(
     clockOut: {
       type: String,
     },
+    totalTime: {
+      type: String,
+    },
     taskId:{
         type: mongoose.Schema.Types.ObjectId , 
           ref:"ProjectTasks"
     }, 
     date:{
-        type:Date,
+        type:String,
         default: Date.now()
-    }
+    },
+   Note:{
+    type:String,
+   },
+   projectId:{
+      type: mongoose.Schema.Types.ObjectId , 
+          ref:"Projects"
+   }
   
   },
   { timestamps: true }

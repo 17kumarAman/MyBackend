@@ -447,16 +447,16 @@ export const changeTaskStatus = async (req, res) => {
 
 export const createTaskTimer = async (req, res) => {
   try {
-    const { taskId, clockIn, clockOut } = req.body;
+    const { taskId, clockIn, clockOut, totalTime ,projectId } = req.body;
 
-    if (!taskId || !clockIn || !clockOut) {
+    if (!taskId || !clockIn || !clockOut || !totalTime) {
       return res.status(400).json({
         status: false,
         message: "Task ID, Clock In, and Clock Out times are required",
       });
     }
 
-    const timerEntry = await TaskTimer.create({ taskId, clockIn, clockOut });
+    const timerEntry = await TaskTimer.create({ taskId, clockIn, clockOut , totalTime , projectId});
 
     return res.status(201).json({
       status: true,
@@ -534,9 +534,21 @@ export const getProjectTaskTimelines = async (req, res) => {
     }
     const taskIds = tasks.map(task => task._id);
 
+    // const taskTimelines = await TaskTimer.find({ taskId: { $in: taskIds } })
+    //   .populate("taskId") 
+    //   .sort({ createdAt: -1 }); 
     const taskTimelines = await TaskTimer.find({ taskId: { $in: taskIds } })
-      .populate("taskId") 
-      .sort({ createdAt: -1 }); 
+  .populate({
+    path: "taskId",
+    populate: {
+      path: "Members", // taskId ke andar member ko bhi populate kar raha hai
+      model: "User",
+    },
+  })
+  .sort({ createdAt: -1 });
+
+
+      
 
     if (!taskTimelines.length) {
       return res.status(404).json({
