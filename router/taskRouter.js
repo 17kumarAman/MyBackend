@@ -8,7 +8,7 @@ import {
   updateTask,
 
 } from "../controller/TaskController.js";
-import { CreateClient, EditClient  ,  getProjectTask , getMyProjectTask ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject  , delteTaskId, DeleteProjects , getProjectByUser , CreateProjectTask ,EditProjectTask ,  GetAllTask , GetTaskByUser , getTodayBirthday  ,FetchAllTask} from "../controller/Clients.js";
+import { CreateClient, EditClient ,clientLogin ,getProjectTask , getMyProjectTask ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject  , delteTaskId, DeleteProjects , getProjectByUser , CreateProjectTask ,EditProjectTask ,  GetAllTask , GetTaskByUser , getTodayBirthday  ,FetchAllTask, getClient} from "../controller/Clients.js";
 
 import {ProjectTimerCreate} from "../controller/ProjectTimer.js"
 
@@ -28,8 +28,12 @@ router.delete("/deleteProjectTaskapi/:id" , delteTaskId);
 
 // for cliient 
 router.post("/createClient" , CreateClient);
+router.post("/clientLogin" , clientLogin);
+
 router.post("/editClient/:clientId" , EditClient);
 router.get("/getAllClient" , getAllClient);
+router.get("/getClient/:id" , getClient);
+
 router.post("/disableClient/:clientId" , DisableClient);
 
 // for projeccts 

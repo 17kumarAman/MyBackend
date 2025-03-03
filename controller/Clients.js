@@ -6,16 +6,96 @@ import { mailSender } from "../utils/SendMail2.js";
 import Notification from "../models/Notification/Notification.js"
 import Task from "../models/Task/Task.js";
 import projectwork from "../models/ProjectWork.js";
+import bcrypt from "bcryptjs";
+import { asyncHandler } from "../utils/AsyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+
+const generateRefreshToken = async (userId) => {
+  try {
+    const user = await Clients.findById(userId);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    const token = user.generateAuthToken();
+    return token;
+  } catch (error) {
+    // Log the actual error for debugging purposes
+    console.error("Error in generateRefreshToken:", error.message);
+
+    throw new ApiError(500, "Something went wrong");
+  }
+};
 
 
 export const CreateClient = async (req, res) => {
   try {
+    const { Name, Email, Password, City, State, ZipCode, PhoneNumber, Country, Address,Role="Client" } = req.body;
 
-    const { Name, Email, City, State, ZipCode, PhoneNumber, Country, Address } = req.body;
+    // Validate required fields
+    if (!Name || !Email || !Password) {
+      return res.status(400).json({
+        status: false,
+        message: "Name, Email, and Password are required",
+      });
+    }
 
-    const clientDetail = await Clients.create({ Name, Email, City, State, ZipCode, PhoneNumber, Country, Address });
+    
 
-    return res.status(200).json({
+    // Check if email already exists
+    const existingClient = await Clients.findOne({ Email })
+    if (existingClient) {
+      return res.status(400).json({
+        status: false,
+        message: "Email is already registered",
+      });
+    }
+    const plainTextPassword = Password;
+    
+    
+
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(Password, 10);
+
+    // Create the client
+    const clientDetail = await Clients.create({
+      Name,
+      Email,
+      Password:hashedPassword,
+      City,
+      State,
+      ZipCode,
+      PhoneNumber,
+      Country,
+      Address,
+      Role:"Client",
+    });
+    const html = `
+  <div style="font-family: Arial, sans-serif; color: #333;">
+      <h2>Welcome to Our Platform!</h2>
+      <p>Hi ${Name},</p>
+      <p>We are thrilled to have you join us! Your account has been successfully created, and we are excited for you to explore our platform.</p>
+      
+      <p><strong>Your login details:</strong></p>
+      <ul>
+        <li><strong>Email:</strong> ${Email}</li>
+        <li><strong>Temporary Password:</strong> ${plainTextPassword}</li>
+      </ul>
+
+      <p>Please use the link below to log in for the first time. For security reasons, we strongly recommend changing your password after your first login.</p>
+      <p><a href="https://hrms.kusheldigi.com/login" style="color: #007bff; text-decoration: none;">Login Here</a></p>
+
+      <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>
+
+      <p>Welcome aboard!</p>
+      <p>Best Regards,<br/>Your Company Name</p>
+  </div>
+`;
+    // await mailSender(Email, "Welcome to Kushel Digi Solutions  Your Account is Ready!", html)
+
+    return res.status(201).json({
       status: true,
       message: "done success",
       data: clientDetail
@@ -53,6 +133,55 @@ export const EditClient = async (req, res) => {
   }
 }
 
+
+export const clientLogin = async (req, res) => {
+  try {
+    const { Email, Password } = req.body;
+
+    // Validate input
+    if (!Email || !Password) {
+      return res.status(400).json({
+        status: false,
+        message: "Email and Password are required",
+      });
+    }
+
+    // Find client by email
+    const client = await Clients.findOne({ Email: Email  });
+
+    if (!client) {
+      return res.status(404).json({
+        status: false,
+        message: "Client not found with this email",
+      });
+    }
+
+    // Compare passwords
+    const isMatch = await bcrypt.compare(Password, client.Password);
+    if (!isMatch) {
+      return res.status(401).json({
+        status: false,
+        message: "Incorrect password",
+      });
+    }
+    const token = await generateRefreshToken(client._id);
+      return res.status(200).json({
+      status: true,
+      message: "Login successful",
+      data: {
+        client,
+        token,
+      },
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 export const getAllClient = async (req, res) => {
 
   const allClient = await Clients.find({});
@@ -63,6 +192,43 @@ export const getAllClient = async (req, res) => {
   })
 
 }
+
+export const getClient = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+
+    if (!id) {
+      return res.status(400).json({
+        status: false,
+        message: "Client ID is required",
+      });
+    }
+
+    const clientDetail = await Clients.findById(id);
+
+    if (!clientDetail) {
+      return res.status(404).json({
+        status: false,
+        message: "Client not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: "Client retrieved successfully",
+      data: clientDetail,
+    });
+
+  } catch (error) {
+    console.error("Error fetching client:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 
 export const DisableClient = async (req, res) => {
   try {
@@ -170,13 +336,13 @@ export const DeleteProjects = async (req, res) => {
   })
 }
 
-export const delteTaskId = async(req ,res)=>{
-  const {id} = req.params;
+export const delteTaskId = async (req, res) => {
+  const { id } = req.params;
   const taskdetail = await ProjectTasks.findByIdAndDelete(id);
 
   return res.status(200).json({
-    status:true , 
-    message:'Done' , 
+    status: true,
+    message: 'Done',
     data: taskdetail
   })
 }
@@ -266,7 +432,7 @@ export const CreateProjectTask = async (req, res) => {
 //       <div>Project: ${projectDetail?.Name}</div>
 //       <div>Subject: ${Title}</div>
 //       <div>Priority: ${Priority}</div>
-     
+
 //       </div>`);
 
 
@@ -293,9 +459,9 @@ export const CreateProjectTask = async (req, res) => {
 export const EditProjectTask = async (req, res) => {
   const { Title, Description, Github, Members, StartDate, DueDate, Priority } = req.body;
   const { projectId } = req.params;
-  
+
   const { taskId } = req.params;
-  console.log("projectid" , taskId);
+  console.log("projectid", taskId);
 
   const taskDetail = await ProjectTasks.findByIdAndUpdate(taskId, { Title, Description, Github, Members, StartDate, DueDate, Priority, Project: projectId });
 
@@ -388,11 +554,11 @@ export const getProjectTask = async (req, res) => {
     const { projectId } = req.params;
 
     const allTasks = await ProjectTasks.find({ Project: projectId }).populate("Members").populate("Project");
-    const taskDetail = await projectwork.find({projectId});
+    const taskDetail = await projectwork.find({ projectId });
 
     return res.status(200).json({
       status: true,
-      data: allTasks , 
+      data: allTasks,
       data2: taskDetail
     })
 
@@ -404,21 +570,21 @@ export const getProjectTask = async (req, res) => {
   }
 }
 
-export const FetchAllTask = async(req ,res)=>{
-  const alltask = await ProjectTasks.find({}).sort({date:-1}).populate("Members", "fullName") 
-  .populate("Project", "projectName");
-   return res.status(200).json({
+export const FetchAllTask = async (req, res) => {
+  const alltask = await ProjectTasks.find({}).sort({ date: -1 }).populate("Members", "fullName")
+    .populate("Project", "projectName");
+  return res.status(200).json({
     status: true,
     data: alltask
-   })
+  })
 }
 
 export const getMyProjectTask = async (req, res) => {
   try {
 
-    const { projectId , memberId } = req.params;
+    const { projectId, memberId } = req.params;
 
-    const allTasks = await ProjectTasks.find({Project: projectId,Members: memberId}).populate("Members").populate("Project");
+    const allTasks = await ProjectTasks.find({ Project: projectId, Members: memberId }).populate("Members").populate("Project");
 
     return res.status(200).json({
       status: true,

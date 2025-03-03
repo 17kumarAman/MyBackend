@@ -6,22 +6,30 @@ import { uploadToCloudinary } from "../../utils/cloudinary.js";
 import ProjectFiles from "../../models/Tasks/ProjectFile.js";
 import { mailSender } from "../../utils/SendMail2.js";
 import User from "../../models/User/User.js"
+import Clients from "../../models/Tasks/Clients.js";
 
 
 
 export const CreateProject = async(req ,res)=>{
      try{
 
-        const {projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description} = req.body;
+        const {projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description, client} = req.body;
 
 
-          if(!projectName || !projectOwner  || !Status  || !Members || !startDate  || !deadline || !Description){
+          if(!projectName || !projectOwner  || !Status  || !Members || !startDate  || !deadline || !Description || !client){
             return res.status(403).json({
                 status:false ,
                 message:"Require all data"
             })
           }
 
+          const clientDetail = await Clients.findById(client);
+            if (!clientDetail) {
+              return res.status(404).json({
+                status: false,
+                message: 'Client not found',
+              });
+            }
            Members.forEach(async(user) => {
              const userdetail = await User.findById(user);
             await mailSender(userdetail.email, `New Project`, `<div>
@@ -33,11 +41,12 @@ export const CreateProject = async(req ,res)=>{
   
            });
 
-        const resp = await Project.create({projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description});
+        const resp = await Project.create({projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description, client:clientDetail._id});
 
         return res.status(200).json({
             status:true , 
             message:"Successffuly crated",
+            data:resp,
         })
 
      } catch(error){
@@ -277,6 +286,30 @@ export const getAllProjects = async (req, res) => {
   }
 };
 
+export const getProjectsByClientId = async(req,res)=>{
+  try {
+    const {clientId} = req.params;
+    if (!clientId) {
+      return res.status(400).json({
+        status: false,
+        message: "client ID is required",
+      });
+    }
+    const projects = await Project.find({client:clientId})
+    return res.status(200).json({
+      status: true,
+      message: "Projects fetched successfully",
+      projects,
+    });
+
+  } catch (error) {
+    console.error("Error fetching projects by user:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+}
 
 export const getProjectsByUserId = async (req, res) => {
     try {

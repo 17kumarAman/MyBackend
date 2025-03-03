@@ -1,6 +1,6 @@
 // this is final project routes 
 import { Router } from "express";
-import {CreateProject, EditProject , deleteProject ,createTask ,editTask ,deleteTask ,getAllProjects ,getProjectsByUserId ,getTasksByProjectId ,getUserTasksByProject ,changeProjectStatus,changeTaskStatus ,createTaskTimer ,getTotalTaskTime ,getProjectTaskTimelines ,uploadProjectFile , getProjectFiles ,deleteProjectFile
+import {CreateProject, EditProject , deleteProject ,createTask ,editTask ,deleteTask ,getAllProjects ,getProjectsByUserId ,getTasksByProjectId ,getUserTasksByProject ,changeProjectStatus,changeTaskStatus ,createTaskTimer ,getTotalTaskTime ,getProjectTaskTimelines ,uploadProjectFile , getProjectFiles ,deleteProjectFile,getProjectsByClientId
 } from "../controller/ProjectFinal/ProjectApis.js"
 
 
@@ -17,6 +17,7 @@ router.post("/editTask" , editTask);
 router.post("/uploadProjectFile" , uploadProjectFile);
 router.post("/getProjectFiles/:projectId" , getProjectFiles);
 router.get("/getProjectsByUserId/:userId" , getProjectsByUserId); 
+router.get("/getProjectsByClientId/:clientId" , getProjectsByClientId); 
 router.get("/getUserTasksByProject/:userId/:projectId" , getUserTasksByProject); 
 router.post("/changeTaskStatus" , changeTaskStatus);
 router.post("/createTaskTimer" , createTaskTimer);

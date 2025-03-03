@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken"
 
 const mySchema = new mongoose.Schema(
   {
@@ -7,6 +8,12 @@ const mySchema = new mongoose.Schema(
     },
     Email: {
       type: String,
+    },
+    Password:{
+      type:String
+    },
+    Role:{
+      type:String,
     },
     City: {
       type: String,
@@ -33,6 +40,18 @@ const mySchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+mySchema.methods.generateAuthToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.env.SK,
+    {
+      expiresIn: "500d",
+    }
+  );
+};
 
 const Clients = mongoose.model("Clients", mySchema);
 
