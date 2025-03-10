@@ -6,16 +6,16 @@ export const SendEmail = async (to, subject, text, html) => {
     port: 465,
     secure: true, 
     auth: {
-      user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      user: "aman.kusheldigi@gmail.com",
+      pass: "Kushel@2025"
     },
-    from: "info@kusheldigi.com",
+    from: "aman.kusheldigi@gmail.com",
     tls: {
       rejectUnauthorized: false,
     },
   });
   await transporter.sendMail({
-    from: '"Kushel Digi Solutions" <info@kusheldigi.com>',
+    from: '"Kushel Digi Solutions" <aman.kusheldigi@gmail.com>',
     to,
     subject,
     text,
