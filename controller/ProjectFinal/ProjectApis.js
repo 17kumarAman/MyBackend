@@ -16,7 +16,7 @@ export const CreateProject = async(req ,res)=>{
         const {projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description, client} = req.body;
 
 
-          if(!projectName || !projectOwner  || !Status  || !Members || !startDate  || !deadline || !Description || !client){
+          if(!projectName || !Status  || !Members || !startDate  || !deadline || !Description ){
             return res.status(403).json({
                 status:false ,
                 message:"Require all data"
@@ -24,12 +24,12 @@ export const CreateProject = async(req ,res)=>{
           }
 
           const clientDetail = await Clients.findById(client);
-            if (!clientDetail) {
-              return res.status(404).json({
-                status: false,
-                message: 'Client not found',
-              });
-            }
+            // if (!clientDetail) {
+            //   return res.status(404).json({
+            //     status: false,
+            //     message: 'Client not found',
+            //   });
+            // }
            Members.forEach(async(user) => {
              const userdetail = await User.findById(user);
             await mailSender(userdetail.email, `New Project`, `<div>
@@ -41,7 +41,7 @@ export const CreateProject = async(req ,res)=>{
   
            });
 
-        const resp = await Project.create({projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description, client:clientDetail._id});
+        const resp = await Project.create({projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description, client});
 
         return res.status(200).json({
             status:true , 
@@ -480,16 +480,16 @@ export const changeTaskStatus = async (req, res) => {
 
 export const createTaskTimer = async (req, res) => {
   try {
-    const { taskId, clockIn, clockOut, totalTime ,projectId } = req.body;
+    const { taskId, clockIn, clockOut, totalTime ,projectId, submitedBy, Note } = req.body;
 
-    if (!taskId || !clockIn || !clockOut || !totalTime) {
+    if (!taskId || !clockIn || !clockOut || !totalTime || !submitedBy || !Note) {
       return res.status(400).json({
         status: false,
         message: "Task ID, Clock In, and Clock Out times are required",
       });
     }
 
-    const timerEntry = await TaskTimer.create({ taskId, clockIn, clockOut , totalTime , projectId});
+    const timerEntry = await TaskTimer.create({ taskId, clockIn, clockOut , totalTime , projectId, submitedBy, Note});
 
     return res.status(201).json({
       status: true,
@@ -567,18 +567,18 @@ export const getProjectTaskTimelines = async (req, res) => {
     }
     const taskIds = tasks.map(task => task._id);
 
-    // const taskTimelines = await TaskTimer.find({ taskId: { $in: taskIds } })
-    //   .populate("taskId") 
-    //   .sort({ createdAt: -1 }); 
     const taskTimelines = await TaskTimer.find({ taskId: { $in: taskIds } })
   .populate({
     path: "taskId",
     populate: {
-      path: "Members", // taskId ke andar member ko bhi populate kar raha hai
+      path: "Members",
       model: "User",
     },
   })
+  .populate("submitedBy")
   .sort({ createdAt: -1 });
+  console.log(taskTimelines)
+
 
 
       

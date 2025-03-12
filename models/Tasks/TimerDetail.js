@@ -25,6 +25,12 @@ const mySchema = new mongoose.Schema(
    projectId:{
       type: mongoose.Schema.Types.ObjectId , 
           ref:"Projects"
+   },
+   submitedBy:{
+    type: mongoose.Schema.Types.ObjectId , 
+          ref:"User"
+   },Note:{
+    type:String
    }
   
   },
