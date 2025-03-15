@@ -24,33 +24,32 @@ const generateRefreshToken = async (userId) => {
   }
 };
 
-export const login = asyncHandler(async (req, res) => {
+export const login = asyncHandler(async (req, res, next) => {
   const { email, password, employeeCode } = req.body;
 
   const user = email
     ? await User.findOne({ email }).populate("PermissionRole")
     : await User.findOne({ employeeCode: employeeCode.slice(3) }).populate("PermissionRole");
-    
+
   if (!user) {
-    throw new ApiError(404, "User not found");
+    return next(new ApiError(404, "User not found"));
   }
 
-  console.log("user" , user);
-
+  console.log("user", user);
 
   const isDeactivated = user.isDeactivated === "Yes";
 
   if (isDeactivated) {
     return res.status(403).json({
-      status:false ,
-      message:"User account is deactivated",
-    })
+      status: false,
+      message: "User account is deactivated",
+    });
   }
 
   const isPasswordValid = await user.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
-    throw new ApiError(401, "Invalid email or password");
+    return next(new ApiError(401, "Invalid email or password"));
   }
 
   const token = await generateRefreshToken(user._id);
@@ -62,6 +61,7 @@ export const login = asyncHandler(async (req, res) => {
     user,
   });
 });
+
 
 export const changePassword = asyncHandler(async (req, res) => {
   const { oldpassword, newpassword, confirmpassword } = req.body;

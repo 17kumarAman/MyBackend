@@ -29,9 +29,7 @@ const mySchema = new mongoose.Schema(
    submitedBy:{
     type: mongoose.Schema.Types.ObjectId , 
           ref:"User"
-   },Note:{
-    type:String
-   }
+   },
   
   },
   { timestamps: true }

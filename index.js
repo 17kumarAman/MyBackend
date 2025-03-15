@@ -37,6 +37,8 @@ import ActivityTracker from "./models/ActivityTracker/ActivityTracker.js";
 import payslip from "./router/paySlipRouter.js";
 import PermissionRouter from "./router/PermissionRouter.js";
 // import Trainer from "./models/Trainer/Trainer.js";
+import errorHandler from "./middleware/errorHandler.js";
+
 
 dotenv.config();
 const port = process.env.PORT;
@@ -51,16 +53,8 @@ connectDb();
 //     methods: ["get", "post", "delete", "put"],
 //   })
 // );
-// const corsOptions = {
-//   origin: "http://localhost:3000", // Allow requests from frontend running on localhost:3000
-//   methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS", // Allow all methods
-//   allowedHeaders: "Content-Type,Authorization", // Allow headers
-//   credentials: true, // Allow cookies if needed
-// };
-
-// app.use(cors(corsOptions)); // Enable CORS
-
 app.use(cors());
+
 app.use(express.json({limit:'10mb'}));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
@@ -139,6 +133,8 @@ task.start();
 app.get("/", (req, res) => {
   res.send("hello world");
 });
+app.use(errorHandler)
+
 
 app.listen(port, () => {
   console.log("Listening on ", port);
