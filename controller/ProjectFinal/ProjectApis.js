@@ -61,7 +61,7 @@ export const CreateProject = async(req ,res)=>{
 export const EditProject = async(req ,res)=>{
      try{
 
-        const {projectName  , Status  ,Members ,startDate ,deadline , Description , projectId} = req.body;
+        const {projectName  , Status  ,Members ,startDate ,deadline , Description , projectId, projectOwner, client} = req.body;
 
           if(!projectName   || !Status  || !Members || !startDate  || !deadline || !Description){
             return res.status(403).json({
@@ -70,7 +70,7 @@ export const EditProject = async(req ,res)=>{
             })
           }
 
-        const resp = await Project.findByIdAndUpdate(projectId, {projectName  , Status  ,Members ,startDate ,deadline , Description},{new:true});
+        const resp = await Project.findByIdAndUpdate(projectId, {projectName  , Status  ,Members ,startDate ,deadline , Description, projectOwner, client},{new:true});
 
         return res.status(200).json({
             status:true , 
