@@ -5,7 +5,6 @@ import {
   RegisterUser,
   getUserByid,
   forgetPassword,
-  resetPassword,
   UpdateUser,
   updateProfile,
   updateProfileImage,
@@ -23,7 +22,7 @@ import {
   uploadImgToCloudinary,
   DeactivateUser , 
   getThisMonthLeave , 
-  getUserOwndetail,
+  getUserOwndetail,forgotPasswordProcess,forgetPasswordVerifyOTP ,resetPassword
  
 } from "../controller/userController.js";
 import isAuthenticated from "../middleware/auth.js";
@@ -51,9 +50,11 @@ router.route("/updateProfile/:id").post( updateProfileImage);
 
 router.route("/updateUser/:userId").put(isAuthenticated, UpdateUser);
 
-router.route("/forgetPassword").post(forgetPassword);
+router.route("/forgetPassword").post(forgotPasswordProcess);
+router.route("/forgetPasswordVerifyOTP").post(forgetPasswordVerifyOTP);
 
-router.route("/resetPassword/:token").put(resetPassword);
+
+router.route("/resetPassword").post(resetPassword);
 
 router.route("/deleteprofile").delete(isAuthenticated, DeleteUserProfile);
 

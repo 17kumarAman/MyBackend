@@ -268,28 +268,122 @@ export const forgetPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, `Reset Token is sent to ${user.email}`));
 });
 
-export const resetPassword = asyncHandler(async (req, res) => {
-  const { token } = req.params;
+const generateOTP = () => {
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  return otp;
+};
 
-  const resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(token)
-    .digest("hex");
+const storeOTP = (email, otp) => {
+  const otpFilePath = `./otp/otp-${email}.txt`;
+  fs.writeFileSync(otpFilePath, otp.toString());
+  // OTP expires after 10 minutes
+  setTimeout(() => {
+    fs.unlinkSync(otpFilePath);
+  }, 10 * 60 * 1000);
+};
 
-  const user = await User.findOne({
-    resetPasswordToken,
-    resetPasswordExpires: {
-      $gt: Date.now(),
-    },
-  });
+const sendOTPEmail = async (email, otp) => {
+  const subject = 'Your OTP for Password Reset';
+  const text = `Your OTP is: ${otp}. It will expire in 10 minutes.`;
+  const html = `<p>Your OTP is: <strong>${otp}</strong>. It will expire in 10 minutes.</p>`;
+
+  // Use the SendEmail function to send the OTP
+  await SendEmail(email, subject, text, html);
+};
+
+
+export const forgetPasswordVerifyOTP = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body
+  // Check if the user exists
+  console.log("Received email:", email);  // Log received email
+  const user = await User.findOne({ email });
   if (!user) {
-    throw new ApiError(400, "Token is invalid or expired");
+    console.log(`User not found for email: ${email}`);
+    return res.status(400).json({ success: false, message: 'Invalid Email' });
   }
-  user.password = req.body.password;
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpires = undefined;
-  user.save();
-  res.status(200).json(new ApiResponse(200, "Password resets successfully"));
+
+  // Check if OTP file exists (if OTP is valid and not expired)
+  const otpFilePath = `./otp/otp-${email}.txt`;
+  if (!fs.existsSync(otpFilePath)) {
+    return res.status(400).json({ success: false, message: 'OTP has expired or is invalid' });
+  }
+
+  // Read the OTP stored in the file
+  const storedOtp = fs.readFileSync(otpFilePath, 'utf-8');
+  
+  // Verify OTP
+  if (Number(storedOtp) !== Number(otp)) {
+    return res.status(400).json({ success: false, message: 'Invalid OTP' });
+  }
+
+  // OTP verified successfully
+  return res.status(200).json({ success: true, message: 'OTP matched successfully', email });
+});
+
+
+export const forgotPasswordProcess = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  // Check if the user exists
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ success: false, message: 'Invalid Email' });
+  }
+
+  // Generate OTP
+  const otp = generateOTP();
+
+  // Store OTP in a file (with expiry)
+  storeOTP(email, otp);
+
+  // Send OTP email
+  await sendOTPEmail(email, otp);
+
+  // Respond to the user
+  return res.status(200).json({
+    success: true,
+    message: `OTP has been sent to ${email}. It will expire in 10 minutes.`,
+  });
+});
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { email, otp, newPassword } = req.body;  // Receive email, OTP, and new password from the request
+console.log(newPassword)
+  // Ensure OTP file exists for the provided email
+  const otpFilePath = `./otp/otp-${email}.txt`;
+  if (!fs.existsSync(otpFilePath)) {
+    return res.status(400).json({ success: false, message: 'OTP has expired or is invalid' });
+  }
+
+  // Read the stored OTP from the file
+  const storedOtp = fs.readFileSync(otpFilePath, 'utf-8');
+  
+  // Verify if the OTP is valid
+  if (Number(storedOtp) !== Number(otp)) {
+    return res.status(400).json({ success: false, message: 'Invalid OTP' });
+  }
+
+  // Find user by email
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ success: false, message: 'User not found' });
+  }
+  // Hash the new password before saving it
+  // const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = newPassword;  // Set the new hashed password
+  // console.log(hashedPassword)
+
+  // Remove OTP file after successful password reset
+  fs.unlinkSync(otpFilePath);  // Delete OTP file to prevent reuse
+
+  // Save the updated user object with the new password
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Password has been reset successfully',
+    user
+  });
 });
 
 export const changePassword = asyncHandler(async (req, res) => {
@@ -435,6 +529,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
     throw new ApiError(error.status || 500, "internal server error");
   }
 });
+
 export const updateProfileImage = asyncHandler(async (req, res) => {
   try {
     const {id} = req.params;
