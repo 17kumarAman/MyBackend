@@ -253,97 +253,19 @@ export const forgetPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    throw new ApiError(400, "User is not found");
+    throw new ApiError(400, "User not found");
   }
   const resetToken = await user.generateResetToken();
   await user.save();
 
   const url = `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`;
-  const message = `click on the link to reset your password . ${url}`;
+  const message = `Click on the link to reset your password: ${url}`;
 
+  // Send reset token via email
   await SendEmail(user.email, "Reset Password", message);
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, `Reset Token is sent to ${user.email}`));
-});
-
-const generateOTP = () => {
-  const otp = Math.floor(1000 + Math.random() * 9000);
-  return otp;
-};
-
-const storeOTP = (email, otp) => {
-  const otpFilePath = `./otp/otp-${email}.txt`;
-  fs.writeFileSync(otpFilePath, otp.toString());
-  // OTP expires after 10 minutes
-  setTimeout(() => {
-    fs.unlinkSync(otpFilePath);
-  }, 10 * 60 * 1000);
-};
-
-const sendOTPEmail = async (email, otp) => {
-  const subject = 'Your OTP for Password Reset';
-  const text = `Your OTP is: ${otp}. It will expire in 10 minutes.`;
-  const html = `<p>Your OTP is: <strong>${otp}</strong>. It will expire in 10 minutes.</p>`;
-
-  // Use the SendEmail function to send the OTP
-  await SendEmail(email, subject, text, html);
-};
-
-
-export const forgetPasswordVerifyOTP = asyncHandler(async (req, res) => {
-  const { email, otp } = req.body
-  // Check if the user exists
-  console.log("Received email:", email);  // Log received email
-  const user = await User.findOne({ email });
-  if (!user) {
-    console.log(`User not found for email: ${email}`);
-    return res.status(400).json({ success: false, message: 'Invalid Email' });
-  }
-
-  // Check if OTP file exists (if OTP is valid and not expired)
-  const otpFilePath = `./otp/otp-${email}.txt`;
-  if (!fs.existsSync(otpFilePath)) {
-    return res.status(400).json({ success: false, message: 'OTP has expired or is invalid' });
-  }
-
-  // Read the OTP stored in the file
-  const storedOtp = fs.readFileSync(otpFilePath, 'utf-8');
-  
-  // Verify OTP
-  if (Number(storedOtp) !== Number(otp)) {
-    return res.status(400).json({ success: false, message: 'Invalid OTP' });
-  }
-
-  // OTP verified successfully
-  return res.status(200).json({ success: true, message: 'OTP matched successfully', email });
-});
-
-
-export const forgotPasswordProcess = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-
-  // Check if the user exists
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ success: false, message: 'Invalid Email' });
-  }
-
-  // Generate OTP
-  const otp = generateOTP();
-
-  // Store OTP in a file (with expiry)
-  storeOTP(email, otp);
-
-  // Send OTP email
-  await sendOTPEmail(email, otp);
-
-  // Respond to the user
-  return res.status(200).json({
-    success: true,
-    message: `OTP has been sent to ${email}. It will expire in 10 minutes.`,
-  });
+  // Respond with success message
+  res.status(200).json(new ApiResponse(200, `Reset token sent to ${user.email}`));
 });
 
 export const resetPassword = asyncHandler(async (req, res) => {
@@ -529,7 +451,6 @@ export const updateProfile = asyncHandler(async (req, res) => {
     throw new ApiError(error.status || 500, "internal server error");
   }
 });
-
 export const updateProfileImage = asyncHandler(async (req, res) => {
   try {
     const {id} = req.params;
@@ -809,7 +730,28 @@ export const getActiveUsersCount = asyncHandler(async (req, res) => {
 
 
 
-// till this 
+const generateOTP = () => {
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  return otp;
+};
+
+const storeOTP = (email, otp) => {
+  const otpFilePath = `./otp/otp-${email}.txt`;
+  fs.writeFileSync(otpFilePath, otp.toString());
+  // OTP expires after 10 minutes
+  setTimeout(() => {
+    fs.unlinkSync(otpFilePath);
+  }, 10 * 60 * 1000);
+};
+
+const sendOTPEmail = async (email, otp) => {
+  const subject = 'Your OTP for Password Reset';
+  const text = `Your OTP is: ${otp}. It will expire in 10 minutes.`;
+  const html = `<p>Your OTP is: <strong>${otp}</strong>. It will expire in 10 minutes.</p>`;
+
+  // Use the SendEmail function to send the OTP
+  await SendEmail(email, subject, text, html);
+};
 
 const forgetPassword1 = async ({ email, otp }) => {
   // todo
@@ -826,6 +768,60 @@ const forgetPassword1 = async ({ email, otp }) => {
 
   return { success: true, message: "Otp matched successfully", email };
 };
+
+export const forgetPasswordVerifyOTP = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body
+  // Check if the user exists
+  console.log("Received email:", email);  // Log received email
+  const user = await User.findOne({ email });
+  if (!user) {
+    console.log(`User not found for email: ${email}`);
+    return res.status(400).json({ success: false, message: 'Invalid Email' });
+  }
+
+  // Check if OTP file exists (if OTP is valid and not expired)
+  const otpFilePath = `./otp/otp-${email}.txt`;
+  if (!fs.existsSync(otpFilePath)) {
+    return res.status(400).json({ success: false, message: 'OTP has expired or is invalid' });
+  }
+
+  // Read the OTP stored in the file
+  const storedOtp = fs.readFileSync(otpFilePath, 'utf-8');
+  
+  // Verify OTP
+  if (Number(storedOtp) !== Number(otp)) {
+    return res.status(400).json({ success: false, message: 'Invalid OTP' });
+  }
+
+  // OTP verified successfully
+  return res.status(200).json({ success: true, message: 'OTP matched successfully', email });
+});
+
+
+export const forgotPasswordProcess = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  // Check if the user exists
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ success: false, message: 'Invalid Email' });
+  }
+
+  // Generate OTP
+  const otp = generateOTP();
+
+  // Store OTP in a file (with expiry)
+  storeOTP(email, otp);
+
+  // Send OTP email
+  await sendOTPEmail(email, otp);
+
+  // Respond to the user
+  return res.status(200).json({
+    success: true,
+    message: `OTP has been sent to ${email}. It will expire in 10 minutes.`,
+  });
+});
 
 const forgetPassword2 = async ({ email, password }) => {
   // todo

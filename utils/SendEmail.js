@@ -7,7 +7,7 @@ export const SendEmail = async (to, subject, text, html) => {
     secure: true, 
     auth: {
       user: "info@kusheldigi.com",
-      pass: "infokushel@2025"
+      pass: "info@kushel12345"
     },
     from: "info@kusheldigi.com",
     tls: {
