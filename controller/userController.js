@@ -11,6 +11,54 @@ import { removeUndefined } from "../utils/util.js";
 import Leave from "../models/Leave/Leave.js";
 import bcrypt from "bcryptjs";
 
+
+// otpController.js
+
+import OTP from '../models/otpModel.js';  // Import OTP model
+
+// Generate OTP function
+// export const generateOTP = () => {
+//   return Math.floor(1000 + Math.random() * 9000);
+// };
+
+// Store OTP in MongoDB with an expiration time of 10 minutes
+export const storeOTPInDatabase = async (email, otp) => {
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);  // OTP expires in 10 minutes
+
+  // Store OTP in the database with an expiration timestamp
+  const otpRecord = new OTP({
+    email,
+    otp: otp.toString(),
+    expiresAt,
+  });
+
+  await otpRecord.save();
+  console.log(`OTP for ${email} has been stored in the database`);
+};
+
+// Function to validate OTP from MongoDB
+export const validateOTPFromDatabase = async (email, otp) => {
+  const otpRecord = await OTP.findOne({ email });
+
+  if (!otpRecord) {
+    return { success: false, message: 'OTP not found' };
+  }
+
+  // Check if OTP has expired
+  if (new Date() > otpRecord.expiresAt) {
+    await OTP.deleteOne({ email });  // Delete expired OTP
+    return { success: false, message: 'OTP has expired' };
+  }
+
+  if (otpRecord.otp !== otp) {
+    return { success: false, message: 'Invalid OTP' };
+  }
+
+  // OTP is valid
+  return { success: true, message: 'OTP matched successfully' };
+};
+
+
 const generateRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -269,42 +317,24 @@ export const forgetPassword = asyncHandler(async (req, res) => {
 });
 
 export const resetPassword = asyncHandler(async (req, res) => {
-  const { email, otp, newPassword } = req.body;  // Receive email, OTP, and new password from the request
-console.log(newPassword)
-  // Ensure OTP file exists for the provided email
-  const otpFilePath = `./otp/otp-${email}.txt`;
-  if (!fs.existsSync(otpFilePath)) {
-    return res.status(400).json({ success: false, message: 'OTP has expired or is invalid' });
+  const { email, otp, newPassword } = req.body;
+
+  const otpValidationResult = await validateOTPFromDatabase(email, otp);
+  if (!otpValidationResult.success) {
+    return res.status(400).json(otpValidationResult);
   }
 
-  // Read the stored OTP from the file
-  const storedOtp = fs.readFileSync(otpFilePath, 'utf-8');
-  
-  // Verify if the OTP is valid
-  if (Number(storedOtp) !== Number(otp)) {
-    return res.status(400).json({ success: false, message: 'Invalid OTP' });
-  }
-
-  // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(400).json({ success: false, message: 'User not found' });
   }
-  // Hash the new password before saving it
-  // const hashedPassword = await bcrypt.hash(newPassword, 10);
-  user.password = newPassword;  // Set the new hashed password
-  // console.log(hashedPassword)
 
-  // Remove OTP file after successful password reset
-  fs.unlinkSync(otpFilePath);  // Delete OTP file to prevent reuse
-
-  // Save the updated user object with the new password
+  user.password = newPassword;  // Hash the password before saving in production
   await user.save();
-
+  await OTP.deleteOne({ email });
   res.status(200).json({
     success: true,
     message: 'Password has been reset successfully',
-    user
   });
 });
 
@@ -770,53 +800,42 @@ const forgetPassword1 = async ({ email, otp }) => {
 };
 
 export const forgetPasswordVerifyOTP = asyncHandler(async (req, res) => {
-  const { email, otp } = req.body
-  // Check if the user exists
-  console.log("Received email:", email);  // Log received email
-  const user = await User.findOne({ email });
-  if (!user) {
-    console.log(`User not found for email: ${email}`);
-    return res.status(400).json({ success: false, message: 'Invalid Email' });
+  const { email, otp } = req.body;
+
+  // Validate OTP from the database or cache (Redis, MongoDB, etc.)
+  const otpValidationResult = await validateOTPFromDatabase(email, otp);
+
+  if (!otpValidationResult.success) {
+    // If OTP is invalid or expired, return error
+    return res.status(400).json({
+      success: false,
+      message: otpValidationResult.message || 'Invalid or expired OTP'
+    });
   }
 
-  // Check if OTP file exists (if OTP is valid and not expired)
-  const otpFilePath = `./otp/otp-${email}.txt`;
-  if (!fs.existsSync(otpFilePath)) {
-    return res.status(400).json({ success: false, message: 'OTP has expired or is invalid' });
-  }
-
-  // Read the OTP stored in the file
-  const storedOtp = fs.readFileSync(otpFilePath, 'utf-8');
-  
-  // Verify OTP
-  if (Number(storedOtp) !== Number(otp)) {
-    return res.status(400).json({ success: false, message: 'Invalid OTP' });
-  }
-
-  // OTP verified successfully
-  return res.status(200).json({ success: true, message: 'OTP matched successfully', email });
+  // OTP is valid
+  return res.status(200).json({
+    success: true,
+    message: 'OTP matched successfully',
+    email,
+  });
 });
 
 
 export const forgotPasswordProcess = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
-  // Check if the user exists
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(400).json({ success: false, message: 'Invalid Email' });
   }
 
-  // Generate OTP
   const otp = generateOTP();
+  await storeOTPInDatabase(email, otp);
 
-  // Store OTP in a file (with expiry)
-  storeOTP(email, otp);
-
-  // Send OTP email
+  // Send OTP via email
   await sendOTPEmail(email, otp);
 
-  // Respond to the user
   return res.status(200).json({
     success: true,
     message: `OTP has been sent to ${email}. It will expire in 10 minutes.`,
