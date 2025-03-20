@@ -73,29 +73,63 @@ export const CreateClient = async (req, res) => {
       Address,
       Role:"Client",
     });
-    const html = `
-  <div style="font-family: Arial, sans-serif; color: #333;">
-      <h2>Welcome to Our Platform!</h2>
-      <p>Hi ${Name},</p>
-      <p>We are thrilled to have you join us! Your account has been successfully created, and we are excited for you to explore our platform.</p>
+
+    const message = `
+    <div>
+      <p>Dear ${Name},</p>
       
-      <p><strong>Your login details:</strong></p>
+      <p>Welcome to Kushel Digi Solutions! We're thrilled to have you join our team and would like to introduce you to our HRMS system. This platform will serve as your central hub for managing all your HR-related tasks and accessing important resources.</p>
+      
+      <p>Your account has been successfully created. Below are your login details:</p>
+      
       <ul>
-        <li><strong>Email:</strong> ${Email}</li>
+        <li><strong>email:</strong> ${Email}</li>
         <li><strong>Temporary Password:</strong> ${plainTextPassword}</li>
       </ul>
-
-      <p>Please use the link below to log in for the first time. For security reasons, we strongly recommend changing your password after your first login.</p>
-      <p><a href="https://hrms.kusheldigi.com/login" style="color: #007bff; text-decoration: none;">Login Here</a></p>
-
-      <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>
-
-      <p>Welcome aboard!</p>
-      <p>Best Regards,<br/>Your Company Name</p>
-  </div>
-`;
-    await SendEmail(Email, "Welcome to Kushel Digi Solutions  Your Account is Ready!", html)
-
+      
+      <p>To log in for the first time, please use the link below. For your security, we highly recommend changing your password upon your initial login.</p>
+      
+      <p><a href="https://hrms.kusheldigi.com/login">Login Here</a></p>
+      
+      <p>If you have any questions or require assistance, our support team is here to help. Feel free to reach out to us at any time.</p>
+      
+      <p>Once again, welcome to Kushel Digi Solutions. We’re excited to have you on board!</p>
+      
+      <br>
+      <p>Best Regards,</p>
+      <p>The Kushel Digi Solutions Team</p>
+    </div>
+    `;
+    
+    const html = `
+    <div>
+      <p>Dear ${Name},</p>
+      
+      <p>Welcome to Kushel Digi Solutions! We're thrilled to have you join our team and would like to introduce you to our HRMS system. This platform will serve as your central hub for managing all your HR-related tasks and accessing important resources.</p>
+      
+      <p>Your account has been successfully created. Below are your login details:</p>
+      
+      <ul>
+        <li><strong>email:</strong> KDS${Email}</li>
+        <li><strong>Temporary Password:</strong> ${plainTextPassword}</li>
+      </ul>
+      
+      <p>To log in for the first time, please use the link below. For your security, we highly recommend changing your password upon your initial login.</p>
+      
+      <p><a href="https://hrms.kusheldigi.com/login">Login Here</a></p>
+      
+      <p>If you have any questions or require assistance, our support team is here to help. Feel free to reach out to us at any time.</p>
+      
+      <p>Once again, welcome to Kushel Digi Solutions. We’re excited to have you on board!</p>
+      
+      <br>
+      <p>Best Regards,</p>
+      <p>The Kushel Digi Solutions Team</p>
+    </div>
+    `;
+    
+    await SendEmail(Email, "Welcome to Kushel Digi Solutions – Your Account is Ready!", message, html);
+    
     return res.status(201).json({
       status: true,
       message: "done success",
