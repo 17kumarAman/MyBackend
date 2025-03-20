@@ -10,6 +10,7 @@ import bcrypt from "bcryptjs";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { SendEmail } from "../utils/SendEmail.js";
 
 const generateRefreshToken = async (userId) => {
   try {
@@ -93,7 +94,7 @@ export const CreateClient = async (req, res) => {
       <p>Best Regards,<br/>Your Company Name</p>
   </div>
 `;
-    // await mailSender(Email, "Welcome to Kushel Digi Solutions  Your Account is Ready!", html)
+    await SendEmail(Email, "Welcome to Kushel Digi Solutions  Your Account is Ready!", html)
 
     return res.status(201).json({
       status: true,
