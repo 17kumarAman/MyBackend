@@ -110,7 +110,7 @@ export const CreateClient = async (req, res) => {
       <p>Your account has been successfully created. Below are your login details:</p>
       
       <ul>
-        <li><strong>email:</strong> KDS${Email}</li>
+        <li><strong>email:</strong> ${Email}</li>
         <li><strong>Temporary Password:</strong> ${plainTextPassword}</li>
       </ul>
       
