@@ -10,16 +10,8 @@ import fs from "fs";
 import { removeUndefined } from "../utils/util.js";
 import Leave from "../models/Leave/Leave.js";
 import bcrypt from "bcryptjs";
+import OTP from '../models/otpModel.js';
 
-
-// otpController.js
-
-import OTP from '../models/otpModel.js';  // Import OTP model
-
-// Generate OTP function
-// export const generateOTP = () => {
-//   return Math.floor(1000 + Math.random() * 9000);
-// };
 
 // Store OTP in MongoDB with an expiration time of 10 minutes
 export const storeOTPInDatabase = async (email, otp) => {
@@ -58,6 +50,96 @@ export const validateOTPFromDatabase = async (email, otp) => {
   return { success: true, message: 'OTP matched successfully' };
 };
 
+const generateOTP = () => {
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  return otp;
+};
+
+
+const sendOTPEmail = async (email, otp) => {
+  const subject = 'Your OTP for Password Reset';
+  const text = `Your OTP is: ${otp}. It will expire in 10 minutes.`;
+  const html = `<p>Your OTP is: <strong>${otp}</strong>. It will expire in 10 minutes.</p>`;
+
+  // Use the SendEmail function to send the OTP
+  await SendEmail(email, subject, text, html);
+};
+export const forgetPasswordVerifyOTP = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body;
+
+  // Validate OTP from the database or cache (Redis, MongoDB, etc.)
+  const otpValidationResult = await validateOTPFromDatabase(email, otp);
+
+  if (!otpValidationResult.success) {
+    // If OTP is invalid or expired, return error
+    return res.status(400).json({
+      success: false,
+      message: otpValidationResult.message || 'Invalid or expired OTP'
+    });
+  }
+
+  // OTP is valid
+  return res.status(200).json({
+    success: true,
+    message: 'OTP matched successfully',
+    email,
+  });
+});
+
+const deleteExistingOTP = async (email) => {
+  await OTP.deleteOne({ email }); // Assuming OTPs are stored in an OTPModel collection
+};
+
+
+export const forgotPasswordProcess = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ success: false, message: 'Invalid Email' });
+  }
+
+  const otp = generateOTP();
+
+  // Remove any existing OTP for this email
+  await deleteExistingOTP(email);
+
+  // Store new OTP in database
+  await storeOTPInDatabase(email, otp);
+
+  // Send OTP via email
+  await sendOTPEmail(email, otp);
+
+  return res.status(200).json({
+    success: true,
+    message: `OTP has been sent to ${email}. It will expire in 10 minutes.`,
+  });
+});
+
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  const otpValidationResult = await validateOTPFromDatabase(email, otp);
+  if (!otpValidationResult.success) {
+    return res.status(400).json(otpValidationResult);
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ success: false, message: 'User not found' });
+  }
+
+  user.password = newPassword;  // Hash the password before saving in production
+  await user.save();
+  await OTP.deleteOne({ email });
+  res.status(200).json({
+    success: true,
+    message: 'Password has been reset successfully',
+  });
+});
+
+
 
 const generateRefreshToken = async (userId) => {
   try {
@@ -78,27 +160,27 @@ const generateRefreshToken = async (userId) => {
   }
 };
 
- export const uploadImgToCloudinary = asyncHandler(async(req ,res)=>{
+export const uploadImgToCloudinary = asyncHandler(async (req, res) => {
 
-  const {image}  = req.files;
-  
-   const details = await uploadToCloudinary(image.tempFilePath);
+  const { image } = req.files;
 
-   return res.status(200).json({
-    status:true , 
+  const details = await uploadToCloudinary(image.tempFilePath);
+
+  return res.status(200).json({
+    status: true,
     data: details.secure_url
-   })
+  })
 
 })
 
-export const getUserOwndetail = async(req ,res)=>{
-   const {userId} = req.params;
-   const userDetail = await User.findById(userId).populate("PermissionRole");
+export const getUserOwndetail = async (req, res) => {
+  const { userId } = req.params;
+  const userDetail = await User.findById(userId).populate("PermissionRole");
 
-   return res.status(200).json({
-    status:true , 
-    data:userDetail
-   })
+  return res.status(200).json({
+    status: true,
+    data: userDetail
+  })
 }
 
 function formatDate(date) {
@@ -114,18 +196,18 @@ export const getThisMonthLeave = async (req, res) => {
 
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    
+
     const formattedStartOfMonth = formatDate(startOfMonth);
 
     const leaves = await Leave.find({
       user: userId,
       from: { $gt: formattedStartOfMonth },
-      status:'Accepted'
+      status: 'Accepted'
     });
-    
+
     return res.status(200).json({
       status: true,
-      totalDays:leaves.length,
+      totalDays: leaves.length,
     });
   } catch (error) {
     console.log(error);
@@ -316,27 +398,7 @@ export const forgetPassword = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, `Reset token sent to ${user.email}`));
 });
 
-export const resetPassword = asyncHandler(async (req, res) => {
-  const { email, otp, newPassword } = req.body;
 
-  const otpValidationResult = await validateOTPFromDatabase(email, otp);
-  if (!otpValidationResult.success) {
-    return res.status(400).json(otpValidationResult);
-  }
-
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ success: false, message: 'User not found' });
-  }
-
-  user.password = newPassword;  // Hash the password before saving in production
-  await user.save();
-  await OTP.deleteOne({ email });
-  res.status(200).json({
-    success: true,
-    message: 'Password has been reset successfully',
-  });
-});
 
 export const changePassword = asyncHandler(async (req, res) => {
   const { oldpassword, newpassword, confirmpassword } = req.body;
@@ -402,7 +464,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
       AccountNumber,
       confirmAccount,
       Branch,
-      dob , 
+      dob,
       updatePassword,
       profileImage,
       leaveNumber,
@@ -410,10 +472,10 @@ export const updateProfile = asyncHandler(async (req, res) => {
 
 
     // const genpass = await bcrypt.hash(password, 10);
-    let updatepasshash=""
+    let updatepasshash = ""
 
-    if(updatePassword){
-       updatepasshash = await bcrypt.hash(updatePassword , 10);
+    if (updatePassword) {
+      updatepasshash = await bcrypt.hash(updatePassword, 10);
     }
 
     const obj = removeUndefined({
@@ -421,7 +483,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
       mobile,
       leaveNumber,
       email,
-      profileImage , 
+      profileImage,
       email1,
       gmail,
       department,
@@ -461,12 +523,12 @@ export const updateProfile = asyncHandler(async (req, res) => {
       BankIfsc,
       AccountNumber,
       confirmAccount,
-      Branch ,
-      updateProfile: false,  
-       dob , 
-       password:updatepasshash
-      
-      
+      Branch,
+      updateProfile: false,
+      dob,
+      password: updatepasshash
+
+
     });
 
     const user = await User.findByIdAndUpdate(req.user._id, obj, {
@@ -483,11 +545,11 @@ export const updateProfile = asyncHandler(async (req, res) => {
 });
 export const updateProfileImage = asyncHandler(async (req, res) => {
   try {
-    const {id} = req.params;
- 
-    const {image}  = req.files;
+    const { id } = req.params;
 
-      const details = await uploadToCloudinary(image.tempFilePath);
+    const { image } = req.files;
+
+    const details = await uploadToCloudinary(image.tempFilePath);
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
@@ -495,9 +557,9 @@ export const updateProfileImage = asyncHandler(async (req, res) => {
       { new: true } // To return the updated document after the update operation
     );
 
-           
-     console.log("a ",updatedUser);
-  
+
+    console.log("a ", updatedUser);
+
     return res
       .status(200)
       .json(new ApiResponse(200, updatedUser, "Updated User Details Successfully"));
@@ -625,7 +687,7 @@ export const UpdateUser = asyncHandler(async (req, res) => {
     });
 
 
-    
+
     const user = await User.findByIdAndUpdate(userId, updateObj, {
       new: true,
     }).select("-password");
@@ -713,23 +775,23 @@ export const getActiveUsers = asyncHandler(async (req, res) => {
 
   const activeUsers = await ActivityTracker.find({
     clockOut: '0',
-    clockIn: { $gte: twelveHoursAgo.getTime() } 
+    clockIn: { $gte: twelveHoursAgo.getTime() }
   }).populate("user");
 
   return res.status(200).json(new ApiResponse(200, activeUsers, "Active users fetched successfully"));
 });
 
-export const changeBreakIn = async(req ,res)=>{
-    const {isBreakIn , userId} = req.body;
-    console.log("is",isBreakIn , userId);
-      const userDetail = await User.findById(userId);
-       userDetail.isBreakIn = isBreakIn;
-        await userDetail.save();
+export const changeBreakIn = async (req, res) => {
+  const { isBreakIn, userId } = req.body;
+  console.log("is", isBreakIn, userId);
+  const userDetail = await User.findById(userId);
+  userDetail.isBreakIn = isBreakIn;
+  await userDetail.save();
 
-        return res.status(200).json({
-          status:true ,
-          
-        })
+  return res.status(200).json({
+    status: true,
+
+  })
 }
 
 export const getActiveUsersCount = asyncHandler(async (req, res) => {
@@ -758,31 +820,6 @@ export const getActiveUsersCount = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-const generateOTP = () => {
-  const otp = Math.floor(1000 + Math.random() * 9000);
-  return otp;
-};
-
-const storeOTP = (email, otp) => {
-  const otpFilePath = `./otp/otp-${email}.txt`;
-  fs.writeFileSync(otpFilePath, otp.toString());
-  // OTP expires after 10 minutes
-  setTimeout(() => {
-    fs.unlinkSync(otpFilePath);
-  }, 10 * 60 * 1000);
-};
-
-const sendOTPEmail = async (email, otp) => {
-  const subject = 'Your OTP for Password Reset';
-  const text = `Your OTP is: ${otp}. It will expire in 10 minutes.`;
-  const html = `<p>Your OTP is: <strong>${otp}</strong>. It will expire in 10 minutes.</p>`;
-
-  // Use the SendEmail function to send the OTP
-  await SendEmail(email, subject, text, html);
-};
-
 const forgetPassword1 = async ({ email, otp }) => {
   // todo
   let checkUser = await User.findOne({ email });
@@ -798,49 +835,6 @@ const forgetPassword1 = async ({ email, otp }) => {
 
   return { success: true, message: "Otp matched successfully", email };
 };
-
-export const forgetPasswordVerifyOTP = asyncHandler(async (req, res) => {
-  const { email, otp } = req.body;
-
-  // Validate OTP from the database or cache (Redis, MongoDB, etc.)
-  const otpValidationResult = await validateOTPFromDatabase(email, otp);
-
-  if (!otpValidationResult.success) {
-    // If OTP is invalid or expired, return error
-    return res.status(400).json({
-      success: false,
-      message: otpValidationResult.message || 'Invalid or expired OTP'
-    });
-  }
-
-  // OTP is valid
-  return res.status(200).json({
-    success: true,
-    message: 'OTP matched successfully',
-    email,
-  });
-});
-
-
-export const forgotPasswordProcess = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ success: false, message: 'Invalid Email' });
-  }
-
-  const otp = generateOTP();
-  await storeOTPInDatabase(email, otp);
-
-  // Send OTP via email
-  await sendOTPEmail(email, otp);
-
-  return res.status(200).json({
-    success: true,
-    message: `OTP has been sent to ${email}. It will expire in 10 minutes.`,
-  });
-});
 
 const forgetPassword2 = async ({ email, password }) => {
   // todo
@@ -879,8 +873,8 @@ export const uploadDocuments = async (req, res) => {
     LastOrganization,
     RelievingLetter,
     OfferLetter,
-    ExperienceLetter , 
-    ITR ,
+    ExperienceLetter,
+    ITR,
     ITR2
   } = req.files;
 
@@ -901,9 +895,9 @@ export const uploadDocuments = async (req, res) => {
       { name: 'LastOrganization', file: LastOrganization },
       { name: 'RelievingLetter', file: RelievingLetter },
       { name: 'OfferLetter', file: OfferLetter },
-      { name: 'ExperienceLetter', file: ExperienceLetter } ,
-      { name: 'ITR', file: ITR } , 
-      {name: 'ITR2' , file:ITR2}
+      { name: 'ExperienceLetter', file: ExperienceLetter },
+      { name: 'ITR', file: ITR },
+      { name: 'ITR2', file: ITR2 }
     ];
 
     let updatedDocuments = user.document || [];
@@ -942,10 +936,10 @@ export const uploadSingleImg = async (req, res) => {
   const { Image } = req.files;
 
   try {
-   
-        const details = await uploadToCloudinary(Image.tempFilePath);
 
-    res.status(200).json({ status:true , message: 'Documents uploaded successfully', link:details.secure_url });
+    const details = await uploadToCloudinary(Image.tempFilePath);
+
+    res.status(200).json({ status: true, message: 'Documents uploaded successfully', link: details.secure_url });
 
   } catch (error) {
     console.error(error);
@@ -959,21 +953,21 @@ export const DeactivateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(id);
 
   if (!user) {
- return res.status(404).json({
-  status:false ,
-  message:"User do not exist "
- })
+    return res.status(404).json({
+      status: false,
+      message: "User do not exist "
+    })
   }
 
   const newDeactivationStatus = user.isDeactivated === "Yes" ? "No" : "Yes";
 
   user.isDeactivated = newDeactivationStatus;
-  
+
   await user.save();
 
   return res.status(200).json({
-      status:true ,
-   message:`Account successfully ${newDeactivationStatus === "Yes" ? "deactivated" : "activated"}`
-})
+    status: true,
+    message: `Account successfully ${newDeactivationStatus === "Yes" ? "deactivated" : "activated"}`
+  })
 
 })
