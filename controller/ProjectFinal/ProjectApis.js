@@ -63,12 +63,12 @@ export const EditProject = async(req ,res)=>{
 
         const {projectName  , Status  ,Members ,startDate ,deadline , Description , projectId, projectOwner, client} = req.body;
 
-          if(!projectName   || !Status  || !Members || !startDate  || !deadline || !Description){
-            return res.status(403).json({
-                status:false ,
-                message:"Require all data"
-            })
-          }
+          // if(!projectName   || !Status  || !Members || !startDate  || !deadline || !Description){
+          //   return res.status(403).json({
+          //       status:false ,
+          //       message:"Require all data"
+          //   })
+          // }
 
         const resp = await Project.findByIdAndUpdate(projectId, {projectName  , Status  ,Members ,startDate ,deadline , Description, projectOwner, client},{new:true});
 
