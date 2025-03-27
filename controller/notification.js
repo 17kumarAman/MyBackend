@@ -122,3 +122,32 @@ export const deleteNotification = async(req ,res)=>{
         })
     }
 }
+
+
+export const markedNotification = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const notification = await Notification.findById(id);
+        
+        if (!notification) {
+            return res.status(404).json({
+                status: 404,
+                message: "Notification not found"
+            });
+        }
+
+        notification.IsRead = true;
+        await notification.save();
+
+        return res.status(200).json({
+            status: 200,
+            message: 'Successfully updated',
+            notification
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            message: "Internal server error"
+        });
+    }
+}

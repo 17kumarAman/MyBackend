@@ -14,7 +14,11 @@ const notificationSchema = new mongoose.Schema({
     user:[{
         type: mongoose.Types.ObjectId,
         ref: "User" 
-    }] 
+    }],
+    IsRead : {
+        type : Boolean,
+        default:false
+    }
  
 });
 

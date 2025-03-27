@@ -75,60 +75,76 @@ export const CreateClient = async (req, res) => {
     });
 
     const message = `
-    <div>
-      <p>Dear ${Name},</p>
-      
-      <p>Welcome to Kushel Digi Solutions! We're thrilled to have you join our team and would like to introduce you to our HRMS system. This platform will serve as your central hub for managing all your HR-related tasks and accessing important resources.</p>
-      
-      <p>Your account has been successfully created. Below are your login details:</p>
-      
-      <ul>
-        <li><strong>email:</strong> ${Email}</li>
-        <li><strong>Temporary Password:</strong> ${plainTextPassword}</li>
-      </ul>
-      
-      <p>To log in for the first time, please use the link below. For your security, we highly recommend changing your password upon your initial login.</p>
-      
-      <p><a href="https://hrms.kusheldigi.com/login">Login Here</a></p>
-      
-      <p>If you have any questions or require assistance, our support team is here to help. Feel free to reach out to us at any time.</p>
-      
-      <p>Once again, welcome to Kushel Digi Solutions. We’re excited to have you on board!</p>
-      
-      <br>
-      <p>Best Regards,</p>
-      <p>The Kushel Digi Solutions Team</p>
-    </div>
+   <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+  <p>Dear <strong>${Name}</strong>,</p>
+
+  <p>Welcome to <strong>Kushel Digi Solutions!</strong> We’re delighted to have you on board. Your account has been successfully created on <strong>${clientDetail.createdAt}</strong>.</p>
+
+  <p>Below are your login details:</p>
+
+  <ul>
+    <li><strong>Username:</strong> ${Email}</li>
+    <li><strong>Temporary Password:</strong> ${plainTextPassword}</li>
+  </ul>
+
+  <p>To access your account, please log in using the link below:</p>
+
+  <p>
+    <a href="https://hrms.kusheldigi.com/login" 
+       style="background-color: #007bff; color: #fff; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block;">
+      Login Here
+    </a>
+  </p>
+
+  <p><strong>For security reasons, we strongly recommend changing your password upon first login.</strong></p>
+
+  <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>
+
+  <p>We look forward to working with you!</p>
+
+  <br>
+  <p><strong>Best Regards,</strong></p>
+  <p><strong>Kushel Digi Solutions Team</strong></p>
+</div>
+
     `;
     
     const html = `
-    <div>
-      <p>Dear ${Name},</p>
-      
-      <p>Welcome to Kushel Digi Solutions! We're thrilled to have you join our team and would like to introduce you to our HRMS system. This platform will serve as your central hub for managing all your HR-related tasks and accessing important resources.</p>
-      
-      <p>Your account has been successfully created. Below are your login details:</p>
-      
-      <ul>
-        <li><strong>email:</strong> ${Email}</li>
-        <li><strong>Temporary Password:</strong> ${plainTextPassword}</li>
-      </ul>
-      
-      <p>To log in for the first time, please use the link below. For your security, we highly recommend changing your password upon your initial login.</p>
-      
-      <p><a href="https://hrms.kusheldigi.com/login">Login Here</a></p>
-      
-      <p>If you have any questions or require assistance, our support team is here to help. Feel free to reach out to us at any time.</p>
-      
-      <p>Once again, welcome to Kushel Digi Solutions. We’re excited to have you on board!</p>
-      
-      <br>
-      <p>Best Regards,</p>
-      <p>The Kushel Digi Solutions Team</p>
-    </div>
+   <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+  <p>Dear <strong>${Name}</strong>,</p>
+
+  <p>Welcome to <strong>Kushel Digi Solutions!</strong> We’re delighted to have you on board. Your account has been successfully created on <strong>${clientDetail.createdAt}</strong>.</p>
+
+  <p>Below are your login details:</p>
+
+  <ul>
+    <li><strong>Username:</strong> ${Email}</li>
+    <li><strong>Temporary Password:</strong> ${plainTextPassword}</li>
+  </ul>
+
+  <p>To access your account, please log in using the link below:</p>
+
+  <p>
+    <a href="https://hrms.kusheldigi.com/login" 
+       style="background-color: #007bff; color: #fff; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block;">
+      Login Here
+    </a>
+  </p>
+
+  <p><strong>For security reasons, we strongly recommend changing your password upon first login.</strong></p>
+
+  <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>
+
+  <p>We look forward to working with you!</p>
+
+  <br>
+  <p><strong>Best Regards,</strong></p>
+  <p><strong>Kushel Digi Solutions Team</strong></p>
+</div>
+
     `;
     
-    await SendEmail(Email, "Welcome to Kushel Digi Solutions – Your Account is Ready!", message, html);
+    await SendEmail(Email, "Welcome to Kushel Digi Solutions – Your Account Details", message, html);
     
     return res.status(201).json({
       status: true,
@@ -263,6 +279,83 @@ export const getClient = async (req, res) => {
     });
   }
 };
+
+export const clientNotification = async (req, res) => {
+  try {
+    const { title, description, client } = req.body;
+
+    if (!client) {
+      return res.status(400).json({
+        status: false,
+        message: "Client ID is required",
+      });
+    }
+
+    const userPromises = client.map(async (userName) => {
+                const ClientDetail = await Clients.findOne({ Name: userName });
+                return ClientDetail;
+            });
+
+    const clientDetail = await Promise.all(userPromises);
+
+    if (!clientDetail) {
+      return res.status(404).json({
+        status: false,
+        message: "Client not found",
+      });
+    }
+
+    const newNotification = new Notification({
+      title,
+      description,
+      user: clientDetail.map(user => user._id),
+    });
+
+    const savedNotification = await newNotification.save();
+
+    return res.status(201).json({
+      status: true,
+      message: "Notification created successfully",
+      data: savedNotification,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+export const getClientNotification = async (req, res) => {
+  try {
+    const { clientId } = req.params;
+
+    if (!clientId) {
+      return res.status(400).json({
+        status: false,
+        message: "Client ID is required",
+      });
+    }
+
+    const notifications = await Notification.find({ user: clientId })
+      .populate("user")
+      .lean();
+
+    return res.status(200).json({
+      status: true,
+      message: "Notifications fetched successfully",
+      data: notifications,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
 
 
 export const DisableClient = async (req, res) => {
