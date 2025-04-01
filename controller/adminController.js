@@ -1150,7 +1150,7 @@ export const postTermination = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1221,7 +1221,7 @@ export const updateTermination = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1274,7 +1274,7 @@ export const postWarning = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1349,7 +1349,7 @@ export const updateWarning = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1400,7 +1400,7 @@ export const postComplain = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1475,7 +1475,7 @@ export const updateComplain = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1525,7 +1525,7 @@ export const postResignation = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1594,7 +1594,7 @@ export const updateResignation = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1644,7 +1644,7 @@ export const postPromotion = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation
@@ -1706,7 +1706,7 @@ export const updatePromotion = asyncHandler(async (req, res) => {
     host: "smtpout.secureserver.net",
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     tls: {
       rejectUnauthorized: false // Temporarily bypass certificate validation

@@ -1,13 +1,14 @@
 import { createTransport } from "nodemailer";
 
 export const SendEmail = async (to, subject, text, html) => {
+  console.log(to, subject, text, html);
   const transporter = createTransport({
     host: "smtpout.secureserver.net",
     port: 465,
     secure: true, 
     auth: {
       user: "info@kusheldigi.com",
-      pass: "info@kushel12345"
+      pass: "Infokusheldigi@3030"
     },
     from: "info@kusheldigi.com",
     tls: {

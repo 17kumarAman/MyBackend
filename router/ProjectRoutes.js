@@ -22,6 +22,7 @@ router.get("/getUserTasksByProject/:userId/:projectId" , getUserTasksByProject);
 router.post("/changeTaskStatus" , changeTaskStatus);
 router.post("/createTaskTimer" , createTaskTimer);
 router.get("/getProjectTaskTimelines/:projectId" , getProjectTaskTimelines);
+router.delete("/deleteProjectFile/:fileId", deleteProjectFile)
 
 
 

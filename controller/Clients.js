@@ -163,11 +163,13 @@ export const CreateClient = async (req, res) => {
 
 export const EditClient = async (req, res) => {
   try {
-    const { Name, Email, City, State, ZipCode, PhoneNumber, Country, Address } = req.body;
+    const { Name, Email, City, State, ZipCode, PhoneNumber, Country, Address, Password } = req.body;
 
     const { clientId } = req.params;
+    const plainTextPassword = Password;
+    const hashedPassword = await bcrypt.hash(Password, 10);
 
-    const clientDetail = await Clients.findByIdAndUpdate(clientId, { Name, Email, City, State, ZipCode, PhoneNumber, Country, Address });
+    const clientDetail = await Clients.findByIdAndUpdate(clientId, { Name, Email, City, State, ZipCode, PhoneNumber, Country, Address, Password:hashedPassword });
 
     return res.status(200).json({
       status: true,

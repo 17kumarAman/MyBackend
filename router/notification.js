@@ -11,6 +11,6 @@ router.delete('/deleteNotification/:userId/:notId',deleteNotification);
 router.put('/markedNotification/:id', markedNotification);
 
 router.post('/clientNotification',clientNotification);
-router.get('getClientNotification/:id',getClientNotification)
+router.get('/getClientNotification/:id',getClientNotification)
 
 export default router;

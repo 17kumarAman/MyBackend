@@ -16,7 +16,7 @@ export const CreateProject = async(req ,res)=>{
         const {projectName , projectOwner , Status  ,Members ,startDate ,deadline , Description, client} = req.body;
 
 
-          if(!projectName || !Status  || !Members || !startDate  || !deadline || !Description ){
+          if(!projectName || !Status  || !Members || !startDate  || !deadline ){
             return res.status(403).json({
                 status:false ,
                 message:"Require all data"
@@ -653,6 +653,8 @@ export const uploadProjectFile = async (req, res) => {
     }
   };
 
+  // export deleteProjectFile
+
   export const getProjectFiles = async (req, res) => {
     try {
       const { projectId } = req.params;
@@ -682,6 +684,7 @@ export const uploadProjectFile = async (req, res) => {
 export const deleteProjectFile = async (req, res) => {
   try {
     const { fileId } = req.params;
+    console.log(fileId)
 
     if (!fileId) {
       return res.status(400).json({ status: false, message: "File ID is required" });
