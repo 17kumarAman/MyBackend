@@ -12,7 +12,8 @@ const mySchema = new mongoose.Schema({
   late: String,
   overtime: String,
   total: String,
-  message: String
+  message: String,
+  clockInTime:String
 });
 
 const ActivityTracker = mongoose.model("ActivityTracker", mySchema);

@@ -9,14 +9,14 @@ const startOfWeek = (date) => {
 };
 
 export const postActivity = asyncHandler(async (req, res) => {
-  const { clockIn, clockOut, late, overtime, total, message, date1 , todayTask } = req.body;
+  const { clockIn, clockOut, late, overtime, total, message, date1 , todayTask, clockInTime } = req.body;
 
 
   try {
     if(clockOut === 0 || clockOut==='0')
     {
       let newActivity=new ActivityTracker({
-        user: req.user?._id, date: new Date().getTime(), date1, clockIn, clockOut, late, overtime, total, message
+        user: req.user?._id, date: new Date().getTime(), date1, clockIn, clockOut, late, overtime, total, message, clockInTime
       });
       await newActivity.save();
       return res.json({
@@ -47,6 +47,32 @@ export const postActivity = asyncHandler(async (req, res) => {
     });
   }
 });
+
+export const getActivity = asyncHandler(async (req, res) => {
+  try {
+    const {userId} = req.params;
+    console.log(userId)
+    const activity = await ActivityTracker.find({user:userId})
+    if(!activity){
+      return res.status(400).json({
+        success: false,
+        message: "Not Have any activity"
+      })
+    }
+    
+    return res.status(200).json({
+      success:true,
+      message :"Activity find",
+      activity
+    })
+  } catch (error) {
+    console.error("Error in postActivity:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+})
 
 export const postActivityHr = asyncHandler(async (req, res) => {
   const { status, hours, overtime, breaks, activity, date } = req.body;

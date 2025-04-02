@@ -9,6 +9,7 @@ import {
   getStatisticsByUser,
   postActivity,
   postActivityHr,
+  getActivity
 } from "../controller/activityController.js";
 const router = Router();
 
@@ -17,6 +18,8 @@ router.post("/postActivity", isAuthenticated, postActivity);
 router.post("/postActivityHr", isAuthenticated, postActivityHr);
 
 router.get("/getActivitiesByUser", isAuthenticated, getActivitiesByUser);
+router.get("/getActivity/:userId", getActivity);
+
 
 router.get("/getStatisticsByUser", isAuthenticated, getStatisticsByUser);
 
