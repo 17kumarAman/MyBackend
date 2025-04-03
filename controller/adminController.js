@@ -898,7 +898,8 @@ export const updateAssets = asyncHandler(async (req, res) => {
     product,
     purchaseDate,
     additonal,
-    description } = req.body;
+    description,
+  status } = req.body;
 
   const { id } = req.params;
 
@@ -926,7 +927,8 @@ export const updateAssets = asyncHandler(async (req, res) => {
     product,
     purchaseDate,
     additonal,
-    description
+    description,
+    status
   });
 
   const updateApprisal = await Assets.findByIdAndUpdate(
