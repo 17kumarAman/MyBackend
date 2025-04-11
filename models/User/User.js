@@ -5,38 +5,38 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { type } from "os";
 
-
 const userSchema = new mongoose.Schema({
   fullName: {
     type: String,
     required: false,
     set: (a) => (a === "" ? undefined : a),
   },
-  netSalary:{
-    type:String,
-    default:"00"
-  }, 
-   updateProfile:{
-    type: Boolean , 
-    default: true , 
-   } , 
-  userAllowance:{
-    type:String , 
-    default:"15"
-  } , 
- 
+  netSalary: {
+    type: String,
+    default: "00",
+  },
+  updateProfile: {
+    type: Boolean,
+    default: true,
+  },
+  userAllowance: {
+    type: String,
+    default: "15",
+  },
+
   dob: {
     type: String,
-
   },
-  document: [{
-    name: String, 
-    url: String,  
-    require: false
-  }],
-EmployeeType:{
-  type:String, 
-} , 
+  document: [
+    {
+      name: String,
+      url: String,
+      require: false,
+    },
+  ],
+  EmployeeType: {
+    type: String,
+  },
   mobile: {
     type: String,
     required: false,
@@ -59,7 +59,6 @@ EmployeeType:{
   },
   joiningDate: {
     type: String,
-   
   },
   salary: {
     type: String,
@@ -89,18 +88,18 @@ EmployeeType:{
     default: "USER",
   },
 
-  PermissionRole:{
-     type:mongoose.Types.ObjectId,
-    ref:"PermissionRole", 
-    required:false,
-    set: (jkk) => (jkk === "" ? undefined : jkk), 
+  PermissionRole: {
+    type: mongoose.Types.ObjectId,
+    ref: "PermissionRole",
+    required: false,
+    set: (jkk) => (jkk === "" ? undefined : jkk),
   },
-  
-  isBreakIn:{
-    type:Boolean, 
-    default: false , 
-  } , 
- 
+
+  isBreakIn: {
+    type: Boolean,
+    default: false,
+  },
+
   status: {
     type: String,
     default: "OFFLINE",
@@ -112,16 +111,15 @@ EmployeeType:{
     set: (k) => (k === "" ? undefined : k),
   },
 
-
   // ======new=======
   employeeCode: {
     type: String,
     required: false,
     set: (l) => (l === "" ? undefined : l),
   },
-  isDeactivated:{
- type: String ,
- default: "No",
+  isDeactivated: {
+    type: String,
+    default: "No",
   },
   department: {
     type: String,
@@ -291,11 +289,11 @@ EmployeeType:{
     required: false,
     set: (rr) => (rr === "" ? undefined : rr),
   },
-//=========================Leave information ===============
-leaveNumber: {
-  type: String,
-  required: false, 
-},
+  //=========================Leave information ===============
+  leaveNumber: {
+    type: String,
+    required: false,
+  },
   // ======================Bank Information====================
   SalaryPay: {
     type: String,
@@ -334,11 +332,18 @@ leaveNumber: {
   },
   paySlipType: {
     type: String,
-    default: "Monthly Payslip"
+    default: "Monthly Payslip",
   },
   salary: {
-    type: String
-  }
+    type: String,
+  },
+  enable2fa: {
+    type: Boolean,
+    default: false,
+  },
+  secrets2fa: {
+    type: String,
+  },
 });
 
 userSchema.methods.generateAuthToken = function () {

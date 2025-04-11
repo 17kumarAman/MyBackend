@@ -11,6 +11,9 @@ import { removeUndefined } from "../utils/util.js";
 import Leave from "../models/Leave/Leave.js";
 import bcrypt from "bcryptjs";
 import OTP from '../models/otpModel.js';
+import base32 from "hi-base32";
+import * as OTPAuth from "otpauth";
+import QRCode from "qrcode";
 
 
 // Store OTP in MongoDB with an expiration time of 10 minutes
@@ -139,6 +142,108 @@ export const resetPassword = asyncHandler(async (req, res) => {
   });
 });
 
+export const Enable2FA = async (req, res) => {
+  try {
+      const { userId } = req.body;
+      console.log("Enable2FA called for:", userId);
+
+      const user = await User.findOne({ _id: userId });
+
+      if (!user) {
+          return res.status(404).json({
+              status: "fail",
+              message: "User does not exist"
+          });
+      }
+
+      // Step 1: Generate Base32 secret manually using crypto
+      const randomBuffer = crypto.randomBytes(20); // 20 bytes = 160 bits
+      const base32_secret = new OTPAuth.Secret({ buffer: randomBuffer }).base32;
+
+      // Step 2: Save secret to DB
+      await User.updateOne({ _id: userId }, { secrets2fa: base32_secret });
+
+      // Step 3: Create OTPAuth URL
+      const issuer = "hrms.kusheldigi.com";
+      const label = user.email;
+
+      const otpauth_url = `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(label)}?secret=${base32_secret}&issuer=${encodeURIComponent(issuer)}&algorithm=SHA1&digits=6&period=30`;
+
+      console.log("Generated OTPAuth URL:", otpauth_url);
+
+      // Step 4: Generate QR
+      QRCode.toDataURL(otpauth_url, (err, qrUrl) => {
+          if (err) {
+              console.error("QR Code Error:", err);
+              return res.status(500).json({
+                  status: "fail",
+                  message: "QR code generation failed"
+              });
+          }
+
+          return res.json({
+              status: "success",
+              data: {
+                  qrCodeUrl: qrUrl,
+                  secret: base32_secret
+              }
+          });
+      });
+
+  } catch (error) {
+      console.error("Enable2FA Error:", error);
+      return res.status(500).json({
+          status: "fail",
+          message: "Something went wrong"
+      });
+  }
+};
+
+
+const generateBase32Secret = () => {
+  const buffer = crypto.randomBytes(15);
+  return base32.encode(buffer).replace(/=/g, "").substring(0, 32);
+};
+
+export const Verify2fa = async (req, res) => {
+  const { userId, token } = req.body;
+  const user = await User.findOne({ _id: userId });
+
+  if (!user) {
+      return res.status(404).json({
+          status: "fail",
+          message: "User does not exist"
+      });
+  }
+
+  const totp = new OTPAuth.TOTP({
+      issuer: "codeninjainsights.com",
+      label: "codeninjainsights",
+      algorithm: "SHA1",
+      digits: 6,
+      secret: user.secrets2fa
+  });
+
+  const delta = totp.validate({ token });
+
+  if (delta === null) {
+      return res.status(401).json({
+          status: "fail",
+          message: "Authentication failed"
+      });
+  }
+
+  if (!user.enable2fa) {
+      await User.updateOne({ _id: userId }, { enable2fa: true });
+  }
+
+  res.json({
+      status: "success",
+      data: {
+          otp_valid: true
+      }
+  });
+};
 
 
 const generateRefreshToken = async (userId) => {
