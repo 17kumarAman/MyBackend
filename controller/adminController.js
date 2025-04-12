@@ -334,8 +334,8 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       AccountNumber,
       confirmAccount,
       Branch,
-      employeeType , 
-      PermissionRole , 
+      employeeType,
+      PermissionRole,
       employeeCode
     } = req.body;
 
@@ -439,7 +439,7 @@ Kushel Digi Solutions
       AccountNumber,
       confirmAccount,
       Branch,
-      EmployeeType: employeeType ,
+      EmployeeType: employeeType,
       PermissionRole: (PermissionRole === "Select Role" || PermissionRole === "") ? null : PermissionRole
     });
 
@@ -743,7 +743,7 @@ export const fetchEmployee = asyncHandler(async (req, res) => {
 })
 
 export const fetchAllEmployee = asyncHandler(async (req, res) => {
-  const emp = await User.find({isDeactivated:"No"});
+  const emp = await User.find({ isDeactivated: "No" });
 
   return res.status(200).json({
     status: true,
@@ -841,17 +841,17 @@ export const postAssets = asyncHandler(async (req, res) => {
     <a href="https://hrms.kusheldigi.com/accept/${apprisal?._id}">Accept Assets</a>
     </div>`);
 
-    const title = `New Assets`;
+  const title = `New Assets`;
 
-    const user = users?._id; 
-    
-    const anss = await Notification.create({
-        title,
-        description,
-        user: [user], 
-    });
-    
-    
+  const user = users?._id;
+
+  const anss = await Notification.create({
+    title,
+    description,
+    user: [user],
+  });
+
+
 
   return res
     .status(200)
@@ -899,7 +899,7 @@ export const updateAssets = asyncHandler(async (req, res) => {
     purchaseDate,
     additonal,
     description,
-  status } = req.body;
+    status } = req.body;
 
   const { id } = req.params;
 
@@ -997,17 +997,19 @@ export const updateTracking = asyncHandler(async (req, res) => {
 // ========================announcement controller================
 export const postAnnouncement = asyncHandler(async (req, res) => {
   const { title, Branch, Department, Employee, startDate, endDate, description } = req.body;
-
+  console.log('here')
   // retreiving all the user of same department and designation 
   if (Employee === "All Employee") {
-
-    const users = await User.find({ department: Department , isDeactivated:"No"  });
-
+    console.log(Employee)
+    const users = await User.find({ isDeactivated: "No" });
     for (const user of users) {
+      console.log(user.department)
 
       // do here
+      console.log(user.email)
 
-      const notify = await Notification.create({ title, description, user: user?._id });
+      await Notification.create({ title, description, user: user?._id });
+      // console.log(users)
 
       await mailSender(user.email, "Create Annnouncement ", `<div>
       <div>title: ${title}</div>
@@ -1028,7 +1030,7 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
 
     const user = await User.findOne({ fullName: Employee });
     const notify = await Notification.create({ title, description, user: user?._id });
-
+    console.log(user.email)
     await mailSender(user?.email, "Create Annnouncement ", `<div>
     <div>title: ${title}</div>
     <div>Branch: ${Branch}</div>
@@ -1207,55 +1209,69 @@ export const updateTermination = asyncHandler(async (req, res) => {
     description } = req.body;
 
   const { id } = req.params;
+  console.log(id)
 
-  // const users = await User.findOne({ _id: id });
-  const users = await User.findOne({ fullName: Employee });
-
-  let updateObj = removeUndefined({
-    Employee,
-    type,
-    noticeDate,
-    terminationDate,
-    description
-  });
-
-  let transporter = createTransport({
-    host: "smtpout.secureserver.net",
-    auth: {
-      user: "info@kusheldigi.com",
-      pass: "Infokusheldigi@3030"
-    },
-    tls: {
-      rejectUnauthorized: false // Temporarily bypass certificate validation
+  try {
+    // Find user by fullName
+    const user = await User.findOne({ fullName: Employee });
+    if (!user) {
+      return res.status(404).json(new ApiResponse(404, null, "User not found"));
     }
-  });
 
-  let info = await transporter.sendMail({
-    from: 'Kushel Digi Solutions" <info@kusheldigi.com>',
-    to: `${users.email}`,
-    subject: "Regarding Termination",
-    html: `<div>
-      <div>Termination Type: ${type}</div>
-      <div>NoticeDate: ${noticeDate}</div>
-      <div>TerminationDate: ${terminationDate}</div>
-      <div>Description: ${description}</div>
+    // Prepare update object, removing undefined properties
+    const updateObj = removeUndefined({
+      Employee,
+      type,
+      noticeDate,
+      terminationDate,
+      description
+    });
+
+    // Setup email transporter
+    const transporter = createTransport({
+      host: "smtpout.secureserver.net",
+      auth: {
+        user: "info@kusheldigi.com",
+        pass: "Infokusheldigi@3030"
+      },
+      tls: {
+        rejectUnauthorized: false // Temporarily bypass certificate validation
+      }
+    });
+
+    // Send email
+    await transporter.sendMail({
+      from: '"Kushel Digi Solutions" <info@kusheldigi.com>',
+      to: user.email,
+      subject: "Regarding Termination",
+      html: `<div>
+        <div>Termination Type: ${type}</div>
+        <div>Notice Date: ${noticeDate}</div>
+        <div>Termination Date: ${terminationDate}</div>
+        <div>Description: ${description}</div>
       </div>`
-  });
+    });
 
-  console.log(`mail send to ${users}`);
+    console.log(`Mail sent to ${user.email}`);
 
-  const updateTermination = await Termination.findByIdAndUpdate(
-    id,
-    {
-      $set: updateObj,
-    },
-    {
-      new: true,
+    // Update termination record
+    const updatedTermination = await Termination.findByIdAndUpdate(
+      id,
+      { $set: updateObj },
+      { new: true, runValidators: true } // Ensure validators run
+    );
+
+    if (!updatedTermination) {
+      return res.status(404).json(new ApiResponse(404, null, "Termination record not found"));
     }
-  );
-  return res
-    .status(200)
-    .json(new ApiResponse(200, updateTermination, "Updated  Successfully"));
+
+    console.log(updatedTermination);
+    return res.status(200).json(new ApiResponse(200, updatedTermination, "Updated Successfully"));
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(new ApiResponse(500, null, "Server error"));
+  }
 });
 
 // ================== warning api=================
@@ -2056,52 +2072,67 @@ export const updateTransfer = asyncHandler(async (req, res) => {
 
 // =====================holiday controller=============
 export const createHoliday = asyncHandler(async (req, res) => {
+  const { holidayName, startDate, endDate } = req.body;
+
   try {
+    console.log('Creating holiday:', holidayName);
 
-    const { holidayName, startDate, endDate } = req.body;
+    // Find active users and extract only necessary fields
+    const users = await User.find({ isDeactivated: "No" }).select("email");
+    console.log(users)
 
-    const users = await User.find({
-      isDeactivated:{
-        $in:[
-          "No"
-        ]
-      }
-    })
 
-    //  Extract email addresses from the retrieved user 
-    const emailList = users.map(user => user.email);
-
-    for (const email of emailList) {
-      // await SendEmail(email);
-      await mailSender(email, `Regarding Holiday`, `<div>
-       <div>Holiday: ${holidayName}</div>
-       <div>Start Date: ${startDate}</div>
-       <div>endDate: ${endDate}</div>
-       </div>`);
-      console.log(`Email sent to ${email}`);
+    if (!users.length) {
+      return res.status(404).json({
+        status: false,
+        message: "No active users found to notify",
+      });
     }
 
-    const holiday = await Holiday.create({ holidayName, startDate, endDate });
+    const emailList = users.map(user => user.email);
 
+    // Prepare email body once
+    const emailSubject = "Regarding Holiday";
+    const emailBody = `
+    <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 8px; color: #333;">
+      <h2 style="text-align: center; color: #4f46e5;">Regarding Update</h2>
+      <div style="margin-top: 20px;">
+        <p style="font-size: 16px; margin: 8px 0;"><strong>Holiday Name:</strong> ${holidayName}</p>
+        <p style="font-size: 16px; margin: 8px 0;"><strong>Start Date:</strong> ${startDate}</p>
+        <p style="font-size: 16px; margin: 8px 0;"><strong>End Date:</strong> ${endDate}</p>
+      </div>
+      <div style="margin-top: 30px; text-align: center;">
+        <p style="font-size: 14px; color: #6b7280;">Please mark your calendar accordingly!</p>
+      </div>
+    </div>
+  `;
+
+
+    // Send emails in parallel (better than awaiting one-by-one)
+    await Promise.all(
+      emailList.map(email =>
+        mailSender(email, emailSubject, emailBody)
+          .catch(err => console.error(`Failed to send email to ${email}:`, err))
+      )
+    );
+
+    // Create the holiday after sending emails
+    const holiday = await Holiday.create({ holidayName, startDate, endDate });
 
     return res.status(200).json({
       status: true,
-      message: 'Holiday created successfully',
+      message: "Holiday created successfully",
       data: holiday,
     });
 
-
-
   } catch (error) {
-    console.log("error ", error);
-
+    console.error("Error creating holiday:", error);
     return res.status(500).json({
-      status: 500,
-      message: "Internal server error "
-    })
+      status: false,
+      message: "Internal server error",
+    });
   }
-})
-
+});
 export const getHoliday = asyncHandler(async (req, res) => {
   try {
 
@@ -2135,40 +2166,74 @@ export const deleteHoliday = asyncHandler(async (req, res) => {
 
 export const updateHoliday = asyncHandler(async (req, res) => {
   const { holidayName, startDate, endDate } = req.body;
-
   const { id } = req.params;
 
-  let updateObj = removeUndefined({
-    holidayName, startDate, endDate
-  });
+  try {
+    const updateObj = removeUndefined({ holidayName, startDate, endDate });
 
-  const users = await User.find({});
-
-  //  Extract email addresses from the retrieved user 
-  const emailList = users.map(user => user.email);
-
-  for (const email of emailList) {
-    // await SendEmail(email);
-    await mailSender(email, `Regarding Holiday`, `<div>
-     <div>Holiday: ${holidayName}</div>
-     <div>Start Date: ${startDate}</div>
-     <div>endDate: ${endDate}</div>
-     </div>`);
-    console.log(`Email sent to ${email}`);
-  }
-
-  const updateHoliday = await Holiday.findByIdAndUpdate(
-    id,
-    {
-      $set: updateObj,
-    },
-    {
-      new: true,
+    if (Object.keys(updateObj).length === 0) {
+      return res.status(400).json({
+        status: false,
+        message: "No fields provided for update",
+      });
     }
-  );
-  return res
-    .status(200)
-    .json(new ApiResponse(200, updateHoliday, "Updated  Successfully"));
+
+    // Update the holiday first
+    const updatedHoliday = await Holiday.findByIdAndUpdate(
+      id,
+      { $set: updateObj },
+      { new: true }
+    );
+
+    if (!updatedHoliday) {
+      return res.status(404).json({
+        status: false,
+        message: "Holiday not found",
+      });
+    }
+
+    // Find active users and extract only email field
+    const users = await User.find({ isDeactivated: "No" }).select("email");
+
+    if (users.length) {
+      const emailList = users.map(user => user.email);
+
+      const emailSubject = `Update Regarding ${holidayName || "Holiday"}`;
+      const emailBody = `
+  <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9fafb; border-radius: 8px; color: #333;">
+    <h2 style="text-align: center; color: #4f46e5;">Holiday Update</h2>
+    <div style="margin-top: 20px;">
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Holiday Name:</strong> ${holidayName}</p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>Start Date:</strong> ${startDate}</p>
+      <p style="font-size: 16px; margin: 8px 0;"><strong>End Date:</strong> ${endDate}</p>
+    </div>
+    <div style="margin-top: 30px; text-align: center;">
+      <p style="font-size: 14px; color: #6b7280;">Please mark your calendar accordingly!</p>
+    </div>
+  </div>
+`;
+
+
+      // Send all emails in parallel
+      await Promise.all(
+        emailList.map(email =>
+          mailSender(email, emailSubject, emailBody)
+            .catch(err => console.error(`Failed to send email to ${email}:`, err))
+        )
+      );
+    }
+
+    return res.status(200).json(
+      new ApiResponse(200, updatedHoliday, "Holiday updated successfully")
+    );
+
+  } catch (error) {
+    console.error("Error updating holiday:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
 });
 
 // ============================== trip controller==================
@@ -2333,22 +2398,22 @@ export const deleteLeads = asyncHandler(async (req, res) => {
 });
 
 export const closeLead = async (req, res) => {
-  const { id } = req.params; 
+  const { id } = req.params;
 
   try {
-    const currentDate = new Date().toISOString(); 
-    
+    const currentDate = new Date().toISOString();
+
     const lead = await Lead.findByIdAndUpdate(id, {
       status: 'Close',
       closeDate: currentDate,
-    }, { new: true }); 
+    }, { new: true });
 
     if (!lead) {
-      return res.status(404).json({ status:false, message: 'Lead not found' });
+      return res.status(404).json({ status: false, message: 'Lead not found' });
     }
 
     return res.status(200).json({
-      status:true ,
+      status: true,
       lead
     });
   } catch (error) {
@@ -2360,26 +2425,26 @@ export const getAllCloseLead = async (req, res) => {
 
   try {
 
-   const  ans = await Lead.find({status:"Close"}).sort({Date:-1});
-   return res.status(200).json({
-    status:ans , 
-    
-   })
+    const ans = await Lead.find({ status: "Close" }).sort({ Date: -1 });
+    return res.status(200).json({
+      status: ans,
+
+    })
   } catch (error) {
     return res.status(500).json({ message: 'Server error', error });
   }
 };
 
 export const getAllCloseLead2 = async (req, res) => {
-  
-  const {id} =req.body;
+
+  const { id } = req.body;
 
   try {
 
-   const  ans = await Lead.find({status:"Close" , LeadOwner:id}).sort({Date:-1});
-   return res.status(200).json({
-    status:ans , 
-   })
+    const ans = await Lead.find({ status: "Close", LeadOwner: id }).sort({ Date: -1 });
+    return res.status(200).json({
+      status: ans,
+    })
   } catch (error) {
     return res.status(500).json({ message: 'Server error', error });
   }
@@ -2410,7 +2475,7 @@ export const getTodayLead = async (req, res) => {
 
 export const getTodayLead2 = async (req, res) => {
   try {
-    const {id} = req.body;
+    const { id } = req.body;
     const startOfToday = new Date();
     startOfToday.setUTCHours(0, 0, 0, 0);
 
@@ -2418,7 +2483,7 @@ export const getTodayLead2 = async (req, res) => {
     endOfToday.setUTCHours(23, 59, 59, 999);
 
     const ans = await Lead.find({
-      createAt: { $gte: startOfToday, $lte: endOfToday } , 
+      createAt: { $gte: startOfToday, $lte: endOfToday },
       LeadOwner: id
     });
 
