@@ -294,3 +294,87 @@ export const deleteAttendence = async (req, res) => {
     })
   }
 }
+
+
+export const getMonthlyWorkingHours = async (req, res) => {
+  try {
+    const { month, year, user } = req.body;
+
+    const regex = new RegExp(`\\d{2}/${month}/${year}`);
+
+    const clock = await Clock.find({
+      user: user,
+      Date: { $regex: regex }
+    });
+
+    if (!clock.length) {
+      return res.status(400).json({
+        success: false,
+        message: "No clock entries found for this month."
+      });
+    }
+
+    let totalHours = 0;
+
+    const updatedClock = clock.map(entry => {
+      let dailyHours = null;
+
+      // Check if clockIn and clockOut are valid
+      if (
+        entry.clockIn &&
+        entry.clockOut &&
+        entry.clockIn !== "undefined" &&
+        entry.clockOut !== "undefined"
+      ) {
+        const dateParts = entry.Date.split('/');
+        const day = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1;
+        const year = parseInt(dateParts[2], 10);
+
+        const clockInTime = new Date(year, month, day, ...convertTo24Hour(entry.clockIn));
+        let clockOutTime = new Date(year, month, day, ...convertTo24Hour(entry.clockOut));
+
+        // Handle overnight shifts
+        if (clockOutTime < clockInTime) {
+          clockOutTime.setDate(clockOutTime.getDate() + 1);
+        }
+
+        const diffMs = clockOutTime - clockInTime;
+        dailyHours = diffMs / (1000 * 60 * 60); // milliseconds to hours
+
+        totalHours += dailyHours;
+      }
+
+      return {
+        ...entry.toObject(),
+        dailyHours: dailyHours !== null ? Number(dailyHours.toFixed(2)) : null
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      totalHours: Number(totalHours.toFixed(2)),
+      clock: updatedClock
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+};
+
+function convertTo24Hour(timeStr) {
+  const [time, modifier] = timeStr.split(' ');
+  let [hours, minutes, seconds] = time.split(':').map(Number);
+
+  if (modifier === 'PM' && hours !== 12) {
+    hours += 12;
+  }
+  if (modifier === 'AM' && hours === 12) {
+    hours = 0;
+  }
+
+  return [hours, minutes, seconds];
+}
