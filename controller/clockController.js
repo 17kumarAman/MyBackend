@@ -298,8 +298,8 @@ export const deleteAttendence = async (req, res) => {
 
 export const getMonthlyWorkingHours = async (req, res) => {
   try {
-    const { month, year, user } = req.body;
-
+    const { month, year, user } = req.query;
+    console.log(month, year, user)
     const regex = new RegExp(`\\d{2}/${month}/${year}`);
 
     const clock = await Clock.find({
