@@ -12,7 +12,9 @@ import LeadSource from "../models/LeadSource/LeadSource.js";
 
 import User from "../models/User/User.js";
 import LeadStat from "../models/LeadStat/LeadStat.js";
+import LeadTypeCategory from "../models/LeadTypeCategory/LeadTypeCategory.js";
 import FollowUpType from "../models/FollowUpType/FollowUpType.js";
+import LeadTypeSubCategory from "../models/LeadTypeSubCategory/LeadTypeSubCategory.js";
 export const postLeaveType = asyncHandler(async (req, res) => {
   const { name, days } = req.body;
   const existLeave = await LeaveType.findOne({ name });
@@ -269,34 +271,34 @@ export const deleteDesignation = asyncHandler(async (req, res) => {
 });
 
 
-export const createDocSetup = asyncHandler(async(req ,res)=>{
- try{
-  const {name , requiredField,documentType} = req.body;
-  console.log('naesm ',name , requiredField);
-
-  
+export const createDocSetup = asyncHandler(async (req, res) => {
+  try {
+    const { name, requiredField, documentType } = req.body;
+    console.log('naesm ', name, requiredField);
 
 
-  const details = await Document.create({name , requiredField:requiredField, documentType:documentType});
 
-  //  console.log({documentType:documentType});
 
-   const userEmployee = await User.findOne({fullName: req.user._id});
+    const details = await Document.create({ name, requiredField: requiredField, documentType: documentType });
 
-   console.log(userEmployee);
+    //  console.log({documentType:documentType});
 
-   for (user of userEmployee){
+    const userEmployee = await User.findOne({ fullName: req.user._id });
+
+    console.log(userEmployee);
+
+    for (user of userEmployee) {
       const ans = await details.save();
       console.log(ans);
-   }
+    }
 
-   return res.status(200).json({
-    status:true ,
-    message:"Successfuly created"
-   })
- } catch(error){
-  console.log(error);
- }
+    return res.status(200).json({
+      status: true,
+      message: "Successfuly created"
+    })
+  } catch (error) {
+    console.log(error);
+  }
 })
 
 
@@ -335,42 +337,42 @@ export const updateDocSetup = asyncHandler(async (req, res) => {
 });
 
 
-export const deleteDocSetup = asyncHandler(async(req ,res)=>{
-  try{
+export const deleteDocSetup = asyncHandler(async (req, res) => {
+  try {
 
-    const {id} = req.params;
+    const { id } = req.params;
 
-     const details = await Document.findByIdAndDelete(id);
+    const details = await Document.findByIdAndDelete(id);
 
 
-     return res.status(200).json({
-      status:true ,
-      message:"Successfuly deleted"
-     })
-     
-  }catch(error){
+    return res.status(200).json({
+      status: true,
+      message: "Successfuly deleted"
+    })
+
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false ,
-      message:"INTERNAL Server error "
+      status: false,
+      message: "INTERNAL Server error "
     })
   }
 })
 
 
-export const fetchAllDocs = asyncHandler(async(req ,res)=>{
-  try{
+export const fetchAllDocs = asyncHandler(async (req, res) => {
+  try {
 
     const allDocs = await Document.find({});
 
     return res.status(200).json({
-      status:true ,
-      message:"done " , 
-      data:allDocs
+      status: true,
+      message: "done ",
+      data: allDocs
     })
 
-  } catch(error){
- console.log(error);
+  } catch (error) {
+    console.log(error);
   }
 })
 
@@ -402,7 +404,7 @@ export const getLeadSources = asyncHandler(async (req, res) => {
 export const updateLeadSources = asyncHandler(async (req, res) => {
   const { name } = req.body;
   const { id } = req.params;
-  let updateObj = removeUndefined({name});
+  let updateObj = removeUndefined({ name });
   // console.log(status, name);
   // console.log(id);
 
@@ -456,7 +458,7 @@ export const getIndustry = asyncHandler(async (req, res) => {
 export const updateIndustry = asyncHandler(async (req, res) => {
   const { name } = req.body;
   const { id } = req.params;
-  let updateObj = removeUndefined({name});
+  let updateObj = removeUndefined({ name });
   // console.log(status, name);
   // console.log(id);
 
@@ -513,7 +515,7 @@ export const getLeadStat = asyncHandler(async (req, res) => {
 export const updateLeadStat = asyncHandler(async (req, res) => {
   const { name } = req.body;
   const { id } = req.params;
-  let updateObj = removeUndefined({name});
+  let updateObj = removeUndefined({ name });
   // console.log(status, name);
   // console.log(id);
 
@@ -570,7 +572,7 @@ export const getFollow = asyncHandler(async (req, res) => {
 export const updateFollow = asyncHandler(async (req, res) => {
   const { name } = req.body;
   const { id } = req.params;
-  let updateObj = removeUndefined({name});
+  let updateObj = removeUndefined({ name });
   // console.log(status, name);
   // console.log(id);
 
@@ -599,8 +601,236 @@ export const deleteFollow = asyncHandler(async (req, res) => {
 });
 
 
+// ==================lead type category========================
+
+export const postLeadCategory = asyncHandler(async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    const existingCategory = await LeadTypeCategory.findOne({ name: name.trim() });
+    if (existingCategory) {
+      return res.status(400).json({
+        success: false,
+        message: "Category name already exists",
+      });
+    }
+
+    const newCategory = await LeadTypeCategory.create({ name: name.trim() });
+
+    return res.status(201).json({
+      success: true,
+      message: "New category added successfully",
+      data: newCategory,
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+});
+
+
+export const getLeadCategories = asyncHandler(async (req, res) => {
+  try {
+    const allCategories = await LeadTypeCategory.find();
+    return res.status(200).json({
+      success: true,
+      message: "All categories fetched successfully",
+      data: allCategories,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+});
+
+
+export const updateLeadCategory = asyncHandler(async (req, res) => {
+  try {
+    const { name } = req.body;
+    const { id } = req.params;
+
+    const category = await LeadTypeCategory.findById(id);
+
+    if (category) {
+      category.name = name;
+      const updatedCategory = await category.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Lead category updated successfully",
+        data: updatedCategory,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+});
+
+export const deleteLeadTypeCategory = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedCategory = await LeadTypeCategory.findByIdAndDelete(id);
+
+    if (deletedCategory) {
+      return res.status(200).json({
+        success: true,
+        message: "Lead type category deleted successfully",
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "Lead type category not found",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+});
+
+// ============================lead type subCategory ====================
+
+
+export const postLeadSubCategory = asyncHandler(async (req, res) => {
+  try {
+    const { leadCategory, name } = req.body;
+
+    // 1. Validate parent category exists
+    const validLeadCategory = await LeadTypeCategory.findById(leadCategory);
+    if (!validLeadCategory) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid LeadTypeCategory ID provided.",
+      });
+    }
+
+    // 2. Check duplicate subcategory under same parent
+    const existingSubCategory = await LeadTypeSubCategory.findOne({
+      name: name.trim(),
+      category: leadCategory
+    });
+    if (existingSubCategory) {
+      return res.status(400).json({
+        success: false,
+        message: "Subcategory name already exists under this category.",
+      });
+    }
+
+    // 3. Create new subcategory
+    const newSubCategory = await LeadTypeSubCategory.create({
+      name: name.trim(),
+      category: leadCategory
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "New subcategory added successfully",
+      data: newSubCategory,
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+});
 
 
 
+export const getSubCategory = asyncHandler(async (req, res) => {
+  try {
+    const allSubCategory = await LeadTypeSubCategory.find({})
+      .populate("category");
+
+    return res.status(200).json({
+      success: true,
+      message: "All subcategories fetched successfully",
+      data: allSubCategory,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
+  }
+});
+
+
+// ─── UPDATE SUBCATEGORY ───────────────────────────────────────────────
+export const updateSubCategory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { name, leadCategory } = req.body;
+  console.log(id,name,leadCategory)
+
+  if (leadCategory) {
+    const cat = await LeadTypeCategory.findById(leadCategory);
+    if (!cat) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid parent category ID",
+      });
+    }
+  }
+
+  const updates = {};
+  if (name) updates.name = name.trim();
+  if (leadCategory) updates.category = leadCategory;
+
+  const updatedSubCat = await LeadTypeSubCategory.findByIdAndUpdate(
+    id,
+    updates,
+    {
+      new: true,
+      runValidators: true,
+    }
+  ).populate("category", "name");
+
+  if (!updatedSubCat) {
+    return res.status(404).json({
+      success: false,
+      message: "Subcategory not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Subcategory updated successfully",
+    data: updatedSubCat,
+  });
+});
+
+// ─── DELETE SUBCATEGORY ───────────────────────────────────────────────
+export const deleteSubCategory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+console.log(id)
+  const deleted = await LeadTypeSubCategory.findByIdAndDelete(id);
+  if (!deleted) {
+    return res.status(404).json({
+      success: false,
+      message: "Subcategory not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Subcategory deleted successfully",
+  });
+});
 
 

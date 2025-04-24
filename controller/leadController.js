@@ -50,12 +50,13 @@ export const createLead = async (req, res) => {
       ZipCode,
       Country,
       DescriptionInfo,
-      date
+      date,
+      dynamicFields
     } = req.body;
 
     const leadDetail = await Lead.create({
-      LeadOwner: LeadOwner,
-      Company: Company,
+      LeadOwner,
+      Company,
       FirstName,
       LastName,
       Title,
@@ -81,19 +82,20 @@ export const createLead = async (req, res) => {
       Country,
       DescriptionInfo,
       image,
-      date
+      date,
+      dynamicFields
     });
 
     return res.status(200).json({
       status: true,
-      message: "Successfuly created ",
+      message: "Successfully created",
       data: leadDetail,
     });
   } catch (error) {
     console.log("error ", error);
     return res.status(500).json({
       status: false,
-      message: "Internal server error ",
+      message: "Internal server error",
     });
   }
 };
@@ -911,7 +913,8 @@ export const editLead = async (req, res) => {
       ZipCode,
       Country,
       DescriptionInfo,
-      date
+      date,
+      dynamicFields
     } = req.body;
 
     // Ensure id is passed as a parameter
@@ -948,7 +951,8 @@ export const editLead = async (req, res) => {
         ZipCode,
         Country,
         DescriptionInfo,
-        date
+        date,
+        dynamicFields
       },
       { new: true }
     );
@@ -962,7 +966,7 @@ export const editLead = async (req, res) => {
     console.log("error ", error);
     return res.status(500).json({
       message: "Internal server error",
-      error: error.message, // Sending specific error message to client
+      error: error.message, 
     });
   }
 };
