@@ -4,13 +4,13 @@ import Clock from "../models/Clock/clock.js"
 export const createClock = async (req, res) => {
   try {
 
-    const { clockInDetail, clockOutDetail, date, breakTime , todayTask } = req.body;
+    const { clockInDetail, clockOutDetail, date, breakTime, todayTask } = req.body;
 
     const { userId } = req.params;
 
     let overTime = "00";
 
-    const clockDetails = await Clock.create({ Date: date, clockIn: clockInDetail, clockOut: clockOutDetail, user: userId, breakTime: breakTime, overTime: overTime , todayTask });
+    const clockDetails = await Clock.create({ Date: date, clockIn: clockInDetail, clockOut: clockOutDetail, user: userId, breakTime: breakTime, overTime: overTime, todayTask });
 
 
     return res.status(200).json({
@@ -39,7 +39,7 @@ export const getClockByUserDate = async (req, res) => {
       Date: date,
     }).select('clockIn clockOut breakTime Note todayTask').populate("user");
 
-      
+
 
     return res.status(200).json({
       status: true,
@@ -56,7 +56,7 @@ export const getClockByUserDate = async (req, res) => {
 };
 export const SaveClockNote = async (req, res) => {
   try {
-    const { date , Note } = req.body;
+    const { date, Note } = req.body;
     const { userId } = req.params;
 
     const clockEntries = await Clock.findOne({
@@ -67,7 +67,7 @@ export const SaveClockNote = async (req, res) => {
     clockEntries.Note = Note;
     await clockEntries.save();
 
-      
+
 
     return res.status(200).json({
       status: true,
@@ -137,13 +137,13 @@ function compareDates1(date3, date4) {
     return
   }
 
-  else if(!date3Parts || date3Parts.length < 5 || date4Parts || date4Parts.length){
-    return 
+  else if (!date3Parts || date3Parts.length < 5 || date4Parts || date4Parts.length) {
+    return
   }
 
-  else{
+  else {
     const date4 = (date3Parts * date4Parts) / date3;
-    const data5 =  date4.split('/',``).splice(0,4).toTimeString();
+    const data5 = date4.split('/', ``).splice(0, 4).toTimeString();
     return data5;
   }
 }
@@ -151,20 +151,20 @@ function compareDates1(date3, date4) {
 
 export const getAttendanceDetails = async (req, res) => {
 
-  const { type, date, month, userId, department } = req.body;
-
+  const { type, date, month, userId, department,year } = req.body;
+  console.log(year,date, month)
   if (type === "monthly") {
 
     if (userId) {
-      const startDate = new Date(`2024-${month}-01`);
+      const startDate = new Date(`${year}-${month}-01`);
       const formattedStartDate = startDate.toLocaleDateString("en-GB", {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric' // Use 'numeric' for full year format
       });
-      const lastDay = new Date(2024, month, 0).getDate();
+      const lastDay = new Date(year, month, 0).getDate();
 
-      const endDate = new Date(2024, month - 1, lastDay);
+      const endDate = new Date(year, month - 1, lastDay);
 
       const formattedEndDate = endDate.toLocaleDateString("en-GB", {
         day: '2-digit',
@@ -252,12 +252,12 @@ export const updateAttendance = async (req, res) => {
   try {
 
     const { id } = req.params;
-    const { Date, clockIn, clockOut , breakTime } = req.body;
+    const { Date, clockIn, clockOut, breakTime } = req.body;
 
     const details = await Clock.findByIdAndUpdate(id, {
       Date,
       clockIn,
-      clockOut , 
+      clockOut,
       breakTime
     }, { new: true });
 
@@ -294,7 +294,6 @@ export const deleteAttendence = async (req, res) => {
     })
   }
 }
-
 
 export const getMonthlyWorkingHours = async (req, res) => {
   try {
@@ -378,3 +377,4 @@ function convertTo24Hour(timeStr) {
 
   return [hours, minutes, seconds];
 }
+
