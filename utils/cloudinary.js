@@ -25,3 +25,19 @@ export const uploadToCloudinary = async (localpath) => {
     return { message: "Fail" };
   }
 };
+
+
+export const deleteFromCloudinary = async (public_id) => {
+  try {
+    if (!public_id) return null;
+
+    const response = await cloudinary.uploader.destroy(public_id, {
+      resource_type: "image",
+    });
+
+    return response;
+  } catch (error) {
+    console.log("Cloudinary delete error: ", error.message);
+    return { message: "Delete Failed" };
+  }
+};

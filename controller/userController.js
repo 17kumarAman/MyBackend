@@ -1,7 +1,7 @@
 import User from "../models/User/User.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { SendEmail } from "../utils/SendEmail.js";
 import ActivityTracker from "../models/ActivityTracker/ActivityTracker.js";
@@ -270,13 +270,41 @@ export const uploadImgToCloudinary = asyncHandler(async (req, res) => {
   const { image } = req.files;
 
   const details = await uploadToCloudinary(image.tempFilePath);
+  const {public_id,secure_url} = details
 
   return res.status(200).json({
     status: true,
-    data: details.secure_url
+    data: {public_id,secure_url},  
   })
 
 })
+
+export const deleteImgFromCloudinary = asyncHandler(async (req, res) => {
+  const { public_id } = req.body;
+
+  if (!public_id) {
+    return res.status(400).json({
+      status: false,
+      message: "public_id is required to delete image.",
+    });
+  }
+
+  const result = await deleteFromCloudinary(public_id);
+
+  if (result.result === "ok") {
+    return res.status(200).json({
+      status: true,
+      message: "Image deleted successfully.",
+      data: result,
+    });
+  } else {
+    return res.status(500).json({
+      status: false,
+      message: "Failed to delete image from Cloudinary.",
+      data: result,
+    });
+  }
+});
 
 export const getUserOwndetail = async (req, res) => {
   const { userId } = req.params;

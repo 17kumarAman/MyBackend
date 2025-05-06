@@ -22,7 +22,7 @@ import {
   uploadImgToCloudinary,
   DeactivateUser , 
   getThisMonthLeave , 
-  getUserOwndetail,forgotPasswordProcess,forgetPasswordVerifyOTP ,resetPassword
+  getUserOwndetail,forgotPasswordProcess,forgetPasswordVerifyOTP ,resetPassword, deleteImgFromCloudinary
  
 } from "../controller/userController.js";
 import isAuthenticated from "../middleware/auth.js";
@@ -31,6 +31,8 @@ const router = Router();
 router.route("RegisterUser").post(RegisterUser);
 
 router.route("/uploadToCloudinary").post(uploadImgToCloudinary);
+router.route("/deleteImgFromCloudinary").delete(deleteImgFromCloudinary);
+
 
 router.route("/login").post(login);
 
