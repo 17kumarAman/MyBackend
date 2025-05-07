@@ -1,9 +1,10 @@
 import { Router } from "express";
 import {
     createLead, getAllLead, getAllLead3, ShareLead, SaveRelivingLetter, saveLORLetter, saveLetter1Api, saveOfferLetterInter, saveExperienceLetter, GetLeadByUser, GetDesiUser, editLeadStatus, getAllLead2, postImage, deleteLeads, editLead, editLeadNote, GetAllLeadByAdmin, GetLeadById, CreateLeadStatus, getLeadStatus, getLeadSource, CreateLeadSource, UpdateLeadStatus, UpdateLeadSource, CreateLeadNote, UpdateLeadNote, DeleteLeadNote, GetNoteById, GetOpenLeads, GetDesiUser1, PostQuotationForm, PostProposalForm, GetQuotationApi, DeleteQuotationapi, deletePropapi, GetUserLetter, UpdateQuotationForm, UpdateProposalForm, OfferLetterDocs, changeOfferLetterPer, changeRelivingLetterPer, InstaAddLead, changeExperienceLetterPer, FreelencerOfferApi, GetSaveTempalte, partTimeOfferApi
+    , deleteOfferLetterDocs, deletepartTimeOfferApi, deleteFreelencerOffer, deleteRelivingLetter, deleteExperienceLetter, deleteOfferLetterInter, deleteLetter1Api, deleteLORLetter
 } from "../controller/leadController.js"
 import { deleteExpense, getExpense, CreateExpense } from "../controller/expenseController.js";
-import { postLeadCategory, getLeadCategories, updateLeadCategory, deleteLeadTypeCategory, postLeadSubCategory, getSubCategory,updateSubCategory, deleteSubCategory } from "../controller/systemController.js";
+import { postLeadCategory, getLeadCategories, updateLeadCategory, deleteLeadTypeCategory, postLeadSubCategory, getSubCategory, updateSubCategory, deleteSubCategory } from "../controller/systemController.js";
 const router = Router();
 
 router.post("/createLead", createLead);
@@ -72,6 +73,14 @@ router.post("/saveLORLetter", saveLORLetter);
 router.post("/saveLetter1Api", saveLetter1Api);
 
 router.post("/getUserLetter", GetUserLetter);
+router.delete("/deleteOfferLetterDocs/:id", deleteOfferLetterDocs);
+router.delete('/deletepartTimeOfferApi/:id', deletepartTimeOfferApi);
+router.delete('/deleteFreelencerOffer/:id', deleteFreelencerOffer);
+router.delete('/deleteRelivingLetter/:id', deleteRelivingLetter);
+router.delete('/deleteExperienceLetter/:id', deleteExperienceLetter);
+router.delete('/deleteOfferLetterInter/:id', deleteOfferLetterInter);
+router.delete('/deleteLetter1Api/:id', deleteLetter1Api);
+router.delete('/deleteLORLetter/:id', deleteLORLetter)
 
 router.post("/changeOfferLetterPer", changeOfferLetterPer);
 router.post("/changeRelivingLetterPer", changeRelivingLetterPer);
@@ -90,11 +99,11 @@ router.post("/sharelead", ShareLead);
 
 router.post('/postLeadCategory', postLeadCategory);
 router.get('/getLeadCategories', getLeadCategories)
-router.put('/updateLeadCategory/:id',updateLeadCategory)
-router.delete('/deleteLeadTypeCategory/:id',deleteLeadTypeCategory)
+router.put('/updateLeadCategory/:id', updateLeadCategory)
+router.delete('/deleteLeadTypeCategory/:id', deleteLeadTypeCategory)
 
 
-router.post('/postLeadSubCategory',postLeadSubCategory)
+router.post('/postLeadSubCategory', postLeadSubCategory)
 router.get('/getSubCategory', getSubCategory)
 router.put('/updateSubCategory/:id', updateSubCategory)
 router.delete('/deleteSubCategory/:id', deleteSubCategory)

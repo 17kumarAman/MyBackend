@@ -119,6 +119,23 @@ export const OfferLetterDocs = async(req ,res)=>{
     })
    }
 }
+export const deleteOfferLetterDocs = async(req,res)=>{
+  try {
+    const {id}  = req.params;
+    const relivingLetter = await OfferLetter.findByIdAndDelete(id);
+    return res.status(200).json({
+      Status:true,
+      message:"OfferLetter Letter Deleted Successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status:false,
+      message:error
+    })
+  }
+}
+
 export const partTimeOfferApi = async(req ,res)=>{
    try{
 
@@ -138,6 +155,24 @@ export const partTimeOfferApi = async(req ,res)=>{
     })
    }
 }
+
+export const deletepartTimeOfferApi = async(req,res)=>{
+  try {
+    const {id}  = req.params;
+    const relivingLetter = await PartTimeOffer.findByIdAndDelete(id);
+    return res.status(200).json({
+      Status:true,
+      message:"PartTimeOffer Letter Deleted Successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status:false,
+      message:error
+    })
+  }
+}
+
 export const FreelencerOfferApi = async(req ,res)=>{
    try{
 
@@ -156,6 +191,23 @@ export const FreelencerOfferApi = async(req ,res)=>{
       message:"internal server error "
     })
    }
+}
+
+export const deleteFreelencerOffer = async(req,res)=>{
+  try {
+    const {id}  = req.params;
+    const relivingLetter = await FreelencerOffer.findByIdAndDelete(id);
+    return res.status(200).json({
+      Status:true,
+      message:"FreelencerOffer Letter Deleted Successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status:false,
+      message:error
+    })
+  }
 }
 
 export const SaveRelivingLetter = async(req ,res)=>{
@@ -178,6 +230,23 @@ export const SaveRelivingLetter = async(req ,res)=>{
    }
 }
 
+export const deleteRelivingLetter = async(req,res)=>{
+  try {
+    const {id}  = req.params;
+    const relivingLetter = await RelivingLetter.findByIdAndDelete(id);
+    return res.status(200).json({
+      Status:true,
+      message:"Reliving Letter Deleted Successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status:false,
+      message:error
+    })
+  }
+}
+
 export const saveExperienceLetter = async(req ,res)=>{
    try{
 
@@ -196,6 +265,23 @@ export const saveExperienceLetter = async(req ,res)=>{
       message:"internal server error "
     })
    }
+}
+
+export const deleteExperienceLetter = async(req,res)=>{
+  try {
+    const {id}  = req.params;
+    const relivingLetter = await ExperienceLetter.findByIdAndDelete(id);
+    return res.status(200).json({
+      Status:true,
+      message:"Experience Letter Deleted Successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status:false,
+      message:error
+    })
+  }
 }
 
 export const saveOfferLetterInter = async(req ,res)=>{
@@ -218,6 +304,23 @@ export const saveOfferLetterInter = async(req ,res)=>{
    }
 }
 
+export const deleteOfferLetterInter = async(req,res)=>{
+  try {
+    const {id}  = req.params;
+    const relivingLetter = await InternLetter.findByIdAndDelete(id);
+    return res.status(200).json({
+      Status:true,
+      message:"Intern Letter Deleted Successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status:false,
+      message:error
+    })
+  }
+}
+
 export const saveLetter1Api = async(req ,res)=>{
    try{
 
@@ -238,6 +341,23 @@ export const saveLetter1Api = async(req ,res)=>{
    }
 }
 
+export const deleteLetter1Api = async(req,res)=>{
+  try {
+    const {id}  = req.params;
+    const relivingLetter = await Letter1.findByIdAndDelete(id);
+    return res.status(200).json({
+      Status:true,
+      message:"Letter Deleted Successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status:false,
+      message:error
+    })
+  }
+}
+
 export const saveLORLetter = async(req ,res)=>{
    try{
 
@@ -256,6 +376,23 @@ export const saveLORLetter = async(req ,res)=>{
       message:"internal server error "
     })
    }
+}
+
+export const deleteLORLetter = async(req,res)=>{
+  try {
+    const {id}  = req.params;
+    const relivingLetter = await LORLetter.findByIdAndDelete(id);
+    return res.status(200).json({
+      Status:true,
+      message:"LORLetter Deleted Successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status:false,
+      message:error
+    })
+  }
 }
 
 export const changeOfferLetterPer = async (req, res) => {
