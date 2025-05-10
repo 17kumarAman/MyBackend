@@ -125,7 +125,7 @@ export const deleteOfferLetterDocs = async(req,res)=>{
     const relivingLetter = await OfferLetter.findByIdAndDelete(id);
     return res.status(200).json({
       Status:true,
-      message:"OfferLetter Letter Deleted Successfully"
+      message:"OfferLetter Deleted Successfully"
     })
   } catch (error) {
     console.log(error)

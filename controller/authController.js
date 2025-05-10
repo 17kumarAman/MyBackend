@@ -49,7 +49,7 @@ export const login = asyncHandler(async (req, res, next) => {
   const isPasswordValid = await user.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
-    return next(new ApiError(401, "Invalid email or password"));
+    return next(new ApiError(401, "Invalid password"));
   }
 
   const token = await generateRefreshToken(user._id);
