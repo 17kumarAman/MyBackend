@@ -33,6 +33,8 @@ import EmployeeType from "../models/EmployeeType/employeeType.js"
 import Quatation from "../models/Quatation/Quatation.js";
 import Leave from "../models/Leave/Leave.js";
 import Notification from "../models/Notification/Notification.js"
+import Clients from "../models/Tasks/Clients.js";
+
 
 export const getAdmins = asyncHandler(async (req, res) => {
   const admin = await Admin.find({}).select("-password ");
@@ -338,6 +340,15 @@ export const CreateNewUser = asyncHandler(async (req, res) => {
       PermissionRole,
       employeeCode
     } = req.body;
+
+    // Check if email already exists
+    const existingClient = await Clients.findOne({ Email: email })
+    if (existingClient) {
+      return res.status(400).json({
+        status: false,
+        message: "Email is already registered to Client",
+      });
+    }
 
     // const employeeCode = makeid(7);
 

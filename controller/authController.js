@@ -5,6 +5,7 @@ import Admin from "../models/Admin/Admin.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import Clients from "../models/Tasks/Clients.js";
 
 const generateRefreshToken = async (userId) => {
   try {
@@ -24,15 +25,55 @@ const generateRefreshToken = async (userId) => {
   }
 };
 
+const generateClientRefreshToken = async (userId) => {
+  try {
+    const user = await Clients.findById(userId);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    const token = user.generateAuthToken();
+    return token;
+  } catch (error) {
+    // Log the actual error for debugging purposes
+    console.error("Error in generateRefreshToken:", error.message);
+
+    throw new ApiError(500, "Something went wrong");
+  }
+};
+
 export const login = asyncHandler(async (req, res, next) => {
   const { email, password, employeeCode } = req.body;
 
-  const user = email
-    ? await User.findOne({ email }).populate("PermissionRole")
-    : await User.findOne({ employeeCode: employeeCode.slice(3) }).populate("PermissionRole");
+  const user = await User.findOne({ email }).populate("PermissionRole");
 
   if (!user) {
-    return next(new ApiError(404, "User not found"));
+    const client = await Clients.findOne({ Email: email });
+    // return next(new ApiError(404, "User not found"));
+    if (!client) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, client.Password);
+
+    console.log('this ', password)
+    if (!isMatch) {
+      return res.status(401).json({
+        status: false,
+        message: "Incorrect password",
+      });
+    }
+    const token = await generateClientRefreshToken(client._id);
+    return res.status(200).json({
+      status: true,
+      message: "Login successful",
+      user: client,
+      token,
+    });
   }
 
   console.log("user", user);

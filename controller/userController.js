@@ -14,6 +14,7 @@ import OTP from '../models/otpModel.js';
 import base32 from "hi-base32";
 import * as OTPAuth from "otpauth";
 import QRCode from "qrcode";
+import Clients from "../models/Tasks/Clients.js";
 
 
 // Store OTP in MongoDB with an expiration time of 10 minutes
@@ -97,26 +98,36 @@ const deleteExistingOTP = async (email) => {
 export const forgotPasswordProcess = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ success: false, message: 'Invalid Email' });
+  // const 
+  const Client = await Clients.findOne({ Email: email })
+  if (Client) {
+    return res.status(400).json({
+      success: false,
+      message: "Please Contact Your Admin to Reset Password"
+    })
+  } else {
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Invalid Email' });
+    }
+
+    const otp = generateOTP();
+
+    // Remove any existing OTP for this email
+    await deleteExistingOTP(email);
+
+    // Store new OTP in database
+    await storeOTPInDatabase(email, otp);
+
+    // Send OTP via email
+    await sendOTPEmail(email, otp);
+
+    return res.status(200).json({
+      success: true,
+      message: `OTP has been sent to ${email}. It will expire in 10 minutes.`,
+    });
   }
-
-  const otp = generateOTP();
-
-  // Remove any existing OTP for this email
-  await deleteExistingOTP(email);
-
-  // Store new OTP in database
-  await storeOTPInDatabase(email, otp);
-
-  // Send OTP via email
-  await sendOTPEmail(email, otp);
-
-  return res.status(200).json({
-    success: true,
-    message: `OTP has been sent to ${email}. It will expire in 10 minutes.`,
-  });
 });
 
 
@@ -144,58 +155,58 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
 export const Enable2FA = async (req, res) => {
   try {
-      const { userId } = req.body;
-      console.log("Enable2FA called for:", userId);
+    const { userId } = req.body;
+    console.log("Enable2FA called for:", userId);
 
-      const user = await User.findOne({ _id: userId });
+    const user = await User.findOne({ _id: userId });
 
-      if (!user) {
-          return res.status(404).json({
-              status: "fail",
-              message: "User does not exist"
-          });
+    if (!user) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User does not exist"
+      });
+    }
+
+    // Step 1: Generate Base32 secret manually using crypto
+    const randomBuffer = crypto.randomBytes(20); // 20 bytes = 160 bits
+    const base32_secret = new OTPAuth.Secret({ buffer: randomBuffer }).base32;
+
+    // Step 2: Save secret to DB
+    await User.updateOne({ _id: userId }, { secrets2fa: base32_secret });
+
+    // Step 3: Create OTPAuth URL
+    const issuer = "hrms.kusheldigi.com";
+    const label = user.email;
+
+    const otpauth_url = `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(label)}?secret=${base32_secret}&issuer=${encodeURIComponent(issuer)}&algorithm=SHA1&digits=6&period=30`;
+
+    console.log("Generated OTPAuth URL:", otpauth_url);
+
+    // Step 4: Generate QR
+    QRCode.toDataURL(otpauth_url, (err, qrUrl) => {
+      if (err) {
+        console.error("QR Code Error:", err);
+        return res.status(500).json({
+          status: "fail",
+          message: "QR code generation failed"
+        });
       }
 
-      // Step 1: Generate Base32 secret manually using crypto
-      const randomBuffer = crypto.randomBytes(20); // 20 bytes = 160 bits
-      const base32_secret = new OTPAuth.Secret({ buffer: randomBuffer }).base32;
-
-      // Step 2: Save secret to DB
-      await User.updateOne({ _id: userId }, { secrets2fa: base32_secret });
-
-      // Step 3: Create OTPAuth URL
-      const issuer = "hrms.kusheldigi.com";
-      const label = user.email;
-
-      const otpauth_url = `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(label)}?secret=${base32_secret}&issuer=${encodeURIComponent(issuer)}&algorithm=SHA1&digits=6&period=30`;
-
-      console.log("Generated OTPAuth URL:", otpauth_url);
-
-      // Step 4: Generate QR
-      QRCode.toDataURL(otpauth_url, (err, qrUrl) => {
-          if (err) {
-              console.error("QR Code Error:", err);
-              return res.status(500).json({
-                  status: "fail",
-                  message: "QR code generation failed"
-              });
-          }
-
-          return res.json({
-              status: "success",
-              data: {
-                  qrCodeUrl: qrUrl,
-                  secret: base32_secret
-              }
-          });
+      return res.json({
+        status: "success",
+        data: {
+          qrCodeUrl: qrUrl,
+          secret: base32_secret
+        }
       });
+    });
 
   } catch (error) {
-      console.error("Enable2FA Error:", error);
-      return res.status(500).json({
-          status: "fail",
-          message: "Something went wrong"
-      });
+    console.error("Enable2FA Error:", error);
+    return res.status(500).json({
+      status: "fail",
+      message: "Something went wrong"
+    });
   }
 };
 
@@ -210,38 +221,38 @@ export const Verify2fa = async (req, res) => {
   const user = await User.findOne({ _id: userId });
 
   if (!user) {
-      return res.status(404).json({
-          status: "fail",
-          message: "User does not exist"
-      });
+    return res.status(404).json({
+      status: "fail",
+      message: "User does not exist"
+    });
   }
 
   const totp = new OTPAuth.TOTP({
-      issuer: "codeninjainsights.com",
-      label: "codeninjainsights",
-      algorithm: "SHA1",
-      digits: 6,
-      secret: user.secrets2fa
+    issuer: "codeninjainsights.com",
+    label: "codeninjainsights",
+    algorithm: "SHA1",
+    digits: 6,
+    secret: user.secrets2fa
   });
 
   const delta = totp.validate({ token });
 
   if (delta === null) {
-      return res.status(401).json({
-          status: "fail",
-          message: "Authentication failed"
-      });
+    return res.status(401).json({
+      status: "fail",
+      message: "Authentication failed"
+    });
   }
 
   if (!user.enable2fa) {
-      await User.updateOne({ _id: userId }, { enable2fa: true });
+    await User.updateOne({ _id: userId }, { enable2fa: true });
   }
 
   res.json({
-      status: "success",
-      data: {
-          otp_valid: true
-      }
+    status: "success",
+    data: {
+      otp_valid: true
+    }
   });
 };
 
@@ -270,11 +281,11 @@ export const uploadImgToCloudinary = asyncHandler(async (req, res) => {
   const { image } = req.files;
 
   const details = await uploadToCloudinary(image.tempFilePath);
-  const {public_id,secure_url} = details
+  const { public_id, secure_url } = details
 
   return res.status(200).json({
     status: true,
-    data: {public_id,secure_url},  
+    data: { public_id, secure_url },
   })
 
 })

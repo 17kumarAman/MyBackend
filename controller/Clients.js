@@ -33,7 +33,7 @@ const generateRefreshToken = async (userId) => {
 
 export const CreateClient = async (req, res) => {
   try {
-    const { Name, Email, Password, City, State, ZipCode, PhoneNumber, Country, Address,Role="Client" } = req.body;
+    const { Name, Email, Password, City, State, ZipCode, PhoneNumber, Country, Address, Role = "Client" } = req.body;
 
     // Validate required fields
     if (!Name || !Email || !Password) {
@@ -43,7 +43,13 @@ export const CreateClient = async (req, res) => {
       });
     }
 
-    
+    const existedUser = await User.findOne({ email: Email });
+    if (existedUser) {
+      return res.status(400).json({
+        status: false,
+        message: "Email is already registered to users",
+      })
+    }
 
     // Check if email already exists
     const existingClient = await Clients.findOne({ Email })
@@ -54,8 +60,8 @@ export const CreateClient = async (req, res) => {
       });
     }
     const plainTextPassword = Password;
-    
-    
+
+
 
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(Password, 10);
@@ -64,14 +70,14 @@ export const CreateClient = async (req, res) => {
     const clientDetail = await Clients.create({
       Name,
       Email,
-      Password:hashedPassword,
+      Password: hashedPassword,
       City,
       State,
       ZipCode,
       PhoneNumber,
       Country,
       Address,
-      Role:"Client",
+      Role: "Client",
     });
 
     const message = `
@@ -108,7 +114,7 @@ export const CreateClient = async (req, res) => {
 </div>
 
     `;
-    
+
     const html = `
    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
   <p>Dear <strong>${Name}</strong>,</p>
@@ -143,9 +149,9 @@ export const CreateClient = async (req, res) => {
 </div>
 
     `;
-    
+
     await SendEmail(Email, "Welcome to Kushel Digi Solutions – Your Account Details", message, html);
-    
+
     return res.status(201).json({
       status: true,
       message: "done success",
@@ -169,7 +175,7 @@ export const EditClient = async (req, res) => {
     const plainTextPassword = Password;
     const hashedPassword = await bcrypt.hash(Password, 10);
 
-    const clientDetail = await Clients.findByIdAndUpdate(clientId, { Name, Email, City, State, ZipCode, PhoneNumber, Country, Address, Password:hashedPassword });
+    const clientDetail = await Clients.findByIdAndUpdate(clientId, { Name, Email, City, State, ZipCode, PhoneNumber, Country, Address, Password: hashedPassword });
 
     return res.status(200).json({
       status: true,
@@ -200,7 +206,7 @@ export const clientLogin = async (req, res) => {
     }
 
     // Find client by email
-    const client = await Clients.findOne({ Email: Email  });
+    const client = await Clients.findOne({ Email: Email });
 
     if (!client) {
       return res.status(404).json({
@@ -218,7 +224,7 @@ export const clientLogin = async (req, res) => {
       });
     }
     const token = await generateRefreshToken(client._id);
-      return res.status(200).json({
+    return res.status(200).json({
       status: true,
       message: "Login successful",
       data: {
@@ -249,7 +255,7 @@ export const getAllClient = async (req, res) => {
 export const getClient = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
 
     if (!id) {
       return res.status(400).json({
@@ -294,9 +300,9 @@ export const clientNotification = async (req, res) => {
     }
 
     const userPromises = client.map(async (userName) => {
-                const ClientDetail = await Clients.findOne({ Name: userName });
-                return ClientDetail;
-            });
+      const ClientDetail = await Clients.findOne({ Name: userName });
+      return ClientDetail;
+    });
 
     const clientDetail = await Promise.all(userPromises);
 
@@ -702,14 +708,14 @@ export const getProjectTask = async (req, res) => {
 
 export const FetchAllTask = async (req, res) => {
   const alltask = await ProjectTasks.find({})
-  .sort({ date: -1 })
-  .populate("Members", "fullName")
-  .populate({
-    path: "Project",
-    populate: {
-      path: "Members", // Members inside Project
-    }
-  });;
+    .sort({ date: -1 })
+    .populate("Members", "fullName")
+    .populate({
+      path: "Project",
+      populate: {
+        path: "Members", // Members inside Project
+      }
+    });;
   return res.status(200).json({
     status: true,
     data: alltask
