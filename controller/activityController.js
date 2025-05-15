@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import ActivityTracker from "../models/ActivityTracker/ActivityTracker.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
+import Clock from "../models/Clock/clock.js";
+import User from "../models/User/User.js";
 
 const startOfWeek = (date) => {
   var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
@@ -9,14 +11,28 @@ const startOfWeek = (date) => {
 };
 
 export const postActivity = asyncHandler(async (req, res) => {
-  const { clockIn, clockOut, late, overtime, total, message, date1 , todayTask, clockInTime } = req.body;
+  const { clockIn, clockOut, late, overtime, total, message, date1, todayTask, clockInTime, } = req.body;
+
+  const clockEntries = await Clock.find({
+    user: req.user._id,
+    Date: date1,
+  });
+
+  console.log(date1, req.user._id)
+
+  if (clockEntries.length > 0) {
+    console.log("Clock-ins found:", clockEntries.length);
+    return res.status(400).json({
+      message: "You have already checked in today. You cannot check in again.",
+      success: false,
+    });
+  }
 
 
   try {
-    if(clockOut === 0 || clockOut==='0')
-    {
-      let newActivity=new ActivityTracker({
-        user: req.user?._id, date: new Date().getTime(), date1, clockIn, clockOut, late, overtime, total, message, clockInTime
+    if (clockOut === 0 || clockOut === '0') {
+      let newActivity = new ActivityTracker({
+        user: req.user?._id, date: new Date().getTime(), date1, clockIn, clockOut, late, overtime, total, message, clockInTime, organizationId
       });
       await newActivity.save();
       return res.json({
@@ -26,10 +42,9 @@ export const postActivity = asyncHandler(async (req, res) => {
       });
     }
 
-    else
-    {
-            
-      let id= await ActivityTracker.findOne({user: req.user._id, date1 });
+    else {
+
+      let id = await ActivityTracker.findOne({ user: req.user._id, date1 });
 
       await ActivityTracker.findByIdAndDelete(id._id);
 
@@ -50,28 +65,30 @@ export const postActivity = asyncHandler(async (req, res) => {
 
 export const getActivity = asyncHandler(async (req, res) => {
   try {
-    const {userId} = req.params;
+    const { userId } = req.params;
     console.log(userId)
-    const activity = await ActivityTracker.find({user:userId})
-    if(!activity){
-      return res.status(400).json({
-        success: false,
-        message: "Not Have any activity"
-      })
-    }
-    
-    return res.status(200).json({
-      success:true,
-      message :"Activity find",
-      activity
-    })
-  } catch (error) {
-    console.error("Error in postActivity:", error);
-    return res.status(500).json({
+    const existingUser = await User.findById(userId);
+    console.log(existingUser?.isBreakIn )
+    const activity = await ActivityTracker.find({ user: userId })
+  if (!activity) {
+    return res.status(400).json({
       success: false,
-      message: "Internal server error",
-    });
+      message: "Not Have any activity"
+    })
   }
+
+  return res.status(200).json({
+    success: true,
+    message: "Activity find",
+    activity
+  })
+} catch (error) {
+  console.error("Error in postActivity:", error);
+  return res.status(500).json({
+    success: false,
+    message: "Internal server error",
+  });
+}
 })
 
 export const postActivityHr = asyncHandler(async (req, res) => {
@@ -131,7 +148,7 @@ export const getActivitiesByUser = asyncHandler(async (req, res) => {
 
   if (!userId || userId === "" || userId === "undefined") {
     and = [{ user: req.user._id }];
-  } 
+  }
   else {
     and = [{ user: userId }];
   }
@@ -242,84 +259,71 @@ function getTotalWorkingDaysInMonth() {
   let totalWorkingDays = 0;
 
   for (let i = 1; i <= daysInMonth; i++) {
-      const currentDate = new Date(year, month, i);
-      if (currentDate.getDay() !== 0) { // Sunday has index 0
-          totalWorkingDays++;
-      }
+    const currentDate = new Date(year, month, i);
+    if (currentDate.getDay() !== 0) { // Sunday has index 0
+      totalWorkingDays++;
+    }
   }
 
   return totalWorkingDays;
 }
 
 export const getAllActivities = asyncHandler(async (req, res) => {
-  let {type, date, userId, month} = req.query;
+  let { type, date, userId, month } = req.query;
 
-  let and=[];
+  let and = [];
 
-  if(type && type!=="" && type!=="undefined")
-  {
-    if(type==='daily')
-    {
-      if(date && date!=="" && date!=="undefined")
-      {
-        and.push({date1: `${date.split('-')[2]}/${date.split('-')[1]}/${date.split('-')[0]}`});
+  if (type && type !== "" && type !== "undefined") {
+    if (type === 'daily') {
+      if (date && date !== "" && date !== "undefined") {
+        and.push({ date1: `${date.split('-')[2]}/${date.split('-')[1]}/${date.split('-')[0]}` });
       }
-      else
-      {
+      else {
         const formattedDate = new Date().toLocaleDateString('en-GB');
-        and.push({date1: formattedDate});
+        and.push({ date1: formattedDate });
       }
     }
-    else if(type==='monthly')
-    {
-      if(userId && userId!=="" && userId!=="undefined")
-      {
-        let objectId=(mongoose.Types.ObjectId(userId));
-        and.push({'user._id': objectId});
+    else if (type === 'monthly') {
+      if (userId && userId !== "" && userId !== "undefined") {
+        let objectId = (mongoose.Types.ObjectId(userId));
+        and.push({ 'user._id': objectId });
       }
 
-      if(month && month!=="" && month!=="undefined")
-      {
+      if (month && month !== "" && month !== "undefined") {
         // console.log(month);
-        let thisMonth=new Date(`${month}-${1}`).getTime();
-        let lastDate=getLastDateOfMonth(Number(month.split('-')[0]), Number(month.split('-')[1]));
-        let thisMonth1=new Date(`${month}-${lastDate}`).getTime();
-        and.push({date: {$gte: thisMonth, $lte: thisMonth1}});
+        let thisMonth = new Date(`${month}-${1}`).getTime();
+        let lastDate = getLastDateOfMonth(Number(month.split('-')[0]), Number(month.split('-')[1]));
+        let thisMonth1 = new Date(`${month}-${lastDate}`).getTime();
+        and.push({ date: { $gte: thisMonth, $lte: thisMonth1 } });
       }
-      else
-      {
-        let d=new Date();
-        let now=d.getTime();
-        let thisMonth=new Date(`${d.getFullYear()}-${d.getMonth()+1}-${1}`).getTime();
-  
-        and.push({date: {$gte: thisMonth, $lte: now}});
+      else {
+        let d = new Date();
+        let now = d.getTime();
+        let thisMonth = new Date(`${d.getFullYear()}-${d.getMonth() + 1}-${1}`).getTime();
+
+        and.push({ date: { $gte: thisMonth, $lte: now } });
       }
     }
-    else if(type==='all')
-    {
-      let obj={};
-      let workingDays=getTotalWorkingDaysInMonth();
+    else if (type === 'all') {
+      let obj = {};
+      let workingDays = getTotalWorkingDaysInMonth();
 
-      if(userId && userId!=="" && userId!=="undefined")
-      {
-        let objectId=(mongoose.Types.ObjectId(userId));
-        and.push({'user._id': objectId});
+      if (userId && userId !== "" && userId !== "undefined") {
+        let objectId = (mongoose.Types.ObjectId(userId));
+        and.push({ 'user._id': objectId });
       }
-      else
-      {
+      else {
         and.push({});
       }
-      const data = await ActivityTracker.find({$and: and});
-      for(let i of data)
-      {
-        if(!obj[i.user_id])
-        {
-          let userId=i.user._id;
-          let users=data.filter(x=>x.user._id===userId);
+      const data = await ActivityTracker.find({ $and: and });
+      for (let i of data) {
+        if (!obj[i.user_id]) {
+          let userId = i.user._id;
+          let users = data.filter(x => x.user._id === userId);
           // Number(item.total) > 21600
-          let presentCount=users.filter(x=>Number(x.total)>0).length;
-          let absentCount=workingDays-presentCount;
-          obj[i.user._id]={
+          let presentCount = users.filter(x => Number(x.total) > 0).length;
+          let absentCount = workingDays - presentCount;
+          obj[i.user._id] = {
             user: i.user,
             workingDays,
             presentCount,
@@ -331,19 +335,17 @@ export const getAllActivities = asyncHandler(async (req, res) => {
       return res.status(200).json(new ApiResponse(200, obj, "successfully fetched all activities"));
     }
   }
-  else
-  {
+  else {
     const formattedDate = new Date().toLocaleDateString('en-GB');
-    and.push({date1: formattedDate});
+    and.push({ date1: formattedDate });
   }
 
-  if(and.length===0)
-  {
+  if (and.length === 0) {
     and.push({});
   }
 
 
-  const data = await ActivityTracker.find({$and: and});
+  const data = await ActivityTracker.find({ $and: and });
   return res.status(200).json(new ApiResponse(200, data, "successfully fetched all activities"));
 });
 

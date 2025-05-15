@@ -34,7 +34,7 @@ export const getClockByUserDate = async (req, res) => {
     const { date } = req.body;
     const { userId } = req.params;
 
-    const clockEntries = await Clock.findOne({
+    const clockEntries = await Clock.find({
       user: userId,
       Date: date,
     }).select('clockIn clockOut breakTime Note todayTask').populate("user");
