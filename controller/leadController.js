@@ -24,6 +24,7 @@ export const createLead = async (req, res) => {
   try {
     const {
       LeadOwner,
+      LeadCreator,
       image,
       Company,
       FirstName,
@@ -56,6 +57,7 @@ export const createLead = async (req, res) => {
 
     const leadDetail = await Lead.create({
       LeadOwner,
+      LeadCreator,
       Company,
       FirstName,
       LastName,
@@ -1024,6 +1026,7 @@ export const editLead = async (req, res) => {
   try {
     const {
       LeadOwner,
+      LeadCreator,
       image,
       Company,
       FirstName,
@@ -1062,6 +1065,7 @@ export const editLead = async (req, res) => {
       id,
       {
         LeadOwner,
+        LeadCreator,
         image,
         Company,
         FirstName,

@@ -5,6 +5,7 @@ const mySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
+  LeadCreator:String,
   Company: String,
   FirstName: String,
   LastName: String,
@@ -32,7 +33,7 @@ const mySchema = new mongoose.Schema({
   DescriptionInfo: String,
   image: String,
   date: String,
-  
+
   isOpen: {
     type: String,
     default: "true",
@@ -57,7 +58,7 @@ const mySchema = new mongoose.Schema({
   }],
 
   dynamicFields: {
-    type: mongoose.Schema.Types.Mixed, 
+    type: mongoose.Schema.Types.Mixed,
     default: {},
   }
 });
