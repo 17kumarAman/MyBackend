@@ -526,11 +526,14 @@ export const GetUserLetter = async( req ,res)=>{
      const relivingLetter = await RelivingLetter.find({user:userId}).sort({date: -1});
      const expeletter = await ExperienceLetter.find({user:userId}).sort({date: -1});
      const internLetter = await InternLetter.find({user:userId}).sort({date: -1});
+     const partTimeLetter = await PartTimeOffer.find({user:userId}).sort({date: -1});
+     const freelencerOfferLetter = await FreelencerOffer.find({user:userId}).sort({date: -1});
+
 
        return res.status(200).json({
          status:200 , 
          data:{
-          relivingLetter , createletter , expeletter , internLetter
+          relivingLetter , createletter , expeletter , internLetter, partTimeLetter, freelencerOfferLetter
          }
        })
   } catch(error){

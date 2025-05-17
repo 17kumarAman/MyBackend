@@ -7,6 +7,7 @@ import EmployeeLeave from "../models/EmployeeLeave/employeeLeave.js"
 
 
 export const postLeave = async ({ auth, type, from, to, days, reason }) => {
+  console.log(auth, type, from, to, days, reason)
   const newLeave = new Leave({
     user: auth,
     leaveType: type,
@@ -25,7 +26,7 @@ export const postLeave = async ({ auth, type, from, to, days, reason }) => {
   await mailSender("hr@kusheldigi.com", "Regarding Leave", `<div>
   <div>from: ${auth?.fullName}</div>
   <div>to: ${to}</div>
-  <div>days: ${days + 1}</div>
+  <div>days: ${days}</div>
   <div>reason: ${reason}</div>
   </div>`);
 

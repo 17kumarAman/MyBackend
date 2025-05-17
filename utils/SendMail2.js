@@ -15,6 +15,8 @@ export const mailSender = async (email, subject, html) => {
             rejectUnauthorized: false,
         },
     });
+
+    console.log(email, subject, html)
     await transporter.sendMail({
         from: 'Kushel Digi Solutions" <info@kusheldigi.com>',
         to: `${email}`,
