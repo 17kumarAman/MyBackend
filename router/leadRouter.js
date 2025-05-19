@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
-    createLead, getAllLead, getAllLead3, ShareLead, SaveRelivingLetter, saveLORLetter, saveLetter1Api, saveOfferLetterInter, saveExperienceLetter, GetLeadByUser, GetDesiUser, editLeadStatus, getAllLead2, postImage, deleteLeads, editLead, editLeadNote, GetAllLeadByAdmin, GetLeadById, CreateLeadStatus, getLeadStatus, getLeadSource, CreateLeadSource, UpdateLeadStatus, UpdateLeadSource, CreateLeadNote, UpdateLeadNote, DeleteLeadNote, GetNoteById, GetOpenLeads, GetDesiUser1, PostQuotationForm, PostProposalForm, GetQuotationApi, DeleteQuotationapi, deletePropapi, GetUserLetter, UpdateQuotationForm, UpdateProposalForm, OfferLetterDocs, changeOfferLetterPer, changeRelivingLetterPer, InstaAddLead, changeExperienceLetterPer, FreelencerOfferApi, GetSaveTempalte, partTimeOfferApi
-    , deleteOfferLetterDocs, deletepartTimeOfferApi, deleteFreelencerOffer, deleteRelivingLetter, deleteExperienceLetter, deleteOfferLetterInter, deleteLetter1Api, deleteLORLetter
+    createLead, getAllLead, getAllLead3, ShareLead, SaveRelivingLetter, saveCompletionLetter, saveLORLetter, saveLetter1Api, saveOfferLetterInter, saveExperienceLetter, GetLeadByUser, GetDesiUser, editLeadStatus, getAllLead2, postImage, deleteLeads, editLead, editLeadNote, GetAllLeadByAdmin, GetLeadById, CreateLeadStatus, getLeadStatus, getLeadSource, CreateLeadSource, UpdateLeadStatus, UpdateLeadSource, CreateLeadNote, UpdateLeadNote, DeleteLeadNote, GetNoteById, GetOpenLeads, GetDesiUser1, PostQuotationForm, PostProposalForm, GetQuotationApi, DeleteQuotationapi, deletePropapi, GetUserLetter, UpdateQuotationForm, UpdateProposalForm, OfferLetterDocs, changeOfferLetterPer, changeRelivingLetterPer, InstaAddLead, changeExperienceLetterPer, FreelencerOfferApi, GetSaveTempalte, partTimeOfferApi
+    , deleteOfferLetterDocs, deletepartTimeOfferApi, deleteFreelencerOffer, deleteCompletionLetter, deleteRelivingLetter, deleteExperienceLetter, deleteOfferLetterInter, deleteLetter1Api, deleteLORLetter
 } from "../controller/leadController.js"
 import { deleteExpense, getExpense, CreateExpense } from "../controller/expenseController.js";
 import { postLeadCategory, getLeadCategories, updateLeadCategory, deleteLeadTypeCategory, postLeadSubCategory, getSubCategory, updateSubCategory, deleteSubCategory } from "../controller/systemController.js";
@@ -32,6 +32,9 @@ router.get('/getAllLead2/:userId', async (req, res) => {
     res.json(data);
 });
 
+router.post('/saveCompletionLetter', saveCompletionLetter);
+router.delete('/deleteCompletionLetter/:id', deleteCompletionLetter);
+
 router.get("/getAllLeadByAdmin", GetAllLeadByAdmin);
 router.post("/postImage", postImage);
 router.delete("/deleteLead/:id", deleteLeads);
@@ -56,7 +59,6 @@ router.delete("/deleteLeadNote/:leadId", DeleteLeadNote);
 router.get("/getNoteById/:leadId", GetNoteById);
 router.get("/getQuotationApi/:leadId", GetQuotationApi);
 router.delete("/deleteQuotationapi/:id", DeleteQuotationapi);
-
 router.post("/postQuotationForm", PostQuotationForm);
 router.delete("/deletePropapi/:id", deletePropapi);
 router.post("/postProposalForm", PostProposalForm);

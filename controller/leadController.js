@@ -18,6 +18,7 @@ import PartTimeOffer from "../models/PartTimeOffer.js";
 import InternLetter from "../models/InternLetter.js";
 import InternOffer from "../models/InternLetter.js"
 import { mailSender } from "../utils/SendMail2.js";
+import CompletionLetter from "../models/CompletionLetter.js";
 
 
 export const createLead = async (req, res) => {
@@ -102,297 +103,331 @@ export const createLead = async (req, res) => {
   }
 };
 
-export const OfferLetterDocs = async(req ,res)=>{
-   try{
+export const OfferLetterDocs = async (req, res) => {
+  try {
 
-     const {userId , content} = req.body;
- console.log("userid ",userId , "contetn",content);
-       const createletter = await OfferLetter.create({user:userId , content});
+    const { userId, content } = req.body;
+    console.log("userid ", userId, "contetn", content);
+    const createletter = await OfferLetter.create({ user: userId, content });
 
-        return res.status(200).json({
-          status:200 , 
-          data: createletter
-        })
-   } catch(error){
+    return res.status(200).json({
+      status: 200,
+      data: createletter
+    })
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false , 
-      message:"internal server error "
+      status: false,
+      message: "internal server error "
     })
-   }
+  }
 }
-export const deleteOfferLetterDocs = async(req,res)=>{
+export const deleteOfferLetterDocs = async (req, res) => {
   try {
-    const {id}  = req.params;
+    const { id } = req.params;
     const relivingLetter = await OfferLetter.findByIdAndDelete(id);
     return res.status(200).json({
-      Status:true,
-      message:"OfferLetter Deleted Successfully"
+      Status: true,
+      message: "OfferLetter Deleted Successfully"
     })
   } catch (error) {
     console.log(error)
     return res.status(400).json({
-      status:false,
-      message:error
+      status: false,
+      message: error
     })
   }
 }
 
-export const partTimeOfferApi = async(req ,res)=>{
-   try{
+export const partTimeOfferApi = async (req, res) => {
+  try {
 
-     const {userId , content8} = req.body;
+    const { userId, content } = req.body;
 
-       const createletter = await PartTimeOffer.create({user:userId , content:content8});
+    const createletter = await PartTimeOffer.create({ user: userId, content: content });
 
-        return res.status(200).json({
-          status:200 , 
-          data: createletter
-        })
-   } catch(error){
+    return res.status(200).json({
+      status: 200,
+      data: createletter
+    })
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false , 
-      message:"internal server error "
+      status: false,
+      message: "internal server error "
     })
-   }
+  }
 }
 
-export const deletepartTimeOfferApi = async(req,res)=>{
+export const deletepartTimeOfferApi = async (req, res) => {
   try {
-    const {id}  = req.params;
+    const { id } = req.params;
     const relivingLetter = await PartTimeOffer.findByIdAndDelete(id);
     return res.status(200).json({
-      Status:true,
-      message:"PartTimeOffer Letter Deleted Successfully"
+      Status: true,
+      message: "PartTimeOffer Letter Deleted Successfully"
     })
   } catch (error) {
     console.log(error)
     return res.status(400).json({
-      status:false,
-      message:error
+      status: false,
+      message: error
     })
   }
 }
 
-export const FreelencerOfferApi = async(req ,res)=>{
-   try{
+export const FreelencerOfferApi = async (req, res) => {
+  try {
 
-     const {userId , content7} = req.body;
+    const { userId, content7 } = req.body;
 
-       const createletter = await FreelencerOffer.create({user:userId , content:content7});
+    const createletter = await FreelencerOffer.create({ user: userId, content: content7 });
 
-        return res.status(200).json({
-          status:200 , 
-          data: createletter
-        })
-   } catch(error){
+    return res.status(200).json({
+      status: 200,
+      data: createletter
+    })
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false , 
-      message:"internal server error "
+      status: false,
+      message: "internal server error "
     })
-   }
+  }
 }
 
-export const deleteFreelencerOffer = async(req,res)=>{
+export const deleteFreelencerOffer = async (req, res) => {
   try {
-    const {id}  = req.params;
+    const { id } = req.params;
     const relivingLetter = await FreelencerOffer.findByIdAndDelete(id);
     return res.status(200).json({
-      Status:true,
-      message:"FreelencerOffer Letter Deleted Successfully"
+      Status: true,
+      message: "FreelencerOffer Letter Deleted Successfully"
     })
   } catch (error) {
     console.log(error)
     return res.status(400).json({
-      status:false,
-      message:error
+      status: false,
+      message: error
     })
   }
 }
 
-export const SaveRelivingLetter = async(req ,res)=>{
-   try{
+export const SaveRelivingLetter = async (req, res) => {
+  try {
 
-     const {userId , content} = req.body;
+    const { userId, content } = req.body;
 
-       const createletter = await RelivingLetter.create({user:userId , content});
+    const createletter = await RelivingLetter.create({ user: userId, content });
 
-        return res.status(200).json({
-          status:200 , 
-          data: createletter
-        })
-   } catch(error){
+    return res.status(200).json({
+      status: 200,
+      data: createletter
+    })
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false , 
-      message:"internal server error "
+      status: false,
+      message: "internal server error "
     })
-   }
+  }
 }
 
-export const deleteRelivingLetter = async(req,res)=>{
+export const deleteRelivingLetter = async (req, res) => {
   try {
-    const {id}  = req.params;
+    const { id } = req.params;
     const relivingLetter = await RelivingLetter.findByIdAndDelete(id);
     return res.status(200).json({
-      Status:true,
-      message:"Reliving Letter Deleted Successfully"
+      Status: true,
+      message: "Reliving Letter Deleted Successfully"
     })
   } catch (error) {
     console.log(error)
     return res.status(400).json({
-      status:false,
-      message:error
+      status: false,
+      message: error
     })
   }
 }
 
-export const saveExperienceLetter = async(req ,res)=>{
-   try{
-
-     const {userId , content} = req.body;
-
-       const createletter = await ExperienceLetter.create({user:userId , content});
-
-        return res.status(200).json({
-          status:200 , 
-          data: createletter
-        })
-   } catch(error){
+export const saveCompletionLetter = async (req, res) => {
+  try {
+    const { userId, content } = req.body;
+    const createletter = await CompletionLetter.create({ user: userId, content })
+    return res.status(200).json({
+      status: 200,
+      data: createletter
+    })
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false , 
-      message:"internal server error "
+      status: false,
+      message: "internal server error "
     })
-   }
+  }
 }
 
-export const deleteExperienceLetter = async(req,res)=>{
+export const deleteCompletionLetter = async (req, res) => {
   try {
-    const {id}  = req.params;
+    const { id } = req.params;
+    const relivingLetter = await CompletionLetter.findByIdAndDelete(id);
+    return res.status(200).json({
+      Status: true,
+      message: "Completion Letter Deleted Successfully"
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status: false,
+      message: error
+    })
+  }
+}
+
+export const saveExperienceLetter = async (req, res) => {
+  try {
+
+    const { userId, content } = req.body;
+
+    const createletter = await ExperienceLetter.create({ user: userId, content });
+
+    return res.status(200).json({
+      status: 200,
+      data: createletter
+    })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "internal server error "
+    })
+  }
+}
+
+export const deleteExperienceLetter = async (req, res) => {
+  try {
+    const { id } = req.params;
     const relivingLetter = await ExperienceLetter.findByIdAndDelete(id);
     return res.status(200).json({
-      Status:true,
-      message:"Experience Letter Deleted Successfully"
+      Status: true,
+      message: "Experience Letter Deleted Successfully"
     })
   } catch (error) {
     console.log(error)
     return res.status(400).json({
-      status:false,
-      message:error
+      status: false,
+      message: error
     })
   }
 }
 
-export const saveOfferLetterInter = async(req ,res)=>{
-   try{
+export const saveOfferLetterInter = async (req, res) => {
+  try {
 
-     const {userId , content} = req.body;
+    const { userId, content } = req.body;
 
-       const createletter = await InternLetter.create({user:userId , content});
+    const createletter = await InternLetter.create({ user: userId, content });
 
-        return res.status(200).json({
-          status:200 , 
-          data: createletter
-        })
-   } catch(error){
+    return res.status(200).json({
+      status: 200,
+      data: createletter
+    })
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false , 
-      message:"internal server error "
+      status: false,
+      message: "internal server error "
     })
-   }
+  }
 }
 
-export const deleteOfferLetterInter = async(req,res)=>{
+export const deleteOfferLetterInter = async (req, res) => {
   try {
-    const {id}  = req.params;
+    const { id } = req.params;
     const relivingLetter = await InternLetter.findByIdAndDelete(id);
     return res.status(200).json({
-      Status:true,
-      message:"Intern Letter Deleted Successfully"
+      Status: true,
+      message: "Intern Letter Deleted Successfully"
     })
   } catch (error) {
     console.log(error)
     return res.status(400).json({
-      status:false,
-      message:error
+      status: false,
+      message: error
     })
   }
 }
 
-export const saveLetter1Api = async(req ,res)=>{
-   try{
+export const saveLetter1Api = async (req, res) => {
+  try {
 
-     const {userId , content} = req.body;
+    const { userId, content } = req.body;
 
-       const createletter = await Letter1.create({user:userId , content});
+    const createletter = await Letter1.create({ user: userId, content });
 
-        return res.status(200).json({
-          status:200 , 
-          data: createletter
-        })
-   } catch(error){
+    return res.status(200).json({
+      status: 200,
+      data: createletter
+    })
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false , 
-      message:"internal server error "
+      status: false,
+      message: "internal server error "
     })
-   }
+  }
 }
 
-export const deleteLetter1Api = async(req,res)=>{
+export const deleteLetter1Api = async (req, res) => {
   try {
-    const {id}  = req.params;
+    const { id } = req.params;
     const relivingLetter = await Letter1.findByIdAndDelete(id);
     return res.status(200).json({
-      Status:true,
-      message:"Letter Deleted Successfully"
+      Status: true,
+      message: "Letter Deleted Successfully"
     })
   } catch (error) {
     console.log(error)
     return res.status(400).json({
-      status:false,
-      message:error
+      status: false,
+      message: error
     })
   }
 }
 
-export const saveLORLetter = async(req ,res)=>{
-   try{
+export const saveLORLetter = async (req, res) => {
+  try {
 
-     const {userId , content} = req.body;
+    const { userId, content } = req.body;
 
-       const createletter = await LORLetter.create({user:userId , content});
+    const createletter = await LORLetter.create({ user: userId, content });
 
-        return res.status(200).json({
-          status:200 , 
-          data: createletter
-        })
-   } catch(error){
+    return res.status(200).json({
+      status: 200,
+      data: createletter
+    })
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
-      status:false , 
-      message:"internal server error "
+      status: false,
+      message: "internal server error "
     })
-   }
+  }
 }
 
-export const deleteLORLetter = async(req,res)=>{
+export const deleteLORLetter = async (req, res) => {
   try {
-    const {id}  = req.params;
+    const { id } = req.params;
     const relivingLetter = await LORLetter.findByIdAndDelete(id);
     return res.status(200).json({
-      Status:true,
-      message:"LORLetter Deleted Successfully"
+      Status: true,
+      message: "LORLetter Deleted Successfully"
     })
   } catch (error) {
     console.log(error)
     return res.status(400).json({
-      status:false,
-      message:error
+      status: false,
+      message: error
     })
   }
 }
@@ -403,11 +438,11 @@ export const changeOfferLetterPer = async (req, res) => {
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { $bit: { offerLetterPermission: { xor: 1 } } }, 
-      { new: true } 
-  );
+      { $bit: { offerLetterPermission: { xor: 1 } } },
+      { new: true }
+    );
 
-    console.log("user",user);
+    console.log("user", user);
 
     return res.status(200).json({
       status: true,
@@ -492,8 +527,8 @@ export const ShareLead = async (req, res) => {
 
     const updatedLead = await Lead.findByIdAndUpdate(
       leadId,
-      { $set: { LeadOwner: shareList } }, 
-      { new: true } 
+      { $set: { LeadOwner: shareList } },
+      { new: true }
     );
 
     if (!updatedLead) {
@@ -506,9 +541,9 @@ export const ShareLead = async (req, res) => {
         <div>A Lead has been shared with you</div>
       </div>`);
     }
-    
+
     res.status(200).json({ success: true, message: "Lead shared successfully.", data: updatedLead });
-    
+
   } catch (error) {
     console.error("Error sharing lead:", error);
     res.status(500).json({ success: false, message: "Server error.", error: error.message });
@@ -517,51 +552,54 @@ export const ShareLead = async (req, res) => {
 
 
 
-export const GetUserLetter = async( req ,res)=>{
-  try{
+export const GetUserLetter = async (req, res) => {
+  try {
 
-    const {userId} = req.body;
+    const { userId } = req.body;
 
-    const createletter = await OfferLetter.find({user:userId}).sort({date: -1});
-     const relivingLetter = await RelivingLetter.find({user:userId}).sort({date: -1});
-     const expeletter = await ExperienceLetter.find({user:userId}).sort({date: -1});
-     const internLetter = await InternLetter.find({user:userId}).sort({date: -1});
-     const partTimeLetter = await PartTimeOffer.find({user:userId}).sort({date: -1});
-     const freelencerOfferLetter = await FreelencerOffer.find({user:userId}).sort({date: -1});
+    const createletter = await OfferLetter.find({ user: userId }).sort({ date: -1 });
+    const relivingLetter = await RelivingLetter.find({ user: userId }).sort({ date: -1 });
+    const expeletter = await ExperienceLetter.find({ user: userId }).sort({ date: -1 });
+    const internLetter = await InternLetter.find({ user: userId }).sort({ date: -1 });
+    const partTimeLetter = await PartTimeOffer.find({ user: userId }).sort({ date: -1 });
+    const freelencerOfferLetter = await FreelencerOffer.find({ user: userId }).sort({ date: -1 });
+    const completionLetter = await CompletionLetter.find({ user: userId }).sort({ date: -1 });
+    const lorLetter = await LORLetter.find({ user: userId }).sort({ date: -1 });
 
 
-       return res.status(200).json({
-         status:200 , 
-         data:{
-          relivingLetter , createletter , expeletter , internLetter, partTimeLetter, freelencerOfferLetter
-         }
-       })
-  } catch(error){
-   console.log(error);
-   return res.status(500).json({
-     status:false , 
-     message:"internal server error "
-   })
+
+    return res.status(200).json({
+      status: 200,
+      data: {
+        relivingLetter, createletter, expeletter, internLetter, partTimeLetter, freelencerOfferLetter, completionLetter, lorLetter
+      }
+    })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "internal server error "
+    })
   }
 }
 
 export const PostQuotationForm = async (req, res) => {
   try {
     const {
-      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId , leadId ,isSave
+      customerName, customerReq, quotationDate, introduction, additional, costhead, timeline, technology, userId, leadId, isSave
     } = req.body;
 
     const newQuotation = new Quatation({
-      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId , leadId , isSave
+      customerName, customerReq, quotationDate, introduction, additional, costhead, timeline, technology, userId, leadId, isSave
     });
 
     await newQuotation.save();
 
     res.status(201).send({
-        status: true,
-        message: "Quotation saved successfully",
-        newQuotation,
-      });
+      status: true,
+      message: "Quotation saved successfully",
+      newQuotation,
+    });
 
   } catch (error) {
     console.log("error ", error);
@@ -607,54 +645,54 @@ export const PostProposalForm = async (req, res) => {
 };
 
 export const UpdateProposalForm = async (req, res) => {
-    try {
-      const {
-          userId,
-          proposalFor,
-          preparedFor,
-          createdBy,
-          Date,
-          content,
-          leadId,
-      } = req.body;
-  
-      const { quoId } = req.params;
-  
-      // Update the quotation
-      const updatedQuotation = await Proposal.findByIdAndUpdate(
-        quoId,
-        {
-          userId,
-          leadId,
-          proposalFor,
-          preparedFor,
-          createdBy,
-          Date,
-          content,
-        },
-        { new: true }
-      );
-  
-      if (!updatedQuotation) {
-        return res
-          .status(404)
-          .json({ status: false, message: "Quotation not found" });
-      }
-  
-      res
-        .status(200)
-        .json({
-          status: true,
-          message: "Propsal updated successfully",
-          data: updatedQuotation,
-        });
-    } catch (error) {
-      console.error("Error updating quotation:", error);
-      res
-        .status(500)
-        .json({ status: false, message: "Internal server error", error });
+  try {
+    const {
+      userId,
+      proposalFor,
+      preparedFor,
+      createdBy,
+      Date,
+      content,
+      leadId,
+    } = req.body;
+
+    const { quoId } = req.params;
+
+    // Update the quotation
+    const updatedQuotation = await Proposal.findByIdAndUpdate(
+      quoId,
+      {
+        userId,
+        leadId,
+        proposalFor,
+        preparedFor,
+        createdBy,
+        Date,
+        content,
+      },
+      { new: true }
+    );
+
+    if (!updatedQuotation) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Quotation not found" });
     }
-  };
+
+    res
+      .status(200)
+      .json({
+        status: true,
+        message: "Propsal updated successfully",
+        data: updatedQuotation,
+      });
+  } catch (error) {
+    console.error("Error updating quotation:", error);
+    res
+      .status(500)
+      .json({ status: false, message: "Internal server error", error });
+  }
+};
 
 export const UpdateQuotationForm = async (req, res) => {
   try {
@@ -674,13 +712,13 @@ export const UpdateQuotationForm = async (req, res) => {
       // companyWebsite,
       // items,
       // content,
-      customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId 
+      customerName, customerReq, quotationDate, introduction, additional, costhead, timeline, technology, userId
     } = req.body;
 
     const { quoId } = req.params;
 
-    console.log("v" , quoId);
-    console.log("userId" , userId);
+    console.log("v", quoId);
+    console.log("userId", userId);
 
 
     // Check if the ID is valid
@@ -694,7 +732,7 @@ export const UpdateQuotationForm = async (req, res) => {
     const updatedQuotation = await Quatation.findByIdAndUpdate(
       quoId,
       {
-        customerName, customerReq,  quotationDate, introduction , additional , costhead ,timeline , technology, userId 
+        customerName, customerReq, quotationDate, introduction, additional, costhead, timeline, technology, userId
       },
       { new: true }
     );
@@ -795,11 +833,11 @@ export const GetQuotationApi = async (req, res) => {
 
   try {
     const quotations = await Quatation.find({ leadId });
-    const proposals = await Proposal.find({leadId});
+    const proposals = await Proposal.find({ leadId });
 
     res.status(200).json({
-        quotations ,
-         proposals
+      quotations,
+      proposals
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching quotations", error });
@@ -1110,7 +1148,7 @@ export const editLead = async (req, res) => {
     console.log("error ", error);
     return res.status(500).json({
       message: "Internal server error",
-      error: error.message, 
+      error: error.message,
     });
   }
 };
@@ -1388,36 +1426,36 @@ export const GetDesiUser1 = async (req, res) => {
 
 
 
-export const InstaAddLead = async (req ,res)=>{
+export const InstaAddLead = async (req, res) => {
 
-  const {FirstName  , LastName, Phone , Email} = req.body;
+  const { FirstName, LastName, Phone, Email } = req.body;
 
 
-   const LeadDetail = await Lead.create({FirstName , Phone , Email , LastName});
-   
-   return res.status(200).json({
-    status:true ,
-    message:"Successfuly Created",
-     })
+  const LeadDetail = await Lead.create({ FirstName, Phone, Email, LastName });
+
+  return res.status(200).json({
+    status: true,
+    message: "Successfuly Created",
+  })
 
 }
 
-export const GetSaveTempalte  = async(req ,res)=>{
-   try{
+export const GetSaveTempalte = async (req, res) => {
+  try {
 
-    const {leadId} = req.params;
+    const { leadId } = req.params;
 
-    const resp = await Quatation.find({isSave:true , leadId:leadId});
+    const resp = await Quatation.find({ isSave: true, leadId: leadId });
 
     return res.status(200).json({
-      status:true , 
+      status: true,
       data: resp
     })
 
-   } catch(error){
+  } catch (error) {
     return res.status(500).json({
-      status: false , 
-      message:"Internal server error "
+      status: false,
+      message: "Internal server error "
     })
-   }
+  }
 }
