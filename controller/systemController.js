@@ -283,14 +283,14 @@ export const createDocSetup = asyncHandler(async (req, res) => {
 
     //  console.log({documentType:documentType});
 
-    const userEmployee = await User.findOne({ fullName: req.user._id });
+    // const userEmployee = await User.findOne({ fullName: req.user._id });
 
-    console.log(userEmployee);
+    // console.log(userEmployee);
 
-    for (user of userEmployee) {
-      const ans = await details.save();
-      console.log(ans);
-    }
+    // for (user of userEmployee) {
+    //   const ans = await details.save();
+    //   console.log(ans);
+    // }
 
     return res.status(200).json({
       status: true,
