@@ -788,3 +788,35 @@ export const getTodayBirthday = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getUpcomingBirthdays = async (req, res) => {
+  try {
+    const today = new Date();
+    const currentMonth = today.getMonth(); // 0-11
+    const currentDate = today.getDate();
+
+    // Get all users
+    const employees = await User.find().exec();
+
+    const filteredEmployees = employees.filter(employee => {
+      if (!employee.dob || employee.isDeactivated !== "No") return false;
+
+      const dob = new Date(employee.dob);
+      const birthMonth = dob.getMonth(); // 0-11
+      const birthDate = dob.getDate();
+
+      // Month difference logic (wrap around December)
+      let monthDiff = birthMonth - currentMonth;
+      if (monthDiff < 0) monthDiff += 12;
+
+      return (
+        monthDiff <= 2 && // 3 months include current + next 2
+        (monthDiff > 0 || birthDate >= currentDate) // Ensure for current month, birthday is today or after
+      );
+    });
+
+    res.status(200).json(filteredEmployees);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

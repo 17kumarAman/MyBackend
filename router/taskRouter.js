@@ -8,7 +8,7 @@ import {
   updateTask,
 
 } from "../controller/TaskController.js";
-import { CreateClient, EditClient ,clientLogin ,getProjectTask , getMyProjectTask ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject  , delteTaskId, DeleteProjects , getProjectByUser , CreateProjectTask ,EditProjectTask ,  GetAllTask , GetTaskByUser , getTodayBirthday  ,FetchAllTask, getClient} from "../controller/Clients.js";
+import { CreateClient, EditClient ,clientLogin ,getProjectTask , getMyProjectTask,getUpcomingBirthdays ,getAllClient ,getTaskByUserProject ,  DisableClient , CreateProject , EditProject , changeTaskStatus , getAllProject  , delteTaskId, DeleteProjects , getProjectByUser , CreateProjectTask ,EditProjectTask ,  GetAllTask , GetTaskByUser , getTodayBirthday  ,FetchAllTask, getClient} from "../controller/Clients.js";
 
 import {ProjectTimerCreate} from "../controller/ProjectTimer.js"
 
@@ -61,6 +61,8 @@ router.post("/postProjectTimer" , ProjectTimerCreate);
 
 // user get birthday 
 router.get("/getBirthDayUser" , getTodayBirthday);
+router.get("/getUpcomingBirthdays" , getUpcomingBirthdays);
+
 
 
 
