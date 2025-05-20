@@ -281,11 +281,11 @@ export const uploadImgToCloudinary = asyncHandler(async (req, res) => {
   const { image } = req.files;
 
   const details = await uploadToCloudinary(image.tempFilePath);
-  const { public_id, secure_url } = details
+  const { secure_url } = details
 
   return res.status(200).json({
     status: true,
-    data: { public_id, secure_url },
+    data: secure_url ,
   })
 
 })
