@@ -763,11 +763,12 @@ export const UpdateUser = asyncHandler(async (req, res) => {
       AccountNumber,
       confirmAccount,
       Branch,
-      PermissionRole
+      PermissionRole,
+      password
     } = req.body;
     const { userId } = req.params;
 
-
+    console.log(password)
     // const profileImageLocalPath = req.file?.path;
     // if (!profileImageLocalPath) {
     //   throw new ApiError(401, "avatar file is Missing");
@@ -776,6 +777,14 @@ export const UpdateUser = asyncHandler(async (req, res) => {
     // if (!profileImage.url) {
     //   throw new ApiError(400, "error uploading on cloudinary");
     // }
+
+    let updatepasshash = ""
+
+    if (password) {
+      updatepasshash = await bcrypt.hash(password, 10);
+    }
+
+    console.log(updatepasshash)
 
     const updateObj = removeUndefined({
       fullName,
@@ -827,6 +836,7 @@ export const UpdateUser = asyncHandler(async (req, res) => {
       AccountNumber,
       confirmAccount,
       Branch,
+      password: updatepasshash,
       PermissionRole: PermissionRole === "Select Role" ? null : PermissionRole
     });
 
@@ -835,7 +845,7 @@ export const UpdateUser = asyncHandler(async (req, res) => {
     const user = await User.findByIdAndUpdate(userId, updateObj, {
       new: true,
     }).select("-password");
-
+    console.log(user)
     return res
       .status(200)
       .json(new ApiResponse(200, user, "Updated User Details Successfully"));
