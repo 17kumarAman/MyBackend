@@ -285,7 +285,7 @@ export const uploadImgToCloudinary = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     status: true,
-    data: secure_url ,
+    data: secure_url,
   })
 
 })

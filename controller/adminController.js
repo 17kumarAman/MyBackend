@@ -2100,7 +2100,7 @@ export const createHoliday = asyncHandler(async (req, res) => {
       });
     }
 
-    const emailList = users.map(user => user.email);
+    // const emailList = users.map(user => user.email);
 
     // Prepare email body once
     const emailSubject = "Regarding Holiday";
@@ -2120,12 +2120,12 @@ export const createHoliday = asyncHandler(async (req, res) => {
 
 
     // Send emails in parallel (better than awaiting one-by-one)
-    await Promise.all(
-      emailList.map(email =>
-        mailSender(email, emailSubject, emailBody)
-          .catch(err => console.error(`Failed to send email to ${email}:`, err))
-      )
-    );
+    // await Promise.all(
+    //   emailList.map(email =>
+    //     mailSender(email, emailSubject, emailBody)
+    //       .catch(err => console.error(`Failed to send email to ${email}:`, err))
+    //   )
+    // );
 
     // Create the holiday after sending emails
     const holiday = await Holiday.create({ holidayName, startDate, endDate });
