@@ -1008,52 +1008,62 @@ export const updateTracking = asyncHandler(async (req, res) => {
 // ========================announcement controller================
 export const postAnnouncement = asyncHandler(async (req, res) => {
   const { title, Branch, Department, Employee, startDate, endDate, description } = req.body;
-  console.log('here')
-  // retreiving all the user of same department and designation 
+
   if (Employee === "All Employee") {
-    console.log(Employee)
     const users = await User.find({ isDeactivated: "No" });
+
+    // Prepare bulk operations
+    const notificationPromises = [];
+    const emailPromises = [];
+
     for (const user of users) {
-      console.log(user.department)
+      notificationPromises.push(
+        Notification.create({ title, description, user: user._id })
+      );
 
-      // do here
-      console.log(user.email)
-
-      await Notification.create({ title, description, user: user?._id });
-      // console.log(users)
-
-      await mailSender(user.email, "Create Annnouncement ", `<div>
-      <div>title: ${title}</div>
-      <div>Branch: ${Branch}</div>
-      <div>Department: ${Department}</div>
-      <div>Employee: ${Employee}</div>
-      <div>startDate: ${startDate}</div>
-      <div>endDate: ${endDate}</div>
-      <div>description: ${description}</div>
-      </div>`)
-
+      emailPromises.push(
+        mailSender(
+          user.email,
+          "Create Announcement",
+          `<div>
+            <div>Title: ${title}</div>
+            <div>Branch: ${Branch}</div>
+            <div>Department: ${Department}</div>
+            <div>Employee: ${Employee}</div>
+            <div>Start Date: ${startDate}</div>
+            <div>End Date: ${endDate}</div>
+            <div>Description: ${description}</div>
+          </div>`
+        )
+      );
     }
 
+    // Execute all in parallel
+    await Promise.all([...notificationPromises, ...emailPromises]);
 
-  }
-
-  else {
-
+  } else {
     const user = await User.findOne({ fullName: Employee });
-    const notify = await Notification.create({ title, description, user: user?._id });
-    console.log(user.email)
-    await mailSender(user?.email, "Create Annnouncement ", `<div>
-    <div>title: ${title}</div>
-    <div>Branch: ${Branch}</div>
-    <div>Department: ${Department}</div>
-    <div>Employee: ${Employee}</div>
-    <div>startDate: ${startDate}</div>
-    <div>endDate: ${endDate}</div>
-    <div>description: ${description}</div>
-    </div>`)
 
+    if (!user) {
+      return res.status(404).json(new ApiResponse(404, null, "Employee not found"));
+    }
 
-
+    await Promise.all([
+      Notification.create({ title, description, user: user._id }),
+      mailSender(
+        user.email,
+        "Create Announcement",
+        `<div>
+          <div>Title: ${title}</div>
+          <div>Branch: ${Branch}</div>
+          <div>Department: ${Department}</div>
+          <div>Employee: ${Employee}</div>
+          <div>Start Date: ${startDate}</div>
+          <div>End Date: ${endDate}</div>
+          <div>Description: ${description}</div>
+        </div>`
+      )
+    ]);
   }
 
   const announcement = await Announcement.create({
@@ -1063,14 +1073,14 @@ export const postAnnouncement = asyncHandler(async (req, res) => {
     Employee,
     startDate,
     endDate,
-    description: description,
+    description,
     ts: new Date().getTime(),
     status: "true",
-
   });
+
   return res
     .status(200)
-    .json(new ApiResponse(200, announcement, " successfully posted"));
+    .json(new ApiResponse(200, announcement, "Successfully posted"));
 });
 
 
