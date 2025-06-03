@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-    createLead, getAllLead, getAllLead3, ShareLead, SaveRelivingLetter, saveCompletionLetter, saveLORLetter, saveLetter1Api, saveOfferLetterInter, saveExperienceLetter, GetLeadByUser, GetDesiUser, editLeadStatus, getAllLead2, postImage, deleteLeads, editLead, editLeadNote, GetAllLeadByAdmin, GetLeadById, CreateLeadStatus, getLeadStatus, getLeadSource, CreateLeadSource, UpdateLeadStatus, UpdateLeadSource, CreateLeadNote, UpdateLeadNote, DeleteLeadNote, GetNoteById, GetOpenLeads, GetDesiUser1, PostQuotationForm, PostProposalForm, GetQuotationApi, DeleteQuotationapi, deletePropapi, GetUserLetter, UpdateQuotationForm, UpdateProposalForm, OfferLetterDocs, changeOfferLetterPer, changeRelivingLetterPer, InstaAddLead, changeExperienceLetterPer, FreelencerOfferApi, GetSaveTempalte, partTimeOfferApi
+    createLead, getAllLead, getAllLeads, getLeadsByUser, getAllLead3, ShareLead, SaveRelivingLetter, saveCompletionLetter, saveLORLetter, saveLetter1Api, saveOfferLetterInter, saveExperienceLetter, GetLeadByUser, GetDesiUser, editLeadStatus, getAllLead2, postImage, deleteLeads, editLead, editLeadNote, GetAllLeadByAdmin, GetLeadById, CreateLeadStatus, getLeadStatus, getLeadSource, CreateLeadSource, UpdateLeadStatus, UpdateLeadSource, CreateLeadNote, UpdateLeadNote, DeleteLeadNote, GetNoteById, GetOpenLeads, GetDesiUser1, PostQuotationForm, PostProposalForm, GetQuotationApi, DeleteQuotationapi, deletePropapi, GetUserLetter, UpdateQuotationForm, UpdateProposalForm, OfferLetterDocs, changeOfferLetterPer, changeRelivingLetterPer, InstaAddLead, changeExperienceLetterPer, FreelencerOfferApi, GetSaveTempalte, partTimeOfferApi
     , deleteOfferLetterDocs, deletepartTimeOfferApi, deleteFreelencerOffer, deleteCompletionLetter, deleteRelivingLetter, deleteExperienceLetter, deleteOfferLetterInter, deleteLetter1Api, deleteLORLetter
 } from "../controller/leadController.js"
 import { deleteExpense, getExpense, CreateExpense } from "../controller/expenseController.js";
@@ -23,6 +23,9 @@ router.post('/getAllLead', async (req, res) => {
     const data = await getAllLead({ ...req.query, userId: id });
     res.json(data);
 });
+
+router.get("/getAllLeads", getAllLeads)
+router.get("/getlead/:id", GetLeadByUser)
 router.get('/getAllLead', async (req, res) => {
     const data = await getAllLead2({ ...req.query });
     res.json(data);

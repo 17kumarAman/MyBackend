@@ -995,6 +995,37 @@ export const getAllLead = async ({ id, query, page, perPage, userId }) => {
   return { status: true, data };
 };
 
+export const getAllLeads = async (req, res) => {
+  try {
+    const leads = await Lead.find();
+    return res.status(200).json({
+      status: true,
+      leads,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Interval server error",
+    });
+  }
+}
+
+export const getLeadsByUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const leads = await Lead.find({ userId: id });
+    return res.status(200).json({
+      status: true,
+      leads,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Interval server error",
+    });
+  }
+}
+
 export const GetAllLeadByAdmin = async (req, res) => {
   const data = await Lead.find({});
 
