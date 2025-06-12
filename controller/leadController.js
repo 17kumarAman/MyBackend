@@ -53,7 +53,9 @@ export const createLead = async (req, res) => {
       Country,
       DescriptionInfo,
       date,
-      dynamicFields
+      dynamicFields,
+      LeadName,
+      revenue
     } = req.body;
 
     const leadDetail = await Lead.create({
@@ -86,7 +88,9 @@ export const createLead = async (req, res) => {
       DescriptionInfo,
       image,
       date,
-      dynamicFields
+      dynamicFields,
+      LeadName,
+      revenue
     });
 
     return res.status(200).json({
@@ -1013,7 +1017,7 @@ export const getAllLeads = async (req, res) => {
 export const getLeadsByUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const leads = await Lead.find({ userId: id });
+    const leads = await Lead.find({ LeadCreator: id });
     return res.status(200).json({
       status: true,
       leads,
@@ -1098,6 +1102,7 @@ export const editLead = async (req, res) => {
   try {
     const {
       LeadOwner,
+      LeadName,
       LeadCreator,
       image,
       Company,
@@ -1126,6 +1131,7 @@ export const editLead = async (req, res) => {
       Country,
       DescriptionInfo,
       date,
+      revenue,
       dynamicFields
     } = req.body;
 
@@ -1138,6 +1144,7 @@ export const editLead = async (req, res) => {
       {
         LeadOwner,
         LeadCreator,
+        LeadName,
         image,
         Company,
         FirstName,
@@ -1165,6 +1172,7 @@ export const editLead = async (req, res) => {
         Country,
         DescriptionInfo,
         date,
+        revenue,
         dynamicFields
       },
       { new: true }

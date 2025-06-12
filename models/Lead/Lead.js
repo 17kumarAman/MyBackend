@@ -5,7 +5,8 @@ const mySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
-  LeadCreator:String,
+  LeadName: String,
+  LeadCreator: String,
   Company: String,
   FirstName: String,
   LastName: String,
@@ -19,6 +20,7 @@ const mySchema = new mongoose.Schema({
   NoOfEmployee: String,
   Industry: String,
   LeadStatus: String,
+  revenue:String,
   AnnualRevenue: String,
   Rating: String,
   EmailOptOut: String,
@@ -40,7 +42,7 @@ const mySchema = new mongoose.Schema({
   },
   createAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   status: {
     type: String,
@@ -56,7 +58,6 @@ const mySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Quatation'
   }],
-
   dynamicFields: {
     type: mongoose.Schema.Types.Mixed,
     default: {},
