@@ -16,5 +16,5 @@ const mySchema = new mongoose.Schema({
     }
 });
 
-const TestClock = mongoose.model("TestClock", mySchema);
-export default TestClock
+const Samay = mongoose.model("Samay", mySchema);
+export default Samay

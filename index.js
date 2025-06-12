@@ -19,6 +19,7 @@ import clock from "./router/clockRouter.js"
 import award from "./router/awardRouter.js"
 import lead from "./router/leadRouter.js"
 import ProjectRoute from "./router/ProjectRoutes.js"
+import samayRoute from "./router/samayRouter.js"
 
 import attendanceRouter from "./router/attendanceRouter.js";
 import authRouter from "./router/authRouter.js";
@@ -28,7 +29,7 @@ import systemRouter from "./router/systemRouter.js";
 import { connectDb } from "./db/user_conn.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
-import TestClockRouter from "./router/TestClockRouter.js"
+// import TestClockRouter from "./router/TestClockRouter.js"
 
 import cron from 'node-cron';
 
@@ -98,7 +99,7 @@ app.use("/payslip", payslip);
 app.use("/permission", PermissionRouter);
 
 app.use("/latest_project", ProjectRoute)
-app.use("/api", TestClockRouter);
+app.use("/samay", samayRoute);
 
 const task = cron.schedule('55 23 * * *', async () => {
 

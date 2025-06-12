@@ -5,7 +5,7 @@ import {
     getClockById,
     updateClock,
     deleteClock
-} from "../controllers/TestClock.js";
+} from "../controller/samayController.js";
 
 const router = express.Router();
 
