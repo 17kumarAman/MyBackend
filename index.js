@@ -28,6 +28,7 @@ import systemRouter from "./router/systemRouter.js";
 import { connectDb } from "./db/user_conn.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
+import TestClockRouter from "./router/TestClockRouter.js"
 
 import cron from 'node-cron';
 
@@ -55,7 +56,7 @@ connectDb();
 // );
 app.use(cors());
 
-app.use(express.json({limit:'10mb'}));
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 app.use(express.urlencoded({ extended: false }));
@@ -65,8 +66,8 @@ app.use(cookieParser());
 
 app.use(
   fileUpload({
-    useTempFiles:true,
-    tempFileDir:"/tmp"
+    useTempFiles: true,
+    tempFileDir: "/tmp"
   })
 )
 
@@ -84,48 +85,46 @@ app.use("/task", taskRouter);
 app.use("/chat", chatRouter);
 app.use("/notification", notification);
 app.use("/clock", clock);
-app.use("/award" ,award);
-app.use("/lead" , lead);
-app.use("/payroll" , payrollRouter);
-app.use("/openActivity" , openActivity);
+app.use("/award", award);
+app.use("/lead", lead);
+app.use("/payroll", payrollRouter);
+app.use("/openActivity", openActivity);
 
 app.use("/attendance", attendanceRouter);
 app.use("/auth", authRouter);
-app.use("/system", systemRouter); 
-app.use("/payslip" , payslip);
+app.use("/system", systemRouter);
+app.use("/payslip", payslip);
 
-app.use("/permission" , PermissionRouter);
+app.use("/permission", PermissionRouter);
 
-app.use("/latest_project" , ProjectRoute)
+app.use("/latest_project", ProjectRoute)
+app.use("/api", TestClockRouter);
 
 const task = cron.schedule('55 23 * * *', async () => {
 
   let users = await User.find({ role: { $ne: "ADMIN" } });
-  let todayDate=new Date().toLocaleDateString('en-GB');
-  let todayAttendances=await ActivityTracker.find({date1: todayDate}, {'user._id': 1, _id: 0});
+  let todayDate = new Date().toLocaleDateString('en-GB');
+  let todayAttendances = await ActivityTracker.find({ date1: todayDate }, { 'user._id': 1, _id: 0 });
 
-  let arr=[];
-  for(let i of todayAttendances)
-  {
-    if(!arr.includes(i.user._id))
-    {
+  let arr = [];
+  for (let i of todayAttendances) {
+    if (!arr.includes(i.user._id)) {
       arr.push(i.user._id);
     }
   }
-  let absentUsers=users.filter(x=>!arr.includes(x._id));
+  let absentUsers = users.filter(x => !arr.includes(x._id));
 
-  let arr1=[];
-  let date=new Date().getTime();
-  for(let i of absentUsers)
-  {
+  let arr1 = [];
+  let date = new Date().getTime();
+  for (let i of absentUsers) {
     arr1.push({
-      user: i, date , date1: todayDate, clockIn: 0, clockOut: 0, late: 0, overtime: 0, total: 0, message: ''
+      user: i, date, date1: todayDate, clockIn: 0, clockOut: 0, late: 0, overtime: 0, total: 0, message: ''
     });
   }
-  await ActivityTracker.insertMany(arr1, {ordered: false});
+  await ActivityTracker.insertMany(arr1, { ordered: false });
 }, {
   scheduled: true,
-  timezone: 'Asia/Kolkata' 
+  timezone: 'Asia/Kolkata'
 });
 
 task.start();
