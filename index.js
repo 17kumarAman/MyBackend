@@ -105,26 +105,30 @@ app.use("/samay", samayRoute);
 app.post("/uploadfile", async (req, res) => {
   try {
     if (!req.files || !req.files.image) {
+      console.log("No file uploaded");
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const uploadedImage = req.files.image;
+    const image = req.files.image;
 
-    // Move to local temp file
-    const filePath = `./uploads/${uploadedImage.name}`;
-    await uploadedImage.mv(filePath);
+    console.log("Temp file path:", image.tempFilePath);
 
-    const cloudinaryRes = await uploadToCloudinary(filePath);
+    // Directly use the temp file path
+    const result = await uploadToCloudinary(image.tempFilePath);
+
+    console.log("Cloudinary upload result:", result);
 
     return res.status(200).json({
-      message: "File uploaded successfully",
-      url: cloudinaryRes.secure_url,
+      message: "Uploaded successfully",
+      url: result.secure_url,
+      imagePath:image.tempFilePath
     });
   } catch (error) {
-    console.error("Upload failed:", error);
-    return res.status(500).json({ message: "Server error" });
+    console.error("Upload error:", error.message);
+    return res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
 
 const task = cron.schedule('55 23 * * *', async () => {
 
