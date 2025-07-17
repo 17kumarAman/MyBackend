@@ -40,6 +40,7 @@ import payslip from "./router/paySlipRouter.js";
 import PermissionRouter from "./router/PermissionRouter.js";
 // import Trainer from "./models/Trainer/Trainer.js";
 import errorHandler from "./middleware/errorHandler.js";
+import { uploadToCloudinary } from "./utils/cloudinary.js";
 
 
 dotenv.config();
@@ -100,6 +101,30 @@ app.use("/permission", PermissionRouter);
 
 app.use("/latest_project", ProjectRoute)
 app.use("/samay", samayRoute);
+
+app.post("/uploadfile", async (req, res) => {
+  try {
+    if (!req.files || !req.files.image) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const uploadedImage = req.files.image;
+
+    // Move to local temp file
+    const filePath = `./uploads/${uploadedImage.name}`;
+    await uploadedImage.mv(filePath);
+
+    const cloudinaryRes = await uploadToCloudinary(filePath);
+
+    return res.status(200).json({
+      message: "File uploaded successfully",
+      url: cloudinaryRes.secure_url,
+    });
+  } catch (error) {
+    console.error("Upload failed:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
 
 const task = cron.schedule('55 23 * * *', async () => {
 
