@@ -10,18 +10,32 @@ cloudinary.config({
 
 
 
-export const uploadToCloudinary = async (localpath) => {
+export const uploadToCloudinary = async (input) => {
   try {
-    if (!localpath) return null;
-    const responce = await cloudinary.uploader.upload(localpath, {
-      resource_type: "auto",
-    });
-    unlinkSync(localpath);
-    // console.log("response", responce); for debugging purpose
-    return responce;
+    if (!input) return null;
+
+    let result;
+
+    if (input.startsWith("http://") || input.startsWith("https://")) {
+      // Handle remote URL upload (for .glb or image)
+      result = await cloudinary.uploader.upload(input, {
+        resource_type: "auto",
+      });
+    } else {
+      // Handle local file upload
+      result = await cloudinary.uploader.upload(input, {
+        resource_type: "auto",
+      });
+      unlinkSync(input); // delete local file after upload
+    }
+
+    return result;
   } catch (error) {
-    console.log("error is encountered ", error.message);
-    unlinkSync(localpath);
+    console.error("Upload error:", error.message);
+    // Delete local file if upload fails
+    if (!input.startsWith("http")) {
+      try { unlinkSync(input); } catch (e) {}
+    }
     return { message: "Fail" };
   }
 };
